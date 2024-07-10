@@ -27,7 +27,7 @@ export default function Home() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-2 sm:p-4">
       <div className="w-full py-4">
         <form className="flex justify-evenly items-center" onSubmit={handleSubmit}>
           <Label className="w-[50%] text-base">Enter your Sleeper league ID:</Label>
