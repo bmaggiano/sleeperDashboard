@@ -3,8 +3,6 @@
 import React from 'react';
 
 const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
-    console.log('team1:', team1);
-    console.log('team2:', team2);
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
         return <div>Loading matchups...</div>;
