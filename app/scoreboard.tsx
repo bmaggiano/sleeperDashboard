@@ -15,9 +15,7 @@ export default function Scoreboard() {
 
     useEffect(() => {
         async function fetchData() {
-            console.log(weekIndex)
             const data = await getMatchups({ weekIndex, leagueId });
-            console.log(data)
             setScoresData(data);
         }
         fetchData();
