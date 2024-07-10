@@ -27,25 +27,17 @@ export default function Scoreboard() {
             setScoresData(data);
         }
         fetchData();
-    }, [weekIndex]);
+    }, [weekIndex, leagueId]);
 
     return (
-        <div>
-            <h1>Scoreboard</h1>
-            {scoresData?.map((matchup) => {
-                return (
-                    <h2 key={matchup.matchup_id}>
-                        {matchup.user ? matchup.user.metadata.team_name : "Unknown Team"} {matchup.points}
-                    </h2>
-                )
-            })}
+        <div className="">
             <MatchupCard team1={scoresData?.[0]} team2={scoresData?.[1]} />
             <MatchupCard team1={scoresData?.[2]} team2={scoresData?.[3]} />
             <MatchupCard team1={scoresData?.[4]} team2={scoresData?.[5]} />
             <MatchupCard team1={scoresData?.[6]} team2={scoresData?.[7]} />
             <MatchupCard team1={scoresData?.[8]} team2={scoresData?.[9]} />
             <MatchupCard team1={scoresData?.[10]} team2={scoresData?.[11]} />
-            {scoresData ? JSON.stringify(scoresData, null, 2) : "Loading..."}
+            {/* {scoresData ? JSON.stringify(scoresData, null, 2) : "Loading..."} */}
         </div>
     );
 }
