@@ -8,11 +8,18 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar"
 import UserRecordDrawer from '@/app/userRecordDrawer';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import MatchupStatsDrawer from '@/app/matchupStatsDrawer';
 
 
 const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
     const [open, setOpen] = useState(false);
-    const [drawerTeam, setDrawerTeam] = useState();
+    const [openStats, setOpenStats] = useState(false);
+    const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
+    const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
+    const [drawerTeam, setDrawerTeam] = useState<any | null>(null);
+    // ... existing code ...
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
         return <div>Loading matchups...</div>;
@@ -30,9 +37,16 @@ const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
         console.log(drawerTeam);
     }
 
+    const handleOpenStatsDrawer = () => {
+        setOpenStats(true);
+        setTeamOneStats(team1);
+        setTeamTwoStats(team2);
+    }
+
     return (
         <>
             <UserRecordDrawer open={open} setOpen={setOpen} drawerTeam={drawerTeam} />
+            <MatchupStatsDrawer open={openStats} setOpen={setOpenStats} teamOne={teamOneStats} teamTwo={teamTwoStats} />
             <div className="flex justify-evenly">
                 <div className="w-full flex items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200">
                     <div className="sm:w-[50%] w-[45%]">
@@ -49,7 +63,8 @@ const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
                             <span className="text-xl font-bold">{team1.score}</span>
                         </div>
                     </div>
-                    <div className="text-sm sm:text-xl font-bold sm:mx-6">VS</div>
+                    <Button onClick={handleOpenStatsDrawer}>View Stats</Button>
+                    {/* <Link href={`/matchup/${team1.roster_id}/${team2.roster_id}`} className="text-sm sm:text-xl font-bold sm:mx-6">VS</Link> */}
                     <div className="sm:w-[50%] w-[45%]">
                         <div className="flex flex-col-reverse sm:flex-row justify-end">
                             <span className="text-xl font-bold">{team2.score}</span>
