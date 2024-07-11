@@ -37,7 +37,6 @@ export default function Scoreboard() {
             <MatchupCard team1={scoresData?.[6]} team2={scoresData?.[7]} withVsLink />
             <MatchupCard team1={scoresData?.[8]} team2={scoresData?.[9]} withVsLink />
             <MatchupCard team1={scoresData?.[10]} team2={scoresData?.[11]} withVsLink />
-            {/* {scoresData ? JSON.stringify(scoresData, null, 2) : "Loading..."} */}
         </div>
     );
 }
