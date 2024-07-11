@@ -31,12 +31,12 @@ export default function Scoreboard() {
 
     return (
         <div className="">
-            <MatchupCard team1={scoresData?.[0]} team2={scoresData?.[1]} />
-            <MatchupCard team1={scoresData?.[2]} team2={scoresData?.[3]} />
-            <MatchupCard team1={scoresData?.[4]} team2={scoresData?.[5]} />
-            <MatchupCard team1={scoresData?.[6]} team2={scoresData?.[7]} />
-            <MatchupCard team1={scoresData?.[8]} team2={scoresData?.[9]} />
-            <MatchupCard team1={scoresData?.[10]} team2={scoresData?.[11]} />
+            <MatchupCard team1={scoresData?.[0]} team2={scoresData?.[1]} withVsLink />
+            <MatchupCard team1={scoresData?.[2]} team2={scoresData?.[3]} withVsLink />
+            <MatchupCard team1={scoresData?.[4]} team2={scoresData?.[5]} withVsLink />
+            <MatchupCard team1={scoresData?.[6]} team2={scoresData?.[7]} withVsLink />
+            <MatchupCard team1={scoresData?.[8]} team2={scoresData?.[9]} withVsLink />
+            <MatchupCard team1={scoresData?.[10]} team2={scoresData?.[11]} withVsLink />
             {/* {scoresData ? JSON.stringify(scoresData, null, 2) : "Loading..."} */}
         </div>
     );
