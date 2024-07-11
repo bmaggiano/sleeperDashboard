@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import { valueAtom, leagueAtom, weekAtom } from "@/app/atoms/atom";
 import { getMatchups } from "./utils";
 import MatchupCard from "@/components/ui/matchupCard";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Matchup {
     matchup_id: string;
@@ -25,7 +26,7 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
             <MatchupCard
                 key={i}
                 team1={matchups[i]}
-                team2={matchups[i + 1]}
+                team2={matchups[i + 1] || {}}
                 withVsLink
             />
         );
@@ -34,17 +35,35 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
 }
 
 export default function Scoreboard() {
+    const { toast } = useToast();
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
     const [scoresData, setScoresData] = useState<Matchup[] | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchData() {
             const data = await getMatchups({ weekIndex, leagueId });
-            setScoresData(data);
+            if (data.error) {
+                setError(data.error);
+                toast({
+                    title: "Error",
+                    description: data.error,
+                });
+                return;
+            } else {
+                setScoresData(data);
+                setError(null);
+            }
         }
         fetchData();
     }, [weekIndex, leagueId]);
+
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
+
+    if (!scoresData) return null;
 
     return (
         <div>
