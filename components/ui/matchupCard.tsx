@@ -9,9 +9,8 @@ import {
 } from "@/components/ui/avatar"
 import UserRecordDrawer from '@/app/userRecordDrawer';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import MatchupStatsDrawer from '@/app/matchupStatsDrawer';
-
+import MatchupCardSkeleton from '@/components/matchupCardSkeleton';
 
 const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, withVsLink: boolean }) => {
     const [open, setOpen] = useState(false);
@@ -22,7 +21,7 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
     // ... existing code ...
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
-        return <div>Loading matchups...</div>;
+        return <MatchupCardSkeleton />
     }
 
     const getResult = (score1: number, score2: number) => {
@@ -34,7 +33,6 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
     const handleOpenDrawer = (team: any) => {
         setOpen(true);
         setDrawerTeam(team);
-        console.log(drawerTeam);
     }
 
     const handleOpenStatsDrawer = () => {
