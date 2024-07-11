@@ -16,6 +16,23 @@ interface Matchup {
     }
 }
 
+const renderMatchupCards = (matchups: Matchup[] | null) => {
+    if (!matchups) return null;
+
+    const cards = [];
+    for (let i = 0; i < matchups.length; i += 2) {
+        cards.push(
+            <MatchupCard
+                key={i}
+                team1={matchups[i]}
+                team2={matchups[i + 1]}
+                withVsLink
+            />
+        );
+    }
+    return cards;
+}
+
 export default function Scoreboard() {
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
@@ -30,13 +47,8 @@ export default function Scoreboard() {
     }, [weekIndex, leagueId]);
 
     return (
-        <div className="">
-            <MatchupCard team1={scoresData?.[0]} team2={scoresData?.[1]} withVsLink />
-            <MatchupCard team1={scoresData?.[2]} team2={scoresData?.[3]} withVsLink />
-            <MatchupCard team1={scoresData?.[4]} team2={scoresData?.[5]} withVsLink />
-            <MatchupCard team1={scoresData?.[6]} team2={scoresData?.[7]} withVsLink />
-            <MatchupCard team1={scoresData?.[8]} team2={scoresData?.[9]} withVsLink />
-            <MatchupCard team1={scoresData?.[10]} team2={scoresData?.[11]} withVsLink />
+        <div>
+            {renderMatchupCards(scoresData)}
         </div>
     );
 }
