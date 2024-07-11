@@ -21,7 +21,7 @@ export default function UserRecordDrawer({ open, setOpen, drawerTeam }: { open: 
                             <DrawerDescription className="text-left">@{drawerTeam.user.display_name}</DrawerDescription>
                             <DrawerDescription>Record: {drawerTeam.settings.wins} - {drawerTeam.settings.losses} - {drawerTeam.settings.ties}</DrawerDescription>
                             <DrawerDescription>PF: {drawerTeam.settings.fpts}</DrawerDescription>
-                            <DrawerDescription>{drawerTeam.roster_id}PA: {drawerTeam.settings.fpts_against}</DrawerDescription>
+                            <DrawerDescription>PA: {drawerTeam.settings.fpts_against}</DrawerDescription>
                         </div>
                     </DrawerHeader>
 
