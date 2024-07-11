@@ -13,7 +13,7 @@ import Link from 'next/link';
 import MatchupStatsDrawer from '@/app/matchupStatsDrawer';
 
 
-const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
+const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, withVsLink: boolean }) => {
     const [open, setOpen] = useState(false);
     const [openStats, setOpenStats] = useState(false);
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
@@ -63,8 +63,8 @@ const MatchupCard = ({ team1, team2 }: { team1: any, team2: any }) => {
                             <span className="text-xl font-bold">{team1.score}</span>
                         </div>
                     </div>
-                    <Button onClick={handleOpenStatsDrawer}>View Stats</Button>
-                    {/* <Link href={`/matchup/${team1.roster_id}/${team2.roster_id}`} className="text-sm sm:text-xl font-bold sm:mx-6">VS</Link> */}
+                    {withVsLink ? <Button variant={"link"} onClick={handleOpenStatsDrawer}>VS</Button>
+                        : <h1>VS</h1>}
                     <div className="sm:w-[50%] w-[45%]">
                         <div className="flex flex-col-reverse sm:flex-row justify-end">
                             <span className="text-xl font-bold">{team2.score}</span>
