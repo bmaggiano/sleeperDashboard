@@ -8,7 +8,7 @@ import { weekAtom } from "./atoms/atom";
 import MatchupCard from "@/components/ui/matchupCard";
 
 const getPlayerInfo = (playerId: string): Player => {
-    return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player' };
+    return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player', position: null, team: null };
 }
 
 interface PlayerMatchupCardsProps {
@@ -17,20 +17,26 @@ interface PlayerMatchupCardsProps {
 }
 
 function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
+    if (!teamOne.starters || !teamTwo.starters) return null;
+
     return (
         <div className="flex flex-col space-y-1">
             {teamOne.starters.map((starter, index) => (
                 <div key={index} className="flex justify-evenly items-center ring-1 ring-gray-200 rounded-md p-2">
                     <div className="flex-1 flex flex-col justify-center items-start sm:items-center">
-                        <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).full_name}: {teamOne.starters_points[index]}</h1>
+                        <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).full_name}: {teamOne.starters_points![index]}</h1>
                         <span className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(starter).team}</span>
                     </div>
                     <div className="flex-initial flex justify-center items-center">
                         <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).position}</h1>
                     </div>
                     <div className="flex-1 flex flex-col justify-center items-end sm:items-center">
-                        <h1 className="text-xs sm:text-sm">{getPlayerInfo(teamTwo.starters[index]).full_name}: {teamTwo.starters_points[index]}</h1>
-                        <span className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</span>
+                        {teamTwo.starters && (
+                            <>
+                                <h1 className="text-xs sm:text-sm">{getPlayerInfo(teamTwo.starters[index]).full_name}: {teamTwo.starters_points![index]}</h1>
+                                <span className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</span>
+                            </>
+                        )}
                     </div>
                 </div>
             ))}
@@ -39,17 +45,17 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
 }
 
 interface Player {
-    full_name: string;
-    position: string;
-    team: string;
+    full_name: string | null;
+    position: string | null;
+    team: string | null;
 }
 
 interface Team {
     user: {
-        display_name: string;
+        display_name: string | null;
     };
-    starters: string[];
-    starters_points: number[];
+    starters: string[] | null;
+    starters_points: number[] | null;
 }
 
 interface UserRecordDrawerProps {
@@ -62,6 +68,8 @@ interface UserRecordDrawerProps {
 const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ open, setOpen, teamOne, teamTwo }) => {
     const [week] = useAtom(weekAtom);
     if (!teamOne || !teamTwo) return null;
+    if (!teamOne.starters || !teamTwo.starters) return null;
+
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent className="max-h-screen flex flex-col">
