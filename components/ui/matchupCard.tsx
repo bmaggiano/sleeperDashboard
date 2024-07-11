@@ -71,7 +71,7 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
                                 <span className="font-bold text-sm sm:text-lg truncate text-right">{team2.user.metadata.team_name || team2.user.display_name}</span>
                                 <span className="inline-flex items-center justify-end text-sm text-gray-400 text-right truncate">{team2.points} &nbsp; {getResult(team2.points, team1.points)}</span>
                             </div>
-                            <Avatar onClick={() => handleOpenDrawer(team2)} className='mr-4 sm:self-center self-end'>
+                            <Avatar onClick={() => handleOpenDrawer(team2)} className='mr-4 sm:self-center self-end cursor-pointer'>
                                 <AvatarImage src={`https://sleepercdn.com/avatars/thumbs/${team2.user.avatar}`} alt={`${team2.user.metadata.team_name} avatar`} />
                                 <AvatarFallback>{team2.user.display_name.charAt(0).toUpperCase() || ""}</AvatarFallback>
                             </Avatar>
