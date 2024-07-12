@@ -18,3 +18,4 @@ This app will serve as a baseline to build new features related to the Sleeper f
 - Sleeper API (fantasy football app)
 - OpenAI
 - Vercel
+- MagicUI
