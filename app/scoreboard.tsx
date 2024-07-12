@@ -20,9 +20,11 @@ interface Matchup {
 }
 
 const renderSkeletons = () => {
-    return Array.from({ length: 8 }, (_, i) => <div>
-        <MatchupCardSkeleton key={i} />
-    </div>)
+    return Array.from({ length: 8 }, (_, i) => (
+        <div key={`skeleton-${i}`}>
+            <MatchupCardSkeleton />
+        </div>
+    ));
 }
 
 const weeks = Array.from({ length: 17 }, (_, i) => ({ index: i + 1, week: `Week ${i + 1}` }));
