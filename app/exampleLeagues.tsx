@@ -101,8 +101,6 @@ export function MarqueeDemo() {
         setLeague(leagueId);
         const leagueName = await getLeagueName(leagueId);
         setLeagueName(leagueName);
-        console.log("done");
-        console.log(leagueId);
     };
     return (
         <div className="my-2 relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg">
