@@ -4,6 +4,7 @@ import { leagueNameAtom, leagueAtom, weekAtom } from "@/app/atoms/atom";
 import { getMatchups } from "./utils";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Combobox } from "@/components/ui/combobox";
+import MatchupCardSkeleton from "@/components/matchupCardSkeleton";
 
 interface Matchup {
     matchup_id: string;
@@ -17,10 +18,16 @@ interface Matchup {
     }
 }
 
+const renderSkeletons = () => {
+    return Array.from({ length: 8 }, (_, i) => <div>
+        <MatchupCardSkeleton key={i} />
+    </div>)
+}
+
 const weeks = Array.from({ length: 17 }, (_, i) => ({ index: i + 1, week: `Week ${i + 1}` }));
 
 const renderMatchupCards = (matchups: Matchup[] | null) => {
-    if (!matchups) return null;
+    if (!matchups) return <MatchupCardSkeleton />;
 
     const cards = [];
     for (let i = 0; i < matchups.length; i += 2) {
@@ -28,7 +35,7 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
             <MatchupCard
                 key={i}
                 team1={matchups[i]}
-                team2={matchups[i + 1] || {}}
+                team2={matchups[i + 1] || null}
                 withVsLink
             />
         );
@@ -60,7 +67,7 @@ export default function Scoreboard() {
         return <div className="text-red-500">{error}</div>;
     }
 
-    if (!scoresData) return null;
+    if (!scoresData) return renderSkeletons();
 
     return (
         <div>
