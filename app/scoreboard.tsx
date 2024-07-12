@@ -3,7 +3,6 @@ import { useAtom } from "jotai";
 import { leagueNameAtom, leagueAtom, weekAtom } from "@/app/atoms/atom";
 import { getMatchups } from "./utils";
 import MatchupCard from "@/components/ui/matchupCard";
-import { useToast } from "@/components/ui/use-toast";
 import { Combobox } from "@/components/ui/combobox";
 
 interface Matchup {
@@ -38,7 +37,6 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
 }
 
 export default function Scoreboard() {
-    const { toast } = useToast();
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
@@ -49,11 +47,6 @@ export default function Scoreboard() {
         async function fetchData() {
             const data = await getMatchups({ weekIndex, leagueId });
             if (data.error) {
-                setError(data.error);
-                toast({
-                    title: "Error",
-                    description: data.error,
-                });
                 return;
             } else {
                 setScoresData(data);
