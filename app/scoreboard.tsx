@@ -5,6 +5,7 @@ import { getMatchups } from "./utils";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Combobox } from "@/components/ui/combobox";
 import MatchupCardSkeleton from "@/components/matchupCardSkeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Matchup {
     matchup_id: string;
@@ -44,28 +45,27 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
 }
 
 export default function Scoreboard() {
+    const { toast } = useToast();
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
     const [scoresData, setScoresData] = useState<Matchup[] | null>(null);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchData() {
             const data = await getMatchups({ weekIndex, leagueId });
             if (data.error) {
+                toast({
+                    title: "Error",
+                    description: data.error,
+                })
                 return;
             } else {
                 setScoresData(data);
-                setError(null);
             }
         }
         fetchData();
     }, [weekIndex, leagueId]);
-
-    if (error) {
-        return <div className="text-red-500">{error}</div>;
-    }
 
     if (!scoresData) return renderSkeletons();
 
