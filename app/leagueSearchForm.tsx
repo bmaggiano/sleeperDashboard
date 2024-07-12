@@ -1,26 +1,23 @@
 "use client";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAtom } from "jotai";
 import { valueAtom, leagueNameAtom, leagueAtom } from "./atoms/atom";
 import { getLeagueName } from "./utils";
 import { useToast } from "@/components/ui/use-toast";
-import { FiArrowRight } from "react-icons/fi";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 
 
 export default function LeagueSearchForm() {
     const { toast } = useToast();
-    const [value, setValue] = useAtom(valueAtom);
     const [localLeagueId, setLocalLeagueId] = useState<string>("");
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [leagueId, setLeagueId] = useAtom(leagueAtom);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setLeagueId(localLeagueId); // Set the leagueId atom
+        setLeagueId(localLeagueId);
         const response = await getLeagueName(localLeagueId);
         if (response.error) {
             toast({
