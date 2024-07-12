@@ -79,5 +79,7 @@ export const getMatchups = async ({ weekIndex, leagueId }: { weekIndex: number, 
     const combinedUserAndRosterInfo = combineUserAndRosterInfo(userInfo, rosterInfo);
     const finalData = combineRosterAndMatchupInfo(combinedUserAndRosterInfo, matchupInfo);
 
+    finalData.sort((a: any, b: any) => a.matchup_id - b.matchup_id);
+
     return finalData;
 }
