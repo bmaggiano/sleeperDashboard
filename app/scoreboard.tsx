@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
-import { valueAtom, leagueAtom, weekAtom } from "@/app/atoms/atom";
+import { leagueNameAtom, leagueAtom, weekAtom } from "@/app/atoms/atom";
 import { getMatchups } from "./utils";
 import MatchupCard from "@/components/ui/matchupCard";
 import { useToast } from "@/components/ui/use-toast";
+import { Combobox } from "@/components/ui/combobox";
 
 interface Matchup {
     matchup_id: string;
@@ -16,6 +17,8 @@ interface Matchup {
         },
     }
 }
+
+const weeks = Array.from({ length: 17 }, (_, i) => ({ index: i + 1, week: `Week ${i + 1}` }));
 
 const renderMatchupCards = (matchups: Matchup[] | null) => {
     if (!matchups) return null;
@@ -36,6 +39,7 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
 
 export default function Scoreboard() {
     const { toast } = useToast();
+    const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
     const [scoresData, setScoresData] = useState<Matchup[] | null>(null);
@@ -67,6 +71,10 @@ export default function Scoreboard() {
 
     return (
         <div>
+            <div className="pt-4 pb-2 flex justify-between items-center">
+                <h1 className="font-medium">Matchups - {leagueName}</h1>
+                <Combobox data={weeks} />
+            </div>
             {renderMatchupCards(scoresData)}
         </div>
     );
