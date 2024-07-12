@@ -1,5 +1,7 @@
 # Sleeper Dashboard Mock
 
+![alt text](image.png)
+
 ## Deployed with Vercel
 
 https://sleeper-dashboard.vercel.app/
