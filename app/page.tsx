@@ -13,7 +13,7 @@ export default function Home() {
   const [leagueId] = useAtom(leagueAtom);
 
   return (
-    <div className="p-2 sm:p-4 max-w-2xl mx-auto">
+    <div className="p-2 sm:p-4 max-w-3xl mx-auto">
       <Header />
       <Separator />
       <RecentSearches />
