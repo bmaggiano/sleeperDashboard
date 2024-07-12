@@ -54,8 +54,8 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
                                 <AvatarFallback>{team1.user.display_name.charAt(0).toUpperCase() || ""}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col mr-4">
-                                <span className="font-bold text-sm sm:text-lg truncate">{team1.user.metadata.team_name || team1.user.display_name}</span>
                                 <span className="text-xs sm:text-sm text-gray-400 truncate">@{team1.user.display_name}</span>
+                                <span className="font-bold text-sm sm:text-lg truncate">{team1.user.metadata.team_name || team1.user.display_name}</span>
                                 <span className="inline-flex items-center text-sm text-gray-400 truncate">{team1.points} &nbsp; {getResult(team1.points, team2.points)}</span>
                             </div>
                             <span className="text-xl font-bold">{team1.score}</span>
@@ -63,14 +63,14 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
                     </div>
                     <div className='sm:w-[5%] w-[10%]'>
                         {withVsLink ? <Button variant={"link"} onClick={handleOpenStatsDrawer}>VS</Button>
-                            : <h1>VS</h1>}
+                            : <h1 className='text-center pl-1'>VS</h1>}
                     </div>
                     <div className="sm:w-[40%] w-[45%]">
                         <div className="flex flex-col-reverse sm:flex-row justify-end">
                             <span className="text-xl font-bold">{team2.score}</span>
                             <div className="flex flex-col ml-4 mr-4">
-                                <span className="font-bold text-sm sm:text-lg truncate text-right">{team2.user.metadata.team_name || team2.user.display_name}</span>
                                 <span className="text-xs sm:text-sm text-gray-400 text-right truncate">@{team2.user.display_name}</span>
+                                <span className="font-bold text-sm sm:text-lg truncate text-right">{team2.user.metadata.team_name || team2.user.display_name}</span>
                                 <span className="inline-flex items-center justify-end text-sm text-gray-400 text-right truncate">{team2.points} &nbsp; {getResult(team2.points, team1.points)}</span>
                             </div>
                             <Avatar onClick={() => handleOpenDrawer(team2)} className='mr-4 sm:self-center self-end cursor-pointer'>
