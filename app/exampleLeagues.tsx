@@ -36,18 +36,18 @@ const leagues = [
         img: "https://sleepercdn.com/avatars/thumbs/03c86c21e887fadf1b652885694af7cc",
     },
     {
-        name: "League of Legends",
-        description: "8 Team, 3 Man Keeper",
-        leagueId: "992142653368156160",
+        name: "Fantasy Fudus ‘23",
+        description: "12 Team Full PPR",
+        leagueId: "990360731344293888",
         body: "1QB, 2RB, 2WR, 1TE, 1WRT, 1K, 1DEF",
-        img: "https://sleepercdn.com/images/v2/icons/league/nfl/orange.png",
+        img: "https://sleepercdn.com/avatars/thumbs/42f817ab2dc95dd29634cd84553902ad",
     },
     {
-        name: "NHAT Remix 2",
-        description: "10 Team Superflex",
-        leagueId: "787735871108562944",
-        body: "2QB, 2RB, 2WR, 1TE, 2WRT",
-        img: "https://sleepercdn.com/avatars/thumbs/bfa3b179c17aa4264282a743e66218bf",
+        name: "TDP FF",
+        description: "12 Team Superflex Half PPR",
+        leagueId: "992179723217981440",
+        body: "1QB, 2RB, 2WR, 1TE, 2WRT, 1K, 1DEF",
+        img: "https://sleepercdn.com/avatars/thumbs/58f6c24fd240df16ed3d57054285b0ef",
     },
 ];
 
