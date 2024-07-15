@@ -5,6 +5,7 @@ import Marquee from "@/components/magicui/marquee";
 import { useAtom } from "jotai";
 import { leagueAtom, leagueNameAtom } from "./atoms/atom";
 import { getLeagueName } from "./utils";
+import { useRouter } from "next/navigation";
 
 const leagues = [
     {
@@ -95,12 +96,11 @@ const ReviewCard = ({
 };
 
 export function MarqueeDemo() {
+    const router = useRouter();
     const [league, setLeague] = useAtom(leagueAtom);
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const handleClick = async (leagueId: string) => {
-        setLeague(leagueId);
-        const leagueName = await getLeagueName(leagueId);
-        setLeagueName(leagueName);
+        router.push(`/${leagueId}`);
     };
     return (
         <div className="my-2 relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg">
