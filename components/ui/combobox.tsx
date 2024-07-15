@@ -1,6 +1,4 @@
-"use client"
-"use client"
-
+"use client";
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -20,8 +18,10 @@ import {
 import { CommandList } from "cmdk";
 import { useAtom } from "jotai";
 import { valueAtom, weekAtom } from "@/app/atoms/atom";
+import { useRouter } from "next/navigation";
 
-export function Combobox({ data }: { data: { index: number, week: string }[] }) {
+export function Combobox({ data, leagueId }: { data: { index: number, week: string }[], leagueId: string }) {
+    const router = useRouter();
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = useAtom(valueAtom);
     const [weekIndex, setWeekIndex] = useAtom(weekAtom);
@@ -52,9 +52,9 @@ export function Combobox({ data }: { data: { index: number, week: string }[] }) 
                                     key={item.index}
                                     value={item.week}
                                     onSelect={() => {
-                                        setWeekIndex(item.index)
+                                        setWeekIndex(item.index);
                                         setValue(item.week === value ? "" : item.week);
-                                        setOpen(false);
+                                        router.push(`/${leagueId}/${item.index}`);
                                     }}
                                 >
                                     <Check
