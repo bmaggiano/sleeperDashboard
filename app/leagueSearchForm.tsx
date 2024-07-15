@@ -6,11 +6,13 @@ import { valueAtom, leagueNameAtom, leagueAtom } from "./atoms/atom";
 import { getLeagueName } from "./utils";
 import { useToast } from "@/components/ui/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
 
 
 
 export default function LeagueSearchForm() {
     const { toast } = useToast();
+    const router = useRouter();
     const [localLeagueId, setLocalLeagueId] = useState<string>("");
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [leagueId, setLeagueId] = useAtom(leagueAtom);
@@ -28,7 +30,8 @@ export default function LeagueSearchForm() {
         } else {
             setLeagueName(response);
             const recentSearches = JSON.parse(localStorage.getItem("recentSearches") || "[]");
-            localStorage.setItem("recentSearches", JSON.stringify([...recentSearches, localLeagueId]));
+            localStorage.setItem("recentSearches", JSON.stringify([...recentSearches, localLeagueId]))
+            router.push(`/${localLeagueId}`);
         }
     }
 
