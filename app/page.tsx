@@ -17,9 +17,7 @@ export default function Home() {
       <Header />
       <Separator />
       <RecentSearches />
-      {leagueId && leagueName ?
-        <Scoreboard />
-        : <MarqueeDemo />}
+      <MarqueeDemo />
       <LeagueSearchForm />
     </div>
   );
