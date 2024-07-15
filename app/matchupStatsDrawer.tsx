@@ -1,8 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import playerIds from "@/app/json/playerIds.json";
-import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { weekAtom } from "./atoms/atom";
 import MatchupCard from "@/components/ui/matchupCard";
@@ -14,6 +12,27 @@ const getPlayerInfo = (playerId: string): Player => {
 interface PlayerMatchupCardsProps {
     teamOne: Team;
     teamTwo: Team;
+}
+
+interface Player {
+    full_name: string | null;
+    position: string | null;
+    team: string | null;
+}
+
+interface Team {
+    user: {
+        display_name: string | null;
+    };
+    starters: string[] | null;
+    starters_points: number[] | null;
+}
+
+interface UserRecordDrawerProps {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    teamOne: Team | null;
+    teamTwo: Team | null;
 }
 
 function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
@@ -42,27 +61,6 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
             ))}
         </div>
     )
-}
-
-interface Player {
-    full_name: string | null;
-    position: string | null;
-    team: string | null;
-}
-
-interface Team {
-    user: {
-        display_name: string | null;
-    };
-    starters: string[] | null;
-    starters_points: number[] | null;
-}
-
-interface UserRecordDrawerProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    teamOne: Team | null;
-    teamTwo: Team | null;
 }
 
 const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ open, setOpen, teamOne, teamTwo }) => {

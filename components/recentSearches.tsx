@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { leagueAtom, leagueNameAtom } from "@/app/atoms/atom";
 import { Button } from "./ui/button";
-import { getLeagueName, getMatchups } from "@/app/utils";
+import { getLeagueName } from "@/app/utils";
 
 export default function RecentSearches() {
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
