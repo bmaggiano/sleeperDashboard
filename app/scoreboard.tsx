@@ -46,37 +46,16 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
     return cards;
 }
 
-export default function Scoreboard() {
+export default function Scoreboard({ scoresData }: { scoresData: Matchup[] | null }) {
     const { toast } = useToast();
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const [weekIndex] = useAtom(weekAtom);
     const [leagueId] = useAtom(leagueAtom);
-    const [scoresData, setScoresData] = useState<Matchup[] | null>(null);
-
-    useEffect(() => {
-        async function fetchData() {
-            const data = await getMatchups({ weekIndex, leagueId });
-            if (data.error) {
-                toast({
-                    title: "Error",
-                    description: data.error,
-                })
-                return;
-            } else {
-                setScoresData(data);
-            }
-        }
-        fetchData();
-    }, [weekIndex, leagueId]);
 
     if (!scoresData) return renderSkeletons();
 
     return (
         <div>
-            <div className="pt-4 pb-2 flex justify-between items-center">
-                <h1 className="font-medium">Matchups - {leagueName}</h1>
-                <Combobox data={weeks} />
-            </div>
             {renderMatchupCards(scoresData)}
         </div>
     );
