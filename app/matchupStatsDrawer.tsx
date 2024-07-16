@@ -46,7 +46,7 @@ const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ open, setOpen, team
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent className="max-h-screen flex flex-col">
-                <div className="flex-1 overflow-y-auto">
+                <div className="px-2 pb-1 flex-1 overflow-y-auto">
                     <div className="mx-auto w-full max-w-3xl">
                         <DrawerHeader className="flex">
                             <DrawerTitle>
