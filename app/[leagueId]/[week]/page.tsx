@@ -25,7 +25,7 @@ export async function generateMetadata(
             description: `Check out the matchups for ${leagueName} for week ${week}.`,
             images: [
                 {
-                    url: `/path/to/custom/image/${id}.png`,
+                    url: `/image.png`,
                     width: 800,
                     height: 600,
                     alt: `Matchups for ${leagueName}`,
