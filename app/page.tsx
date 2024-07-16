@@ -1,6 +1,4 @@
 "use client";
-import { useAtom } from "jotai";
-import { leagueNameAtom, leagueAtom } from "./atoms/atom";
 import RecentSearches from "@/components/recentSearches";
 import { MarqueeDemo } from "./exampleLeagues";
 import LeagueSearchForm from "./leagueSearchForm";
