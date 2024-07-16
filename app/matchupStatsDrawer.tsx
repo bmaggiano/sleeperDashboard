@@ -3,36 +3,11 @@ import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerT
 import playerIds from "@/app/json/playerIds.json";
 import { useAtom } from "jotai";
 import { weekAtom } from "./atoms/atom";
+import { Player, PlayerMatchupCardsProps, UserRecordDrawerProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
 
 const getPlayerInfo = (playerId: string): Player => {
     return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player', position: null, team: null };
-}
-
-interface PlayerMatchupCardsProps {
-    teamOne: Team;
-    teamTwo: Team;
-}
-
-interface Player {
-    full_name: string | null;
-    position: string | null;
-    team: string | null;
-}
-
-interface Team {
-    user: {
-        display_name: string | null;
-    };
-    starters: string[] | null;
-    starters_points: number[] | null;
-}
-
-interface UserRecordDrawerProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-    teamOne: Team | null;
-    teamTwo: Team | null;
 }
 
 function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
