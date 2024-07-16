@@ -1,7 +1,37 @@
-// page.tsx
+// pages/[leagueId]/page.tsx
 import { getLeagueName } from "../utils";
 import ScoresComponent from "./scoresServer";
 import { Combobox } from "@/components/ui/combobox";
+import { Metadata, ResolvingMetadata } from 'next';
+
+type Props = {
+    params: { leagueId: string }
+}
+
+export async function generateMetadata(
+    { params }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const id = params.leagueId;
+    const leagueName = await getLeagueName(id);
+
+    return {
+        title: `Matchups - ${leagueName}`,
+        description: `Check out the matchups for ${leagueName}.`,
+        openGraph: {
+            title: `Matchups - ${leagueName}`,
+            description: `Check out the matchups for ${leagueName}.`,
+            images: [
+                {
+                    url: `/path/to/custom/image/${id}.png`,
+                    width: 800,
+                    height: 600,
+                    alt: `Matchups for ${leagueName}`,
+                },
+            ],
+        },
+    };
+}
 
 export default function Page({ params }: { params: { leagueId: string } }) {
     const { leagueId } = params;
