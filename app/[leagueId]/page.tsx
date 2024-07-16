@@ -23,7 +23,7 @@ export async function generateMetadata(
             description: `Check out the matchups for ${leagueName}.`,
             images: [
                 {
-                    url: `/path/to/custom/image/${id}.png`,
+                    url: `https://play-lh.googleusercontent.com/L5sDy5zFKKLLMndpR7wJfD3aum4w0FVL_rRK6W1t9T5-d4BYc-4A7LTXa2nGeP62TCo=w480-h960-rw`,
                     width: 800,
                     height: 600,
                     alt: `Matchups for ${leagueName}`,
