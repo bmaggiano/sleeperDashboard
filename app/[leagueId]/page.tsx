@@ -23,7 +23,7 @@ export async function generateMetadata(
             description: `Check out the matchups for ${leagueName}.`,
             images: [
                 {
-                    url: `image.png`,
+                    url: `/image.png`,
                     width: 800,
                     height: 600,
                     alt: `Matchups for ${leagueName}`,
