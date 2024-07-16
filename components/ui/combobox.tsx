@@ -18,13 +18,25 @@ import {
 import { CommandList } from "cmdk";
 import { useAtom } from "jotai";
 import { valueAtom, weekAtom } from "@/app/atoms/atom";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Combobox({ data, leagueId }: { data: { index: number, week: string }[], leagueId: string }) {
     const router = useRouter();
+    const pathname = usePathname();
     const [open, setOpen] = React.useState(false);
     const [value, setValue] = useAtom(valueAtom);
     const [weekIndex, setWeekIndex] = useAtom(weekAtom);
+
+    React.useEffect(() => {
+        const weekFromUrl = parseInt(pathname.split("/")[2], 10);
+        if (!isNaN(weekFromUrl)) {
+            const weekItem = data.find(item => item.index === weekFromUrl);
+            if (weekItem) {
+                setWeekIndex(weekFromUrl);
+                setValue(weekItem.week);
+            }
+        }
+    }, []);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
