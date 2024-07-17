@@ -17,7 +17,6 @@ export default function MatchupPage() {
             const leagueIdStr = Array.isArray(leagueId) ? leagueId[0] : leagueId;
             const matchupId = Array.isArray(matchup) ? matchup[0] : matchup;
             const data = await getMatchupsWithMatchupID({ weekIndex, leagueId: leagueIdStr, matchupId });
-            console.log(data);
             setTeamOne(data[0]);
             setTeamTwo(data[1]);
         }
@@ -25,9 +24,6 @@ export default function MatchupPage() {
     }, []);
     return (
         <div>
-            <h1>Matchup {matchup}</h1>
-            <p>Week {week}</p>
-            <p>League {leagueId}</p>
             <UserRecordDrawer teamOne={teamOne} teamTwo={teamTwo} />
         </div>
     )
