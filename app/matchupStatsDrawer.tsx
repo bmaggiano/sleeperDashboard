@@ -38,33 +38,27 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
     )
 }
 
-const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ open, setOpen, teamOne, teamTwo }) => {
+const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo }) => {
     const [week] = useAtom(weekAtom);
     if (!teamOne || !teamTwo) return null;
     if (!teamOne.starters || !teamTwo.starters) return null;
 
     return (
-        <Drawer open={open} onOpenChange={setOpen}>
-            <DrawerContent className="max-h-screen flex flex-col">
-                <div className="px-2 pb-1 flex-1 overflow-y-auto">
-                    <div className="mx-auto w-full max-w-3xl">
-                        <DrawerHeader className="flex">
-                            <DrawerTitle>
-                                Matchup Stats - Week {week}
-                            </DrawerTitle>
-                        </DrawerHeader>
-
-                        <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
-                        <PlayerMatchupCards teamOne={teamOne} teamTwo={teamTwo} />
+        <div className="max-h-screen flex flex-col">
+            <div className="px-2 pb-1 flex-1 overflow-y-auto">
+                <div className="mx-auto w-full max-w-3xl">
+                    <div className="flex">
+                        <div>
+                            Matchup Stats - Week {week}
+                        </div>
                     </div>
+
+                    <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
+                    <PlayerMatchupCards teamOne={teamOne} teamTwo={teamTwo} />
                 </div>
-                <DrawerFooter className="max-w-3xl flex justify-center mx-auto w-full">
-                    <DrawerClose asChild>
-                        <Button className="w-full">Close</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
+            </div>
+
+        </div>
     )
 }
 

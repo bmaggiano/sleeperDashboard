@@ -18,8 +18,6 @@ export interface PlayerMatchupCardsProps {
 }
 
 export interface UserRecordDrawerProps {
-    open: boolean;
-    setOpen: (open: boolean) => void;
     teamOne: Team | null;
     teamTwo: Team | null;
 }

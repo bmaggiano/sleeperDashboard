@@ -66,6 +66,25 @@ const combineRosterAndMatchupInfo = (rosterInfo: any, matchupInfo: any) => {
     });
 }
 
+export const getMatchupsWithMatchupID = async ({ weekIndex, leagueId, matchupId }: { weekIndex: number, leagueId: string, matchupId: string }) => {
+    const userInfo = await getUsersInfo(leagueId);
+    if (userInfo?.error) return userInfo;
+
+    const rosterInfo = await getRosterInfo(leagueId);
+    if (rosterInfo?.error) return rosterInfo;
+
+    const matchupInfo = await getMatchupInfo(leagueId, weekIndex);
+    if (matchupInfo?.error) return matchupInfo;
+
+    const combinedUserAndRosterInfo = combineUserAndRosterInfo(userInfo, rosterInfo);
+    const finalData = combineRosterAndMatchupInfo(combinedUserAndRosterInfo, matchupInfo);
+
+    const matchupIdNumber = Number(matchupId);
+    const filteredData = finalData.filter((matchup: any) => matchup.matchup_id === matchupIdNumber);
+
+    return filteredData;
+}
+
 export const getMatchups = async ({ weekIndex, leagueId }: { weekIndex: number, leagueId: string }) => {
     const userInfo = await getUsersInfo(leagueId);
     if (userInfo?.error) return userInfo;

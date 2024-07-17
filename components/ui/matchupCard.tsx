@@ -7,10 +7,12 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import UserRecordDrawer from '@/app/userRecordDrawer';
 import { Button } from '@/components/ui/button';
 import MatchupStatsDrawer from '@/app/matchupStatsDrawer';
 import MatchupCardSkeleton from '@/components/matchupCardSkeleton';
+import { useRouter } from "next/navigation";
+import { useAtom } from "jotai";
+import { weekAtom } from "@/app/atoms/atom";
 
 const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, withVsLink: boolean }) => {
     const [open, setOpen] = useState(false);
@@ -18,6 +20,8 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
     const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
     const [drawerTeam, setDrawerTeam] = useState<any | null>(null);
+    const [weekIndex] = useAtom(weekAtom);
+    const router = useRouter();
     // ... existing code ...
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
@@ -36,20 +40,18 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
     }
 
     const handleOpenStatsDrawer = () => {
-        setOpenStats(true);
         setTeamOneStats(team1);
         setTeamTwoStats(team2);
+        router.push(`/${team1.league_id}/${weekIndex}/${team1.matchup_id}`);
     }
 
     return (
         <>
-            <UserRecordDrawer open={open} setOpen={setOpen} drawerTeam={drawerTeam} />
-            <MatchupStatsDrawer open={openStats} setOpen={setOpenStats} teamOne={teamOneStats} teamTwo={teamTwoStats} />
             <div className="flex justify-evenly">
                 <div className="w-full flex items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200">
                     <div className="sm:w-[40%] w-[45%]">
                         <div className="sm:flex items-center">
-                            <Avatar onClick={() => handleOpenDrawer(team1)} className='mr-4 cursor-pointer'>
+                            <Avatar className='mr-4 cursor-pointer'>
                                 <AvatarImage src={`https://sleepercdn.com/avatars/thumbs/${team1.user.avatar}`} alt={`${team1.user.metadata.team_name} avatar`} />
                                 <AvatarFallback>{team1.user.display_name.charAt(0).toUpperCase() || ""}</AvatarFallback>
                             </Avatar>
@@ -73,7 +75,7 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
                                 <span className="font-bold text-sm sm:text-lg truncate text-right">{team2.user.metadata.team_name || team2.user.display_name}</span>
                                 <span className="inline-flex items-center justify-end text-sm text-gray-400 text-right truncate">{team2.points} &nbsp; {getResult(team2.points, team1.points)}</span>
                             </div>
-                            <Avatar onClick={() => handleOpenDrawer(team2)} className='mr-4 sm:self-center self-end cursor-pointer'>
+                            <Avatar className='mr-4 sm:self-center self-end cursor-pointer'>
                                 <AvatarImage src={`https://sleepercdn.com/avatars/thumbs/${team2.user.avatar}`} alt={`${team2.user.metadata.team_name} avatar`} />
                                 <AvatarFallback>{team2.user.display_name.charAt(0).toUpperCase() || ""}</AvatarFallback>
                             </Avatar>
