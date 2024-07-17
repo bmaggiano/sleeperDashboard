@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
 import { useAtom } from "jotai";
 import { leagueAtom, leagueNameAtom } from "./atoms/atom";
-import { getLeagueName } from "./utils";
 import { useRouter } from "next/navigation";
 
 const leagues = [
