@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import playerIds from "@/app/json/playerIds.json";
 import { useAtom } from "jotai";
 import { weekAtom } from "./atoms/atom";
 import { Player, PlayerMatchupCardsProps, UserRecordDrawerProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
+import { Separator } from "@/components/ui/separator";
 
 const getPlayerInfo = (playerId: string): Player => {
     return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player', position: null, team: null };
@@ -17,18 +16,29 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
         <div className="flex flex-col space-y-1">
             {teamOne.starters.map((starter, index) => (
                 <div key={index} className="flex justify-evenly items-center ring-1 ring-gray-200 rounded-md p-2">
-                    <div className="flex-1 flex flex-col justify-center items-start sm:items-center">
-                        <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).full_name}: {teamOne.starters_points![index]}</h1>
-                        <span className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(starter).team}</span>
+                    <div className="px-2 flex-1 flex flex-col justify-center items-start">
+                        <div className="w-full text-xs sm:text-sm justify-between flex">
+                            <p className="hidden sm:block">{getPlayerInfo(starter).full_name} </p>
+                            <p className="sm:hidden">{getPlayerInfo(starter).first_name?.charAt(0)}. {getPlayerInfo(starter).last_name}</p>
+                            <p className="pr-4 font-medium">{teamOne.starters_points![index]}</p>
+                        </div>
+                        <Separator className="my-1 w-[95%]" />
+                        <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(starter).team}</p>
                     </div>
                     <div className="flex-initial flex justify-center items-center">
                         <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).position}</h1>
                     </div>
-                    <div className="flex-1 flex flex-col justify-center items-end sm:items-center">
+                    <div className="flex-1 flex flex-col justify-center items-end px-2">
                         {teamTwo.starters && (
                             <>
-                                <h1 className="text-xs sm:text-sm">{getPlayerInfo(teamTwo.starters[index]).full_name}: {teamTwo.starters_points![index]}</h1>
-                                <span className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</span>
+                                <div className="text-xs sm:text-sm flex justify-between w-full items-center">
+                                    <p className="pl-4 font-medium">{teamTwo.starters_points![index]}</p>
+                                    <p className="hidden sm:block">{getPlayerInfo(teamTwo.starters[index]).full_name} </p>
+                                    <p className="sm:hidden">{getPlayerInfo(teamTwo.starters[index]).first_name?.charAt(0)}. {getPlayerInfo(teamTwo.starters[index]).last_name}</p>
+
+                                </div>
+                                <Separator className="my-1 w-[95%]" />
+                                <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</p>
                             </>
                         )}
                     </div>
@@ -45,10 +55,10 @@ const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo })
 
     return (
         <div className="max-h-screen flex flex-col">
-            <div className="px-2 pb-1 flex-1 overflow-y-auto">
+            <div className="px-2 pb-1 flex-1 ">
                 <div className="mx-auto w-full max-w-3xl">
                     <div className="flex">
-                        <div>
+                        <div className="py-2 sm:py-4">
                             Matchup Stats - Week {week}
                         </div>
                     </div>
