@@ -42,7 +42,7 @@ export default function WeekMatchup({ params }: { params: { week: number, league
     return (
         <div>
             <div className="pt-4 pb-2 flex justify-between items-center">
-                <h1 className="font-medium">Matchups - {getLeagueName(leagueId)}</h1>
+                <h1 className="font-medium my-2">Matchups - {getLeagueName(leagueId)}</h1>
                 <Combobox leagueId={leagueId} data={weeks} />
             </div>
             <ScoresComponent leagueId={leagueId} week={week} />
