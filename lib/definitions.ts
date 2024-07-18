@@ -1,5 +1,7 @@
 export interface Player {
     full_name: string | null;
+    first_name: string | null;
+    last_name: string | null;
     position: string | null;
     team: string | null;
 }
