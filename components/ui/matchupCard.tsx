@@ -29,14 +29,14 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
         return null;
     };
 
-    const handleOpenStatsDrawer = () => {
+    const handleRedirectToMatchupDetails = () => {
         setTeamOneStats(team1);
         setTeamTwoStats(team2);
         router.push(`/${team1.league_id}/${weekIndex}/${team1.matchup_id}`);
     }
 
     return (
-        <div className={withVsLink ? "cursor-pointer" : ""} onClick={withVsLink ? handleOpenStatsDrawer : undefined}>
+        <div className={withVsLink ? "cursor-pointer" : ""} onClick={withVsLink ? handleRedirectToMatchupDetails : undefined}>
             <div className="flex justify-evenly">
                 <div className="w-full flex items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200">
                     <div className="sm:w-[40%] w-[45%]">

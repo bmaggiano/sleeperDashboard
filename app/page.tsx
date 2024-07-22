@@ -1,6 +1,6 @@
 "use client";
 import RecentSearches from "@/components/ui/recentSearches";
-import { LeaguesMarquee } from "./leaguesMarquee";
+import LeaguesMarquee from "./leaguesMarquee";
 import LeagueSearchForm from "./leagueSearchForm";
 
 export default function Home() {

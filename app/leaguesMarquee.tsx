@@ -2,8 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
-import { useAtom } from "jotai";
-import { leagueAtom, leagueNameAtom } from "./atoms/atom";
 import { useRouter } from "next/navigation";
 
 const leagues = [
@@ -57,14 +55,12 @@ const secondRow = leagues.slice(leagues.length / 2);
 const ReviewCard = ({
     img,
     name,
-    leagueId,
     description,
     body,
     onClick,
 }: {
     img: string;
     name: string;
-    leagueId: string;
     description: string;
     body: string;
     onClick: () => void;
@@ -94,10 +90,8 @@ const ReviewCard = ({
     );
 };
 
-export function LeaguesMarquee() {
+export default function LeaguesMarquee() {
     const router = useRouter();
-    const [league, setLeague] = useAtom(leagueAtom);
-    const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
     const handleClick = async (leagueId: string) => {
         router.push(`/${leagueId}`);
     };
