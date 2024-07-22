@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAtom } from "jotai";
 import { leagueAtom, leagueNameAtom } from "@/app/atoms/atom";
-import { Button } from "./ui/button";
+import { Button } from "./button";
 import { getLeagueName } from "@/app/utils";
 import { useRouter } from "next/navigation";
 

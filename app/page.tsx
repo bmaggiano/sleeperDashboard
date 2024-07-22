@@ -1,5 +1,5 @@
 "use client";
-import RecentSearches from "@/components/recentSearches";
+import RecentSearches from "@/components/ui/recentSearches";
 import { LeaguesMarquee } from "./leaguesMarquee";
 import LeagueSearchForm from "./leagueSearchForm";
 
