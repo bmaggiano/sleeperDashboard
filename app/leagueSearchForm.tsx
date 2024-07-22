@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAtom } from "jotai";
-import { valueAtom, leagueNameAtom, leagueAtom } from "./atoms/atom";
+import { leagueNameAtom, leagueAtom } from "./atoms/atom";
 import { getLeagueName } from "./utils";
 import { useToast } from "@/components/ui/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

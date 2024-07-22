@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { getMatchupsWithMatchupID } from "@/app/utils"
-import UserRecordDrawer from "@/app/matchupStatsDrawer";
+import UserRecordDrawer from "@/app/matchupDetails";
 
 export default function MatchupPage() {
     const { week, leagueId, matchup } = useParams()

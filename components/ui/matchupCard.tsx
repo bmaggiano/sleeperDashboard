@@ -7,20 +7,15 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { Button } from '@/components/ui/button';
-import MatchupStatsDrawer from '@/app/matchupStatsDrawer';
-import MatchupCardSkeleton from '@/components/matchupCardSkeleton';
+import MatchupCardSkeleton from '@/components/ui/matchupCardSkeleton';
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
-import { weekAtom } from "@/app/atoms/atom";
+import { weekNumberAtom } from "@/app/atoms/atom";
 
 const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, withVsLink: boolean }) => {
-    const [open, setOpen] = useState(false);
-    const [openStats, setOpenStats] = useState(false);
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
     const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
-    const [drawerTeam, setDrawerTeam] = useState<any | null>(null);
-    const [weekIndex] = useAtom(weekAtom);
+    const [weekIndex] = useAtom(weekNumberAtom);
     const router = useRouter();
     // ... existing code ...
 

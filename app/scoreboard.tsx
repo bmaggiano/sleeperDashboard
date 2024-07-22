@@ -1,6 +1,6 @@
 import MatchupCard from "@/components/ui/matchupCard";
 import { Matchup } from "@/lib/definitions";
-import MatchupCardSkeleton from "@/components/matchupCardSkeleton";
+import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
 
 const renderSkeletons = () => {
     return Array.from({ length: 8 }, (_, i) => (

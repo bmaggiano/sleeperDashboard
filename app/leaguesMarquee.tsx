@@ -94,7 +94,7 @@ const ReviewCard = ({
     );
 };
 
-export function MarqueeDemo() {
+export function LeaguesMarquee() {
     const router = useRouter();
     const [league, setLeague] = useAtom(leagueAtom);
     const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
