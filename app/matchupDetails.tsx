@@ -14,13 +14,14 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
 
 const getPlayerInfo = (playerId: string): Player => {
     return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player', position: null, team: null };
 }
 
 function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
-    if (!teamOne.starters || !teamTwo.starters) return null;
+    if (!teamOne.starters || !teamTwo.starters) return <MatchupCardSkeleton />;
 
     return (
         <div className="flex flex-col space-y-1">
