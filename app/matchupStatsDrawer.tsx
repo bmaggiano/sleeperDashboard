@@ -4,6 +4,10 @@ import { weekAtom } from "./atoms/atom";
 import { Player, PlayerMatchupCardsProps, UserRecordDrawerProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 const getPlayerInfo = (playerId: string): Player => {
     return (playerIds as { [key: string]: Player })[playerId] || { full_name: 'Unknown Player', position: null, team: null };
@@ -52,17 +56,36 @@ const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo })
     const [week] = useAtom(weekAtom);
     if (!teamOne || !teamTwo) return null;
     if (!teamOne.starters || !teamTwo.starters) return null;
-
+    const router = useRouter();
+    const handleBack = () => {
+        router.back();
+    }
     return (
         <div className="max-h-screen flex flex-col">
             <div className="px-2 pb-1 flex-1 ">
                 <div className="mx-auto w-full max-w-3xl">
-                    <div className="flex">
-                        <div className="py-2 sm:py-4">
-                            Matchup Stats - Week {week}
-                        </div>
+                    <div className="py-4">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink>
+                                        <Link href="/">Home</Link>
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink onClick={handleBack}>
+                                        <Link href="/components">Week {week}
+                                        </Link>
+                                    </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>Matchup Stats - Week {week}</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
                     </div>
-
                     <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
                     <PlayerMatchupCards teamOne={teamOne} teamTwo={teamTwo} />
                 </div>
