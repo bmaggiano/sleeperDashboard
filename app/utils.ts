@@ -102,3 +102,67 @@ export const getMatchups = async ({ weekIndex, leagueId }: { weekIndex: number, 
 
     return finalData;
 }
+
+export const getWinnersBracket = async ({ leagueId }: { leagueId: string }) => {
+    const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`);
+    if (!response.ok) throw new Error("Failed to fetch winners bracket");
+    const winnersBracket = await response.json();
+    return winnersBracket;
+}
+
+export const matchBracketToMatchup = async ({
+    leagueId,
+    week,
+}: {
+    leagueId: string;
+    week: number;
+}) => {
+    const winnersBracket = await getWinnersBracket({ leagueId });
+    const matchupResults: any[] = []; // Array to store matchup results
+
+    const numBracketLength = winnersBracket.length;
+    let roundsLength = winnersBracket[numBracketLength - 1].r;
+
+    // Start from the initial week
+    let currentWeek = week;
+
+    // Iterate through rounds from the highest to the lowest
+    while (roundsLength > 0) {
+        // Get matchup details for the current week
+        const matchupDetailsInfo = await getMatchups({
+            weekIndex: currentWeek,
+            leagueId,
+        });
+
+        // Filter for matchups corresponding to the current round
+        winnersBracket.forEach((bracketMatchup: any) => {
+            if (bracketMatchup.r === roundsLength) {
+                // Find the corresponding teams
+                const matchupTeam1 = matchupDetailsInfo.find(
+                    (matchup: any) => matchup.roster_id === bracketMatchup.t1
+                );
+                const matchupTeam2 = matchupDetailsInfo.find(
+                    (matchup: any) => matchup.roster_id === bracketMatchup.t2
+                );
+
+                // If both teams are found, add to the results array
+                if (matchupTeam1 && matchupTeam2) {
+                    matchupResults.push({
+                        round: roundsLength,
+                        week: currentWeek, // Include the current week in the result
+                        matchupId: bracketMatchup.m,
+                        team1: matchupTeam1,
+                        team2: matchupTeam2,
+                    });
+                }
+            }
+        });
+
+        // Move to the next round and week
+        console.log(currentWeek);
+        roundsLength--;
+        currentWeek--;
+    }
+
+    return matchupResults; // Return the array of matchup results
+};

@@ -25,7 +25,10 @@ export interface UserRecordDrawerProps {
 }
 
 export interface Matchup {
+    round: number;
+    roster_id: string;
     matchup_id: string;
+    starters: string[] | null;
     points: number;
     user?: {
         avatar: string;
