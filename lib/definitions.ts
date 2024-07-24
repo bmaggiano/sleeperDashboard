@@ -19,7 +19,7 @@ export interface PlayerMatchupCardsProps {
     teamTwo: Team;
 }
 
-export interface UserRecordDrawerProps {
+export interface MatchupDetailProps {
     teamOne: Team | null;
     teamTwo: Team | null;
 }

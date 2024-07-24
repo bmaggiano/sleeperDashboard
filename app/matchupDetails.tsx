@@ -1,7 +1,7 @@
 import playerIds from "@/app/json/playerIds.json";
 import { useAtom } from "jotai";
 import { weekNumberAtom } from "./atoms/atom";
-import { Player, PlayerMatchupCardsProps, UserRecordDrawerProps } from "@/lib/definitions";
+import { Player, PlayerMatchupCardsProps, MatchupDetailProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Separator } from "@/components/ui/separator";
 import { useParams, useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
     );
 }
 
-const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo }) => {
+const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
     // Ensure hooks are called unconditionally at the top of the component
     const { week } = useParams();
     const router = useRouter();
@@ -109,4 +109,4 @@ const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo })
     );
 };
 
-export default UserRecordDrawer;
+export default MatchupDetails;

@@ -3,14 +3,13 @@
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { getMatchupsWithMatchupID } from "@/app/utils"
-import UserRecordDrawer from "@/app/matchupDetails";
+import MatchupDetails from "@/app/matchupDetails";
 
 export default function MatchupPage() {
     const { week, leagueId, matchup } = useParams()
     const [teamOne, setTeamOne] = useState<any | null>(null);
     const [teamTwo, setTeamTwo] = useState<any | null>(null);
 
-    console.log(week, leagueId, matchup);
     useEffect(() => {
         const fetchData = async () => {
             const weekIndex = Array.isArray(week) ? Number(week[0]) : Number(week);
@@ -24,7 +23,7 @@ export default function MatchupPage() {
     }, []);
     return (
         <div>
-            <UserRecordDrawer teamOne={teamOne} teamTwo={teamTwo} />
+            <MatchupDetails teamOne={teamOne} teamTwo={teamTwo} />
         </div>
     )
 }
