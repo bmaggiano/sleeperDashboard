@@ -1,5 +1,5 @@
 // pages/[leagueId]/page.tsx
-import { getLeagueName } from "../utils";
+import { getLeagueName, getLeagueWeeks } from "../utils";
 import ScoresComponent from "./scoresServer";
 import { Combobox } from "@/components/ui/combobox";
 import { Metadata, ResolvingMetadata } from 'next';
@@ -33,11 +33,10 @@ export async function generateMetadata(
     };
 }
 
-export default function Page({ params }: { params: { leagueId: string } }) {
+export default async function Page({ params }: { params: { leagueId: string } }) {
     const { leagueId } = params;
 
-    const weeks = Array.from({ length: 17 }, (_, i) => ({ index: i + 1, week: `Week ${i + 1}` }));
-
+    const weeks = await getLeagueWeeks(leagueId);
     return (
         <main>
             <div className="pt-4 pb-2 flex justify-between items-center">

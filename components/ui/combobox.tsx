@@ -20,7 +20,7 @@ import { useAtom } from "jotai";
 import { weekStringAtom, weekNumberAtom } from "@/app/atoms/atom";
 import { useRouter, usePathname } from "next/navigation";
 
-export function Combobox({ data, leagueId }: { data: { index: number, week: string }[], leagueId: string }) {
+export function Combobox({ data, leagueId }: { data: { index: any, week: any }[], leagueId: string }) {
     const router = useRouter();
     const pathname = usePathname();
     const [open, setOpen] = React.useState(false);
@@ -37,6 +37,16 @@ export function Combobox({ data, leagueId }: { data: { index: number, week: stri
             }
         }
     }, []);
+
+    const handleSelect = (week: any) => {
+        setWeekIndex(week.index);
+        setValue(week.week);
+        if (week.week === "Winners Bracket") {
+            router.push(`/${leagueId}/winners`)
+        } else {
+            router.push(`/${leagueId}/${week.index}`);
+        }
+    }
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -63,11 +73,7 @@ export function Combobox({ data, leagueId }: { data: { index: number, week: stri
                                 <CommandItem
                                     key={item.index}
                                     value={item.week}
-                                    onSelect={() => {
-                                        setWeekIndex(item.index);
-                                        setValue(item.week === value ? "" : item.week);
-                                        router.push(`/${leagueId}/${item.index}`);
-                                    }}
+                                    onSelect={() => handleSelect(item)}
                                 >
                                     <Check
                                         className={cn(

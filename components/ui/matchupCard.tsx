@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 import { weekNumberAtom } from "@/app/atoms/atom";
 
-const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, withVsLink: boolean }) => {
+const MatchupCard = ({ team1, team2, withVsLink, withWeekRef }: { team1: any, team2: any, withVsLink: boolean, withWeekRef?: number }) => {
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
     const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
     const [weekIndex] = useAtom(weekNumberAtom);
@@ -32,7 +32,11 @@ const MatchupCard = ({ team1, team2, withVsLink }: { team1: any, team2: any, wit
     const handleRedirectToMatchupDetails = () => {
         setTeamOneStats(team1);
         setTeamTwoStats(team2);
-        router.push(`/${team1.league_id}/${weekIndex}/${team1.matchup_id}`);
+        if (withWeekRef !== undefined) {
+            router.push(`/${team1.league_id}/${withWeekRef}/${team1.matchup_id}`);
+        } else {
+            router.push(`/${team1.league_id}/${weekIndex}/${team1.matchup_id}`);
+        }
     }
 
     return (

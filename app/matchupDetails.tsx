@@ -4,7 +4,7 @@ import { weekNumberAtom } from "./atoms/atom";
 import { Player, PlayerMatchupCardsProps, UserRecordDrawerProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Separator } from "@/components/ui/separator";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -65,8 +65,9 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
 
 const UserRecordDrawer: React.FC<UserRecordDrawerProps> = ({ teamOne, teamTwo }) => {
     // Ensure hooks are called unconditionally at the top of the component
+    const { week } = useParams();
     const router = useRouter();
-    const [week] = useAtom(weekNumberAtom);
+    // const [week] = useAtom(weekNumberAtom);
 
     const handleBack = () => {
         router.back();

@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { matchBracketToMatchup } from "../../utils";
+import { matchBracketToMatchup, getChampionInfo, getTotalWeeks, getLeagueWeeks } from "../../utils";
 import MatchupCard from "@/components/ui/matchupCard";
+import UserCard from "@/components/ui/userCard";
 
 type TeamInfo = {
     displayName: string;
@@ -23,14 +24,23 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
     const [matchupDetails, setMatchupDetails] = useState<Matchup[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
+    const [champion, setChampion] = useState<any[]>([]);
+    const [weekLengthNum, setWeekLengthNum] = useState<number>(0);
+    const [regSeasonWeekNum, setRegSeasonWeekNum] = useState<number>(0);
 
     useEffect(() => {
         const fetchMatchupDetails = async () => {
             try {
+                const weekLength = await getTotalWeeks(leagueId)
                 const details = await matchBracketToMatchup({
-                    week: 17,
+                    week: weekLength,
                     leagueId: leagueId,
                 });
+                const championInfo = await getChampionInfo(leagueId);
+                const regSeason = await getLeagueWeeks(leagueId);
+                setRegSeasonWeekNum(regSeason.length - 1);
+                setWeekLengthNum(weekLength);
+                setChampion(championInfo);
                 setMatchupDetails(details);
             } catch (err) {
                 setError("Failed to load matchup details.");
@@ -73,13 +83,14 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
 
     return (
         <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Winners Bracket</h2>
+            <h2 className="text-3xl text-center font-bold text-gray-800 my-6">Winners Bracket</h2>
+            <UserCard user={champion} />
             {Object.keys(matchupsByRound).length > 0 ? (
                 Object.entries(matchupsByRound)
                     .sort(([a], [b]) => Number(b) - Number(a)) // Sort rounds in descending order
                     .map(([round, matchups]) => (
                         <div key={round}>
-                            <h3 className="text-2xl font-semibold text-gray-700 mb-4">
+                            <h3 className="text-2xl font-semibold text-gray-700 mt-4">
                                 Round {round}
                             </h3>
                             {matchups.map((matchup, index) => (
@@ -88,6 +99,7 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
                                     team1={matchup.team1}
                                     team2={matchup.team2}
                                     withVsLink
+                                    withWeekRef={regSeasonWeekNum + parseInt(round)}
                                 />
                             ))}
                         </div>

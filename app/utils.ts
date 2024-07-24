@@ -1,5 +1,30 @@
 "use server"
 
+export const getTotalWeeks = async (leagueId: string) => {
+    try {
+        const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+        if (!response.ok) throw new Error("Failed to fetch league weeks");
+        const leagueWeeks = await response.json();
+        return leagueWeeks.settings.leg;
+    } catch (error: any) {
+        return 0;
+    }
+}
+
+export const getLeagueWeeks = async (leagueId: string) => {
+    try {
+        const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+        if (!response.ok) throw new Error("Failed to fetch league weeks");
+        const leagueWeeks = await response.json();
+        const leagueWeekNum = leagueWeeks.settings.playoff_week_start - 1;
+        const leagueWeeksArray = Array.from({ length: leagueWeekNum }, (_, i) => ({ index: i + 1, week: `Week ${i + 1}` }));
+        leagueWeeksArray.push({ index: leagueWeekNum + 1, week: "Winners Bracket" });
+        return leagueWeeksArray
+    } catch (error: any) {
+        return [];
+    }
+}
+
 export const getLeagueName = async (leagueId: string) => {
     try {
         const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
@@ -30,6 +55,26 @@ const getRosterInfo = async (leagueId: string) => {
         return rosterInfo;
     } catch (error: any) {
         return { error: error.message };
+    }
+}
+
+export const getChampionInfo = async (leagueId: string) => {
+    // owner id on rosters is user id on users
+    try {
+        const response = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+        if (!response.ok) throw new Error("Failed to fetch champion info");
+        const championInfo = await response.json();
+        const rosterInfo = await getRosterInfo(leagueId);
+        const userInfo = await getUsersInfo(leagueId);
+        const champion = rosterInfo.find((roster: any) => roster.roster_id == championInfo.metadata.latest_league_winner_roster_id);
+        const user = userInfo.find((user: any) => user.user_id == champion.owner_id);
+        const championObj = {
+            ...champion,
+            user: { ...user }, // Nest the user object inside championObj
+        };
+        return championObj;
+    } catch (error: any) {
+        return;
     }
 }
 
@@ -159,7 +204,6 @@ export const matchBracketToMatchup = async ({
         });
 
         // Move to the next round and week
-        console.log(currentWeek);
         roundsLength--;
         currentWeek--;
     }
