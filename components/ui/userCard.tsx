@@ -11,7 +11,7 @@ export default function UserCard({ user }: { user: any }) {
                 <div className="flex items-center">
                     <Avatar className="mr-4">
                         <AvatarImage src={user.user.metadata.avatar} />
-                        <AvatarFallback>UI</AvatarFallback>
+                        <AvatarFallback>{user.user.display_name.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>
                         <p className="text-xl font-bold">{user.user.metadata.team_name}</p>
