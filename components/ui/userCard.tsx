@@ -18,7 +18,7 @@ export default function UserCard({ user }: { user: any }) {
                         <p className="text-sm text-gray-400">@{user.user.display_name}</p>
                     </div>
                 </div>
-                <div className="mt-2 flex flex-row justify-between gap-x-4">
+                <div className="text-gray-400 mt-2 flex flex-row justify-between gap-x-4">
                     <p className="text-sm">Record: {user.settings.wins} - {user.settings.losses}</p>
                     <p className="text-sm">FPS: {user.settings.fpts}.{user.settings.fpts_decimal}</p>
                     <p className="text-sm">FPA: {user.settings.fpts_against}.{user.settings.fpts_against_decimal}</p>
