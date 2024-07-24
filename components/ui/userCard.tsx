@@ -1,8 +1,10 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar"
+import { FaTrophy } from "react-icons/fa";
 
 export default function UserCard({ user }: { user: any }) {
     return (
-        <div className="p-4 flex mx-auto flex-col items-center justify-center w-1/2 h-full ring-1 ring-gray-200 rounded-lg">
+        <div className="p-4 flex mx-auto flex-col items-center justify-center sm:w-1/2 h-full ring-1 ring-gray-200 rounded-lg">
+            <p className="relative right-[11.25rem] bottom-4 text-amber-400 text-3xl"><FaTrophy /></p>
             <div className="flex flex-col items-center justify-center w-full h-full">
                 <Avatar>
                     <AvatarImage src={user.user.metadata.avatar} />

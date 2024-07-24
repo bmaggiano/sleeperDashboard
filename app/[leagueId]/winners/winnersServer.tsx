@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { matchBracketToMatchup, getChampionInfo, getTotalWeeks, getLeagueWeeks } from "../../utils";
 import MatchupCard from "@/components/ui/matchupCard";
+import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
 import UserCard from "@/components/ui/userCard";
 
 type TeamInfo = {
@@ -55,17 +56,11 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <p className="text-xl text-gray-600">Loading matchups...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex justify-center items-center min-h-screen">
-                <p className="text-xl text-red-600">{error}</p>
-            </div>
+            Array.from({ length: 6 }).map((_, i) => (
+                <div className="mx-auto w-full max-w-3xl" key={i}>
+                    <MatchupCardSkeleton />
+                </div>
+            ))
         );
     }
 
@@ -82,8 +77,7 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
     );
 
     return (
-        <div>
-            <h2 className="text-3xl text-center font-bold text-gray-800 my-6">Winners Bracket</h2>
+        <div className="pt-4">
             <UserCard user={champion} />
             {Object.keys(matchupsByRound).length > 0 ? (
                 Object.entries(matchupsByRound)
