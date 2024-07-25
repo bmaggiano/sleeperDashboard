@@ -25,29 +25,8 @@ const MatchupCard = ({
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
     const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
     const [weekIndex] = useAtom(weekNumberAtom);
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
     const router = useRouter();
 
-    // Update window width on resize
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-            console.log(isMobile)
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    // Set initial height based on screen size
-    const initialHeight = isMobile ? "110px" : "100px";
-
-    // Define animation variants
-    const boxVariants = {
-        hover: {
-            height: isMobile ? "120px" : "150px", // Adjust hover height accordingly
-        },
-    };
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
         return <MatchupCardSkeleton />;
@@ -76,10 +55,8 @@ const MatchupCard = ({
         >
             <div className="flex justify-evenly">
                 <motion.div
-                    className="w-full flex flex-col items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200 overflow-hidden"
-                    initial={{ height: initialHeight }}
-                    whileHover="hover"
-                    variants={boxVariants}
+                    className="w-full flex flex-col items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200 overflow-hidden h-[110px] sm:h-[100px]"
+                    whileHover={{ height: "150px" }}
                     transition={{
                         duration: 0.2,
                         ease: "easeInOut",
