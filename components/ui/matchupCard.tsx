@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaTrophy } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 import { weekNumberAtom } from "@/app/atoms/atom";
 import { Button } from "./button";
-import { motion } from "framer-motion"; // Import Framer Motion
+import { motion } from "framer-motion";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 const MatchupCard = ({
@@ -24,9 +24,30 @@ const MatchupCard = ({
 }) => {
     const [teamOneStats, setTeamOneStats] = useState<any | null>(null);
     const [teamTwoStats, setTeamTwoStats] = useState<any | null>(null);
-    const [isHovered, setIsHovered] = useState(false);
     const [weekIndex] = useAtom(weekNumberAtom);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
     const router = useRouter();
+
+    // Update window width on resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+            console.log(isMobile)
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    // Set initial height based on screen size
+    const initialHeight = isMobile ? "110px" : "100px";
+
+    // Define animation variants
+    const boxVariants = {
+        hover: {
+            height: isMobile ? "120px" : "150px", // Adjust hover height accordingly
+        },
+    };
 
     if (!team1 || !team2 || !team1.user || !team2.user) {
         return <MatchupCardSkeleton />;
@@ -50,18 +71,18 @@ const MatchupCard = ({
 
     return (
         <div
-            className={withVsLink ? "cursor-pointer relative" : "relative"}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            className={withVsLink ? "cursor-pointer" : ""}
             onClick={withVsLink ? handleRedirectToMatchupDetails : undefined}
         >
             <div className="flex justify-evenly">
                 <motion.div
                     className="w-full flex flex-col items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200 overflow-hidden"
-                    whileHover={{ height: "150px" }} // Height when hovered
+                    initial={{ height: initialHeight }}
+                    whileHover="hover"
+                    variants={boxVariants}
                     transition={{
-                        duration: 0.2, // Animation duration
-                        ease: "easeInOut", // Easing function
+                        duration: 0.2,
+                        ease: "easeInOut",
                     }}
                 >
                     <div className="w-full flex items-center justify-between">
@@ -123,11 +144,8 @@ const MatchupCard = ({
                     </div>
 
                     {/* The button reveal section */}
-                    <motion.div
-                        className={`mt-2 flex self-end ${isHovered ? 'block ease-in-out' : 'hidden'}`} // Show button only when hovered
-                        initial={{ opacity: 1 }} // Initial opacity
-                        whileHover={{ opacity: 1 }} // Fade in when hovered
-                        transition={{ duration: 0.3, ease: "easeInOut" }} // Smooth transition
+                    <div
+                        className="mt-4 flex group-hover:opacity-100 flex self-end"
                     >
                         <Button
                             variant="expandIcon"
@@ -137,7 +155,7 @@ const MatchupCard = ({
                         >
                             View Matchup
                         </Button>
-                    </motion.div>
+                    </div>
                 </motion.div>
             </div>
         </div>
