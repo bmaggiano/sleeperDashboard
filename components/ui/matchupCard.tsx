@@ -56,7 +56,7 @@ const MatchupCard = ({
             <div className="flex justify-evenly">
                 <motion.div
                     className="w-full flex flex-col items-center justify-between bg-white rounded-lg p-2 sm:p-4 my-2 text-black ring-1 ring-gray-200 overflow-hidden h-[110px] sm:h-[100px]"
-                    whileHover={{ height: "150px" }}
+                    whileHover={withVsLink ? { height: "150px" } : undefined}
                     transition={{
                         duration: 0.2,
                         ease: "easeInOut",
