@@ -27,33 +27,31 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
         <div className="flex flex-col space-y-1">
             {teamOne.starters.map((starter, index) => (
                 <div key={index} className="flex justify-evenly items-center ring-1 ring-gray-200 rounded-md p-2">
-                    <div className="px-2 flex-1 flex flex-col justify-center items-start">
-                        <div className="w-full text-xs sm:text-sm justify-between flex">
-                            <p className="hidden sm:block">{getPlayerInfo(starter).full_name} </p>
-                            <p className="sm:hidden">
+                    <div className="px-2 flex-1 flex flex-row justify-center items-center">
+                        <div className="w-full text-xs sm:text-sm justify-between flex flex-col">
+                            <p className="font-semibold hidden sm:block">{getPlayerInfo(starter).full_name} </p>
+                            <p className="font-semibold sm:hidden">
                                 {getPlayerInfo(starter).first_name?.charAt(0)}. {getPlayerInfo(starter).last_name}
                             </p>
-                            <p className="pr-4 font-medium">{teamOne.starters_points![index]}</p>
+                            <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(starter).team}</p>
                         </div>
-                        <Separator className="my-1 w-[95%]" />
-                        <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(starter).team}</p>
+                        <p className="pr-4 font-medium">{teamOne.starters_points![index]}</p>
                     </div>
                     <div className="flex-initial flex justify-center items-center">
                         <h1 className="text-xs sm:text-sm">{getPlayerInfo(starter).position}</h1>
                     </div>
-                    <div className="flex-1 flex flex-col justify-center items-end px-2">
+                    <div className="flex-1 flex flex-row justify-center items-center px-2">
                         {teamTwo.starters && (
                             <>
-                                <div className="text-xs sm:text-sm flex justify-between w-full items-center">
-                                    <p className="pl-4 font-medium">{teamTwo.starters_points![index]}</p>
-                                    <p className="hidden sm:block">{getPlayerInfo(teamTwo.starters[index]).full_name} </p>
-                                    <p className="sm:hidden">
+                                <p className="pl-4 font-medium">{teamTwo.starters_points![index]}</p>
+                                <div className="text-right text-xs sm:text-sm flex-row justify-between w-full items-center">
+                                    <p className="font-semibold hidden sm:block">{getPlayerInfo(teamTwo.starters[index]).full_name} </p>
+                                    <p className="font-semibold sm:hidden">
                                         {getPlayerInfo(teamTwo.starters[index]).first_name?.charAt(0)}.{" "}
                                         {getPlayerInfo(teamTwo.starters[index]).last_name}
                                     </p>
+                                    <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</p>
                                 </div>
-                                <Separator className="my-1 w-[95%]" />
-                                <p className="text-xs sm:text-sm text-gray-500">{getPlayerInfo(teamTwo.starters[index]).team}</p>
                             </>
                         )}
                     </div>
