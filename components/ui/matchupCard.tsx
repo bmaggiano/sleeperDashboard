@@ -122,9 +122,10 @@ const MatchupCard = ({
 
                     {/* The button reveal section */}
                     <div
-                        className="mt-4 flex group-hover:opacity-100 flex self-end"
+                        className="mt-4 w-full group-hover:opacity-100 flex"
                     >
                         <Button
+                            className="w-full"
                             variant="expandIcon"
                             Icon={ArrowRightIcon}
                             iconPlacement="right"
