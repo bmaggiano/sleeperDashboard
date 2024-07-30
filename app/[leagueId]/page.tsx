@@ -1,5 +1,6 @@
 // pages/[leagueId]/page.tsx
 import { getLeagueName, getLeagueWeeks } from "../utils";
+import PlayersServer from "./playersServer";
 import ScoresComponent from "./scoresServer";
 import { Combobox } from "@/components/ui/combobox";
 import { Metadata, ResolvingMetadata } from 'next';
@@ -38,12 +39,13 @@ export default async function Page({ params }: { params: { leagueId: string } })
 
     const weeks = await getLeagueWeeks(leagueId);
     return (
-        <main>
+        <main className="mt-4">
             <div className="pt-4 pb-2 flex justify-between items-center">
                 <h1 className="font-medium">Matchups - {getLeagueName(leagueId)}</h1>
                 <Combobox leagueId={leagueId} data={weeks} />
             </div>
-            <ScoresComponent leagueId={leagueId} week={1} />
+            <PlayersServer leagueId={leagueId} />
+            {/* <ScoresComponent leagueId={leagueId} week={1} /> */}
         </main>
     );
 }

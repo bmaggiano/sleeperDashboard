@@ -1,6 +1,6 @@
-"use client";
+"use server";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { matchBracketToMatchup, getChampionInfo, getTotalWeeks, getLeagueWeeks } from "../../utils";
 import MatchupCard from "@/components/ui/matchupCard";
 import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
@@ -21,40 +21,17 @@ type Matchup = {
     team2: TeamInfo;
 };
 
-const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
-    const [matchupDetails, setMatchupDetails] = useState<Matchup[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
-    const [champion, setChampion] = useState<any[]>([]);
-    const [weekLengthNum, setWeekLengthNum] = useState<number>(0);
-    const [regSeasonWeekNum, setRegSeasonWeekNum] = useState<number>(0);
+const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
+    const weekLength = await getTotalWeeks(leagueId)
+    const matchupDetails = await matchBracketToMatchup({
+        week: weekLength,
+        leagueId: leagueId,
+    });
+    const champion = await getChampionInfo(leagueId);
+    const regSeason = await getLeagueWeeks(leagueId);
+    const regSeasonWeekNum = regSeason.length - 1;
 
-    useEffect(() => {
-        const fetchMatchupDetails = async () => {
-            try {
-                const weekLength = await getTotalWeeks(leagueId)
-                const details = await matchBracketToMatchup({
-                    week: weekLength,
-                    leagueId: leagueId,
-                });
-                const championInfo = await getChampionInfo(leagueId);
-                const regSeason = await getLeagueWeeks(leagueId);
-                setRegSeasonWeekNum(regSeason.length - 1);
-                setWeekLengthNum(weekLength);
-                setChampion(championInfo);
-                setMatchupDetails(details);
-            } catch (err) {
-                setError("Failed to load matchup details.");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMatchupDetails();
-    }, []);
-
-    if (loading) {
+    if (!leagueId) {
         return (
             Array.from({ length: 6 }).map((_, i) => (
                 <div className="mx-auto w-full max-w-3xl" key={i}>
@@ -78,7 +55,7 @@ const WinnersBracket = ({ leagueId }: { leagueId: any }) => {
 
     return (
         <div className="pt-4">
-            <UserCard user={champion} />
+            <UserCard width={true} user={champion} champion={true} />
             {Object.keys(matchupsByRound).length > 0 ? (
                 Object.entries(matchupsByRound)
                     .sort(([a], [b]) => Number(b) - Number(a)) // Sort rounds in descending order

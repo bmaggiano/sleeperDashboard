@@ -100,6 +100,18 @@ const combineUserAndRosterInfo = (userInfo: any, rosterInfo: any) => {
     });
 }
 
+export const combineUserAndRosterInfoCard = async (leagueId: string) => {
+    const userInfo = await getUsersInfo(leagueId);
+    const rosterInfo = await getRosterInfo(leagueId);
+    return rosterInfo.map((roster: any) => {
+        const user = userInfo.find((user: any) => user.user_id === roster.owner_id);
+        return {
+            ...roster,
+            user
+        }
+    });
+}
+
 const combineRosterAndMatchupInfo = (rosterInfo: any, matchupInfo: any) => {
     if (!rosterInfo || !matchupInfo) return [];
     return matchupInfo.map((matchup: any) => {
