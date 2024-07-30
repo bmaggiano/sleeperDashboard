@@ -10,26 +10,23 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     // Retrieve the 'title' query parameter, defaulting to 'Hello, World!' if not provided
-    const title = searchParams.get('title') || 'Hello, World!';
-
-    console.log("Generating image for title:", title);
-
+    const title = searchParams.get('title') || 'Fantasy Dashboard';
     // Return an Open Graph image response
     return new ImageResponse(
       (
         <div
           style={{
-            backgroundColor: 'lavender',
+            backgroundColor: 'black',
             height: '100%',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: 128,
-            color: 'black',
+            color: 'white',
           }}
         >
-          Sleeper Dashboard
+          {title}
         </div>
       ),
       {
