@@ -1,10 +1,10 @@
+"use client"
 import playerIds from "@/app/json/playerIds.json";
 import { useAtom } from "jotai";
 import { weekNumberAtom } from "./atoms/atom";
 import { Player, PlayerMatchupCardsProps, MatchupDetailProps } from "@/lib/definitions";
 import MatchupCard from "@/components/ui/matchupCard";
 import { Separator } from "@/components/ui/separator";
-import { useParams, useRouter } from "next/navigation";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -63,13 +63,6 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
 
 const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
     // Ensure hooks are called unconditionally at the top of the component
-    const { week } = useParams();
-    const router = useRouter();
-    // const [week] = useAtom(weekNumberAtom);
-
-    const handleBack = () => {
-        router.back();
-    };
 
     // Early return logic
     if (!teamOne || !teamTwo) return null;
@@ -79,26 +72,7 @@ const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
         <div className="max-h-screen flex flex-col">
             <div className="px-2 pb-1 flex-1">
                 <div className="mx-auto w-full max-w-3xl">
-                    <div className="py-4">
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem>
-                                    <Link href="/">Home</Link>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    {/* Remove Link and use onClick to handle back */}
-                                    <BreadcrumbLink onClick={handleBack} className="cursor-pointer">
-                                        Week {week}
-                                    </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                    <BreadcrumbPage>Matchup Stats - Week {week}</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                    </div>
+
                     <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
                     <PlayerMatchupCards teamOne={teamOne} teamTwo={teamTwo} />
                 </div>
