@@ -9,7 +9,7 @@ export default async function PlayersServer({ leagueId }: { leagueId: string }) 
     return (
         <div className="">
             {users && users.map((user: any) => (
-                <UserCard key={user.user.user_id} user={user} />
+                <UserCard key={user.user.user_id} user={user} viewRoster={true} />
             ))}
         </div>
     );
