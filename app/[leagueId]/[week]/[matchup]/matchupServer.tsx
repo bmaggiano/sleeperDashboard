@@ -14,24 +14,27 @@ export async function generateMetadata(
     { params, searchParams }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    // read route params
-    const id = params.id
+    // Read route params
+    const id = params.id;
 
-    // fetch data
-
-    // optionally access and extend (rather than replace) parent metadata
+    // Fetch data or construct specific metadata logic here
+    // For example, determine a custom image URL based on the matchup
+    const imageUrl = `https://sleeper-dashboard.vercel.app/api/cards`;
 
     return {
-        title: "Matchup Details",
+        title: `Matchup Details`,
+        description: "Detailed matchup information.",
         openGraph: {
             images: [{
-                url: `https://sleeper-dashboard.vercel.app/api/cards`,
+                url: imageUrl,
                 width: 1200,
                 height: 630,
-                alt: 'Fantasy Dashboard',
+                alt: 'Matchup Details Image',
             }],
+            title: `Matchup Details`,
+            description: "Detailed matchup information.",
         },
-    }
+    };
 }
 
 export default async function MatchupServer({ week, leagueId, matchup }: { week: string, leagueId: string, matchup: string }) {
@@ -42,5 +45,5 @@ export default async function MatchupServer({ week, leagueId, matchup }: { week:
         <div>
             <MatchupDetails teamOne={data[0]} teamTwo={data[1]} />
         </div>
-    )
+    );
 }

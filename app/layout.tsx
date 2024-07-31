@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -16,7 +15,7 @@ export const metadata: Metadata = {
       url: `https://sleeper-dashboard.vercel.app/api/cards`,
       width: 1200,
       height: 630,
-      alt: 'Fantasy Dashboard',
+      alt: 'Fantasy Dashboard Default Image',
     }],
   },
 };
@@ -29,11 +28,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Fantasy Dashboard</title>
-        <meta
+        {/* 
+          Remove hardcoded meta tags if you're using Next.js metadata API
+          These will be added dynamically based on the metadata configuration
+        */}
+        {/* <meta
           property="og:image"
           content="https://sleeper-dashboard.vercel.app/api/og?title=Fantasy%20Dashboard"
-        />
+        /> */}
         <meta property="og:title" content="Fantasy Dashboard" />
         <meta property="og:description" content="Your one-stop dashboard for all your Fantasy data." />
         <meta property="og:url" content="https://sleeper-dashboard.vercel.app" />
