@@ -5,8 +5,6 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/ui/header";
 import { Separator } from "@/components/ui/separator";
-import { useAtom } from "jotai";
-import { leagueAtom } from "@/app/atoms/atom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +13,7 @@ export const metadata: Metadata = {
   description: "Your one-stop dashboard for all your Fantasy data.",
   openGraph: {
     images: [{
-      url: 'https://sleeper-dashboard.vercel.app/api/og',
+      url: `https://sleeper-dashboard.vercel.app/api/og`,
       width: 1200,
       height: 630,
       alt: 'Fantasy Dashboard',
