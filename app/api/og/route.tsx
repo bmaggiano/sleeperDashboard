@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  Ben'd me over Sidd
+                  Ben&apos;d me over Sidd
                 </span>
                 <span
                   style={{
