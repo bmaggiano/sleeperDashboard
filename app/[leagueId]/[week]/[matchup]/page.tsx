@@ -18,7 +18,7 @@ export async function generateMetadata(
     const { week, leagueId, matchup } = params;
 
     // Fetch data if necessary, or use params to customize metadata
-    const imageUrl = `https://sleeper-dashboard.vercel.app/api/cards`;
+    const imageUrl = `https://sleeper-dashboard.vercel.app/api/cards?week=${week}`;
 
     return {
         title: `Matchup Details - Week ${week}`,

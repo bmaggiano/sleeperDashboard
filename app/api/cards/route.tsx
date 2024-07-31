@@ -13,15 +13,14 @@ export async function GET(req: NextRequest) {
         console.log(searchParams);
 
         // Retrieve the 'title' query parameter, defaulting to 'Fantasy Dashboard' if not provided
-        const title = searchParams.get('leagueId') || 'Fantasy Dashboard Title';
-        console.log(title);
+        const week = searchParams.get('week') || 'Viewing Matchup Details';
 
         // Return an Open Graph image response
         return new ImageResponse(
             (
                 <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md font-inter">
-                    <h1 tw="text-center">{title}</h1>
-                    <div tw="flex items-center w-3/5 mx-auto">
+                    <h1 tw="text-center">Matchup Details - Week {week}</h1>
+                    <div tw="flex items-center w-4/5 mx-auto">
 
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
