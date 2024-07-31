@@ -24,7 +24,12 @@ export async function generateMetadata(
     return {
         title: "Matchup Details",
         openGraph: {
-            images: "https://sleeper-dashboard.vercel.app/api/cards",
+            images: [{
+                url: `https://sleeper-dashboard.vercel.app/api/cards`,
+                width: 1200,
+                height: 630,
+                alt: 'Fantasy Dashboard',
+            }],
         },
     }
 }
