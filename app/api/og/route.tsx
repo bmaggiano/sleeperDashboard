@@ -19,7 +19,9 @@ export async function GET(req: NextRequest) {
     // Return an Open Graph image response
     return new ImageResponse(
       (
-        <h1>Hi</h1>
+        <div tw="flex flex-col items-center justify-center">
+          <h1 tw="text-center">Fantasy Dashboard Main</h1>
+        </div>
       ),
       {
         // Define the dimensions of the image

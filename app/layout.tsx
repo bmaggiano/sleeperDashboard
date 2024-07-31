@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Your one-stop dashboard for all your Fantasy data.",
   openGraph: {
     images: [{
-      url: `https://sleeper-dashboard.vercel.app/api/cards`,
+      url: `https://sleeper-dashboard.vercel.app/api/og`,
       width: 1200,
       height: 630,
       alt: 'Fantasy Dashboard Default Image',
@@ -36,10 +36,6 @@ export default function RootLayout({
           property="og:image"
           content="https://sleeper-dashboard.vercel.app/api/og?title=Fantasy%20Dashboard"
         /> */}
-        <meta property="og:title" content="Fantasy Dashboard" />
-        <meta property="og:description" content="Your one-stop dashboard for all your Fantasy data." />
-        <meta property="og:url" content="https://sleeper-dashboard.vercel.app" />
-        <meta property="og:type" content="website" />
       </head>
       <body className={inter.className}>
         <div className="p-2 sm:p-4 max-w-3xl mx-auto">
