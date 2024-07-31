@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Fantasy Dashboard",
-    description: "Your one-stop dashboard for all your Fantasy data.",
+    description: "A Matchup between team 1 and team 2",
     openGraph: {
         images: [{
             url: `https://sleeper-dashboard.vercel.app/api/cards`,
