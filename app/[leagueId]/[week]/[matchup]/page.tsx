@@ -34,8 +34,8 @@ export async function generateMetadata(
         teamTwoDisplayName: data[1].user.display_name,
         teamOnePoints: data[0].points,
         teamTwoPoints: data[1].points,
-        teamOneAvatar: data[0].user.avatar,
-        teamTwoAvatar: data[1].user.avatar,
+        teamOneAvatar: data[0].user.metadata.avatar,
+        teamTwoAvatar: data[1].user.metadata.avatar,
     }
     // Append all parameters using a loop or Object.entries
     for (const [key, value] of Object.entries(params)) {
