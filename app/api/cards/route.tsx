@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
                                 <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">{paramsObj.teamOneDisplayName}</span>
                                 <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
                                 <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis">
-                                    {paramsObj.teamOneWin ? <span tw="mr-1 text-[#FFD700] text-2xl">🏆</span> : null}
+                                    {paramsObj.teamOneWin === "true" ? <span tw="mr-1 text-[#FFD700] text-2xl">🏆</span> : null}
                                     {paramsObj.teamOnePoints}
                                 </span>
                             </div>
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
                                 <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
                                 <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
                                     {paramsObj.teamTwoPoints}
-                                    {paramsObj.teamOneWin ? null : <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span>}
+                                    {paramsObj.teamOneWin === "false" ? null : <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span>}
                                 </span>
                             </div>
                             <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} />
