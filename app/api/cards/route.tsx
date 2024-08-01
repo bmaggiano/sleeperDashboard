@@ -7,10 +7,8 @@ export const runtime = "edge";
 export async function GET(req: NextRequest) {
     try {
         const font1 = await fetch(new URL("/public/Inter-Bold.ttf", import.meta.url));
-        const font2 = await fetch(new URL("/public/Inter-Regular.ttf", import.meta.url));
         const font3 = await fetch(new URL("/public/Inter-SemiBold.ttf", import.meta.url));
         const fontData1 = await font1.arrayBuffer();
-        const fontData2 = await font2.arrayBuffer();
         const fontData3 = await font3.arrayBuffer();
 
         // Create a URL object from the request URL
@@ -40,7 +38,7 @@ export async function GET(req: NextRequest) {
                                 <span
                                     tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden"
                                     style={{
-                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontFamily: "Inter-Semi", // Use regular font
                                         fontWeight: "normal"
                                     }}
                                 >
@@ -72,7 +70,7 @@ export async function GET(req: NextRequest) {
                             <h1
                                 tw="text-[#111827] font-bold text-3xl m-0"
                                 style={{
-                                    fontFamily: "Inter-Regular", // Use regular font
+                                    fontFamily: "Inter-Semi", // Use regular font
                                     fontWeight: "normal"
                                 }}
                             >
@@ -85,7 +83,7 @@ export async function GET(req: NextRequest) {
                                 <span
                                     tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right"
                                     style={{
-                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontFamily: "Inter-Semi", // Use regular font
                                         fontWeight: "normal"
                                     }}
                                 >
@@ -123,11 +121,6 @@ export async function GET(req: NextRequest) {
                     {
                         name: "Inter-Bold",
                         data: fontData1,
-                        style: "normal",
-                    },
-                    {
-                        name: "Inter-Regular",
-                        data: fontData2,
                         style: "normal",
                     },
                     {
