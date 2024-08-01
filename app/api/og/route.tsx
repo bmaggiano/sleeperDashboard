@@ -1,7 +1,5 @@
 import { NextRequest } from "next/server"
 import { ImageResponse } from "@vercel/og"
-import { promises as fs } from "fs"
-import path from "path"
 
 import { getAppUrl } from "@/lib/utils"
 import { ogImageSchema } from "@/lib/validations/og"
@@ -10,20 +8,14 @@ export const runtime = "edge"
 
 // Function to read font files from disk
 // Function to read font files from disk
-async function loadFont(filePath: string) {
-  try {
-    const absolutePath = path.resolve("./public/assets/fonts", filePath);
-    const fontData = await fs.readFile(absolutePath);
-    return fontData.buffer;
-  } catch (error) {
-    console.error(`Failed to load font at ${filePath}`, error);
-    throw new Error(`Failed to load font: ${filePath}`);
-  }
-}
 
-// Load the fonts
-const interRegular = loadFont("Inter-Regular.ttf")
-const interBold = loadFont("Inter-Bold.ttf")
+const interRegular = fetch(
+  new URL("/public/assets/fonts/Inter-Regular.ttf", import.meta.url)
+).then((res) => res.arrayBuffer())
+
+const interBold = fetch(
+  new URL("/public/assets/fonts/Inter-Bold.ttf", import.meta.url)
+).then((res) => res.arrayBuffer())
 
 export async function GET(req: NextRequest) {
   console.log("step 1")
