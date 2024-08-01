@@ -3,15 +3,15 @@ import type { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+const font1 = fetch(new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url)).then(res => res.arrayBuffer());
+const font2 = fetch(new URL("../../assets/fonts/Inter-Regular.ttf", import.meta.url)).then(res => res.arrayBuffer());
+const font3 = fetch(new URL("../../assets/fonts/Inter-SemiBold.ttf", import.meta.url)).then(res => res.arrayBuffer());
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
     try {
-        const font1 = await fetch(new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url));
-        const font2 = await fetch(new URL("../../assets/fonts/Inter-Regular.ttf", import.meta.url));
-        const font3 = await fetch(new URL("../../assets/fonts/Inter-SemiBold.ttf", import.meta.url));
-        const fontData1 = await font1.arrayBuffer();
-        const fontData2 = await font2.arrayBuffer();
-        const fontData3 = await font3.arrayBuffer();
+        const fontData1 = await font1;
+        const fontData2 = await font2;
+        const fontData3 = await font3;
 
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
