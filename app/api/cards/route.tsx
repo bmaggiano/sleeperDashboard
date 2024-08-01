@@ -1,7 +1,7 @@
 import { ImageResponse } from '@vercel/og';
 import type { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
+export const runtime = "edge";
 
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
                             <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
                                 <span
-                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis"
+                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden"
                                     style={{
                                         fontFamily: "Inter-Regular", // Use regular font
                                         fontWeight: "normal"
