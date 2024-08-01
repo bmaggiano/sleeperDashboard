@@ -15,9 +15,6 @@ export async function GET(req: NextRequest) {
             paramsObj[key] = value;
         });
 
-        // Log the resulting object
-        console.log(paramsObj);
-
         // Return an Open Graph image response
         return new ImageResponse(
             (
@@ -27,7 +24,7 @@ export async function GET(req: NextRequest) {
 
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
-                            <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamTwoAvatar}`} />
+                            <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
                                 <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">{paramsObj.teamOneDisplayName}</span>
                                 <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
