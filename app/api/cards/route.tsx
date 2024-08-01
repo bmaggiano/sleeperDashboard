@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-const font1 = fetch(new URL("../../public/assets/fonts/Inter-Bold.ttf", import.meta.url)).then(res => res.arrayBuffer());
+const font1 = fetch(new URL("/public/assets/fonts/Inter-Bold.ttf", import.meta.url)).then(res => res.arrayBuffer());
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
     try {
