@@ -15,6 +15,8 @@ export async function GET(req: NextRequest) {
             paramsObj[key] = value;
         });
 
+        console.log("paramsObj", paramsObj);
+
         // Return an Open Graph image response
         return new ImageResponse(
             (
@@ -47,7 +49,7 @@ export async function GET(req: NextRequest) {
                                 <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
                                 <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
                                     {paramsObj.teamTwoPoints}
-                                    {paramsObj.teamOneWin === "false" ? null : <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span>}
+                                    {paramsObj.teamOneWin === "false" ? <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span> : null}
                                 </span>
                             </div>
                             <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} />
