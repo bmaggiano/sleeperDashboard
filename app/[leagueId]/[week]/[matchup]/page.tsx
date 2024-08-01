@@ -28,7 +28,7 @@ export async function generateMetadata(
         week: week,
         leagueId: leagueId,
         matchup: matchup,
-        teamTwoName: "test",
+        teamTwoName: data[1].user.metadata.team_name,
         teamOneName: data[0].user.metadata.team_name,
         teamOneDisplayName: data[0].user.display_name,
         teamTwoDisplayName: data[1].user.display_name,
@@ -38,15 +38,12 @@ export async function generateMetadata(
         teamTwoAvatar: data[1].user.metadata.avatar || "https://via.placeholder.com/64",
     }
     // Append all parameters using a loop or Object.entries
-    for (const [key, value] of Object.entries(params)) {
+    for (const [key, value] of Object.entries(paramsObj)) {
         url.searchParams.append(key, value);
     }
 
-    console.log("paramsObj", paramsObj);
-
     // Fetch data if necessary, or use params to customize metadata
     const imageUrl = url.toString();
-    console.log("imageUrl", imageUrl);
 
     return {
         title: `Matchup Details - Week ${week}`,

@@ -8,15 +8,12 @@ export async function GET(req: NextRequest) {
     try {
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
+        console.log("req.url", req.url);
         let paramsObj: Record<string, string | string[]> = {}
         // Iterate over the search parameters and populate the object
         searchParams.forEach((value, key) => {
             paramsObj[key] = value;
         });
-
-        console.log("paramsObj on route", paramsObj);
-
-        console.log(paramsObj.teamOneName);
 
         // Return an Open Graph image response
         return new ImageResponse(
@@ -27,7 +24,7 @@ export async function GET(req: NextRequest) {
 
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
-                            {/* <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} /> */}
+                            <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
                                 <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">{paramsObj.teamOneDisplayName}</span>
                                 <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
@@ -50,7 +47,7 @@ export async function GET(req: NextRequest) {
                                     <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span>
                                 </span>
                             </div>
-                            {/* <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} /> */}
+                            <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} />
                         </div>
                     </div>
                 </div>
