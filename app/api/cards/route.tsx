@@ -21,17 +21,17 @@ export async function GET(req: NextRequest) {
         return new ImageResponse(
             (
                 <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md font-inter">
-                    <h1 tw="text-7xl mb-16 font-bold text-center">Matchup Details - Week {paramsObj.week}</h1>
+                    <h1 tw="text-[80px] mb-16 font-bold text-center">Matchup Details - Week {paramsObj.week}</h1>
                     <div tw="flex items-center mx-auto">
 
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
                             <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
-                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">{paramsObj.teamOneDisplayName}</span>
-                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
-                                <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis">
-                                    {paramsObj.teamOneWin === "true" ? <span tw="mr-1 text-[#FFD700] text-2xl">🏆</span> : null}
+                                <span tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">@{paramsObj.teamOneDisplayName}</span>
+                                <span tw="font-bold text-4xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
+                                <span tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis">
+                                    {paramsObj.teamOneWin === "true" ? <span tw="mr-1 text-[#FFD700] text-3xl">🏆</span> : null}
                                     {paramsObj.teamOnePoints}
                                 </span>
                             </div>
@@ -45,11 +45,11 @@ export async function GET(req: NextRequest) {
                         {/* Right Side Team Info */}
                         <div tw="flex items-center justify-end w-2/5 pr-8">
                             <div tw="flex flex-col items-end ml-4">
-                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoDisplayName}</span>
-                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
-                                <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
+                                <span tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right">@{paramsObj.teamTwoDisplayName}</span>
+                                <span tw="font-bold text-4xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
+                                <span tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
                                     {paramsObj.teamTwoPoints}
-                                    {paramsObj.teamOneWin === "false" ? <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span> : null}
+                                    {paramsObj.teamOneWin === "false" ? <span tw="ml-1 text-[#FFD700] text-3xl">🏆</span> : null}
                                 </span>
                             </div>
                             <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} />
