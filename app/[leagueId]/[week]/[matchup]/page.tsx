@@ -28,7 +28,7 @@ export async function generateMetadata(
         week: week,
         leagueId: leagueId,
         matchup: matchup,
-        teamTwoName: data[1].user.metadata.team_name,
+        teamTwoName: data[1].user.metadata.team_name || "test",
         teamOneName: data[0].user.metadata.team_name,
         teamOneDisplayName: data[0].user.display_name,
         teamTwoDisplayName: data[1].user.display_name,
@@ -46,6 +46,7 @@ export async function generateMetadata(
 
     // Fetch data if necessary, or use params to customize metadata
     const imageUrl = url.toString();
+    console.log("imageUrl", imageUrl);
 
     return {
         title: `Matchup Details - Week ${week}`,

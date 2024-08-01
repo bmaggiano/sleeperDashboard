@@ -14,11 +14,15 @@ export async function GET(req: NextRequest) {
             paramsObj[key] = value;
         });
 
+        console.log("paramsObj on route", paramsObj);
+
+        console.log(paramsObj.teamOneName);
+
         // Return an Open Graph image response
         return new ImageResponse(
             (
                 <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md font-inter">
-                    <h1 tw="text-7xl mb-16 font-bold text-center">Matchup Details - {paramsObj.week}</h1>
+                    <h1 tw="text-7xl mb-16 font-bold text-center">Matchup Details - Week {paramsObj.week}</h1>
                     <div tw="flex items-center mx-auto">
 
                         {/* Left Side Team Info */}
