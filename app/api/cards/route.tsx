@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
                                     {paramsObj.teamTwoName}
                                 </span>
                                 <span
-                                    tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right"
+                                    tw="flex items-center text-3xl font-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right"
                                     style={{
                                         fontFamily: "Inter-Semi", // Use regular font
                                         fontWeight: "normal"
