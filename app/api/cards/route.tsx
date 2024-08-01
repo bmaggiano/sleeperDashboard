@@ -1,53 +1,112 @@
-// app/api/og/route.tsx
-
 import { ImageResponse } from '@vercel/og';
 import type { NextRequest } from 'next/server';
+
+export const runtime = 'edge';
 
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
     try {
+        const font1 = await fetch(new URL("/public/Inter-Bold.ttf", import.meta.url));
+        const font2 = await fetch(new URL("/public/Inter-Regular.ttf", import.meta.url));
+        const font3 = await fetch(new URL("/public/Inter-SemiBold.ttf", import.meta.url));
+        const fontData1 = await font1.arrayBuffer();
+        const fontData2 = await font2.arrayBuffer();
+        const fontData3 = await font3.arrayBuffer();
+
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
-        console.log("req.url", req.url);
-        let paramsObj: Record<string, string | string[]> = {}
-        // Iterate over the search parameters and populate the object
+        let paramsObj: Record<string, string | string[]> = {};
         searchParams.forEach((value, key) => {
             paramsObj[key] = value;
         });
 
-        console.log("paramsObj", paramsObj);
-
         // Return an Open Graph image response
         return new ImageResponse(
             (
-                <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md font-inter">
-                    <h1 tw="text-[80px] mb-16 font-bold text-center">Matchup Details - Week {paramsObj.week}</h1>
+                <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md">
+                    <h1
+                        tw="text-[80px] mb-16"
+                        style={{
+                            fontFamily: "Inter-Bold", // Use font name directly
+                        }}
+                    >
+                        Matchup Details - Week {paramsObj.week}
+                    </h1>
                     <div tw="flex items-center mx-auto">
-
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
                             <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
-                                <span tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">@{paramsObj.teamOneDisplayName}</span>
-                                <span tw="font-bold text-4xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
-                                <span tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis">
+                                <span
+                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis"
+                                    style={{
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    @{paramsObj.teamOneDisplayName}
+                                </span>
+                                <span
+                                    tw="font-bold text-4xl overflow-hidden overflow-ellipsis"
+                                    style={{
+                                        fontFamily: "Inter-Semi", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    {paramsObj.teamOneName}
+                                </span>
+                                <span
+                                    tw="flex items-center text-3xl font-bold text-[#6B7280] overflow-hidden overflow-ellipsis"
+                                    style={{
+                                        fontFamily: "Inter-Semi", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
                                     {paramsObj.teamOneWin === "true" ? <span tw="mr-1 text-[#FFD700] text-3xl">🏆</span> : null}
                                     {paramsObj.teamOnePoints}
                                 </span>
                             </div>
                         </div>
-
                         {/* VS Section */}
                         <div tw="flex items-center justify-center w-1/5 text-center">
-                            <h1 tw="text-[#111827] font-bold text-3xl m-0">VS</h1>
+                            <h1
+                                tw="text-[#111827] font-bold text-3xl m-0"
+                                style={{
+                                    fontFamily: "Inter-Regular", // Use regular font
+                                    fontWeight: "normal"
+                                }}
+                            >
+                                VS
+                            </h1>
                         </div>
-
                         {/* Right Side Team Info */}
                         <div tw="flex items-center justify-end w-2/5 pr-8">
                             <div tw="flex flex-col items-end ml-4">
-                                <span tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right">@{paramsObj.teamTwoDisplayName}</span>
-                                <span tw="font-bold text-4xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
-                                <span tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
+                                <span
+                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right"
+                                    style={{
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    @{paramsObj.teamTwoDisplayName}
+                                </span>
+                                <span
+                                    tw="font-bold text-4xl overflow-hidden overflow-ellipsis text-right"
+                                    style={{
+                                        fontFamily: "Inter-Semi", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
+                                    {paramsObj.teamTwoName}
+                                </span>
+                                <span
+                                    tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right"
+                                    style={{
+                                        fontFamily: "Inter-Semi", // Use regular font
+                                        fontWeight: "normal"
+                                    }}
+                                >
                                     {paramsObj.teamTwoPoints}
                                     {paramsObj.teamOneWin === "false" ? <span tw="ml-1 text-[#FFD700] text-3xl">🏆</span> : null}
                                 </span>
@@ -58,16 +117,29 @@ export async function GET(req: NextRequest) {
                 </div>
             ),
             {
-                // Define the dimensions of the image
                 width: 1200,
                 height: 630,
+                fonts: [
+                    {
+                        name: "Inter-Bold",
+                        data: fontData1,
+                        style: "normal",
+                    },
+                    {
+                        name: "Inter-Regular",
+                        data: fontData2,
+                        style: "normal",
+                    },
+                    {
+                        name: "Inter-Semi",
+                        data: fontData3,
+                        style: "normal",
+                    }
+                ]
             }
         );
     } catch (error) {
-        // Log the error for debugging
         console.error("Error generating Open Graph image:", error);
-
-        // Return a JSON response with error details
         return new Response(
             JSON.stringify({
                 error:
