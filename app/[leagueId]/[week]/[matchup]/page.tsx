@@ -35,7 +35,6 @@ export async function generateMetadata(
         teamOnePoints: data[0].points,
         teamTwoPoints: data[1].points,
         teamOneWin: (data[0].points > data[1].points) ? true : false,
-        teamTwoWin: (data[1].points > data[0].points) ? true : false,
         teamOneAvatar: data[0].user.metadata.avatar || "https://via.placeholder.com/64",
         teamTwoAvatar: data[1].user.metadata.avatar || "https://via.placeholder.com/64",
     }
