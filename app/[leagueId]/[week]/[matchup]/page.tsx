@@ -28,7 +28,7 @@ export async function generateMetadata(
         week: week,
         leagueId: leagueId,
         matchup: matchup,
-        teamTwoName: data[1].user.metadata.team_name || "test",
+        teamTwoName: "test",
         teamOneName: data[0].user.metadata.team_name,
         teamOneDisplayName: data[0].user.display_name,
         teamTwoDisplayName: data[1].user.display_name,
