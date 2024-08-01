@@ -4,14 +4,10 @@ import type { NextRequest } from 'next/server';
 export const runtime = 'edge';
 
 const font1 = fetch(new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url)).then(res => res.arrayBuffer());
-const font2 = fetch(new URL("../../assets/fonts/Inter-Regular.ttf", import.meta.url)).then(res => res.arrayBuffer());
-const font3 = fetch(new URL("../../assets/fonts/Inter-SemiBold.ttf", import.meta.url)).then(res => res.arrayBuffer());
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
     try {
         const fontData1 = await font1;
-        const fontData2 = await font2;
-        const fontData3 = await font3;
 
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
@@ -125,16 +121,6 @@ export async function GET(req: NextRequest) {
                         data: fontData1,
                         style: "normal",
                     },
-                    {
-                        name: "Inter-Regular",
-                        data: fontData2,
-                        style: "normal",
-                    },
-                    {
-                        name: "Inter-Semi",
-                        data: fontData3,
-                        style: "normal",
-                    }
                 ]
             }
         );
