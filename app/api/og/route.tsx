@@ -6,7 +6,7 @@ import path from "path"
 import { getAppUrl } from "@/lib/utils"
 import { ogImageSchema } from "@/lib/validations/og"
 
-export const config = { runtime: "edge" }
+export const runtime = "edge"
 
 // Function to read font files from disk
 // Function to read font files from disk
