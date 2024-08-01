@@ -6,9 +6,6 @@ import { ogImageSchema } from "@/lib/validations/og"
 
 export const runtime = "edge"
 
-// Function to read font files from disk
-// Function to read font files from disk
-
 const interRegular = fetch(
   new URL("/public/assets/fonts/Inter-Regular.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
@@ -18,17 +15,11 @@ const interBold = fetch(
 ).then((res) => res.arrayBuffer())
 
 export async function GET(req: NextRequest) {
-  console.log("step 1")
   try {
     const fontRegular = await interRegular
-    console.log("step 2")
     const fontBold = await interBold
-    console.log("step 3")
 
-    console.log("step 4")
-    console.log(req.url)
     const url = new URL(req.url)
-    console.log("hey", ogImageSchema.parse(Object.fromEntries(url.searchParams)))
     const values = ogImageSchema.parse(Object.fromEntries(url.searchParams))
     const heading =
       values.heading.length > 140
