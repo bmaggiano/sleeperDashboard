@@ -9,26 +9,29 @@ export async function GET(req: NextRequest) {
     try {
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
+        let paramsObj: Record<string, string | string[]> = {}
+        // Iterate over the search parameters and populate the object
+        searchParams.forEach((value, key) => {
+            paramsObj[key] = value;
+        });
 
-        console.log(searchParams);
-
-        // Retrieve the 'title' query parameter, defaulting to 'Fantasy Dashboard' if not provided
-        const week = searchParams.get('week') || 'N/A';
+        // Log the resulting object
+        console.log(paramsObj);
 
         // Return an Open Graph image response
         return new ImageResponse(
             (
                 <div tw="flex flex-col items-center justify-center w-full h-full p-5 bg-[#F7F9FC] rounded-lg border border-[#E5E7EB] shadow-md font-inter">
-                    <h1 tw="text-5xl mb-16 font-semibold text-center">Matchup Details - Week {week}</h1>
+                    <h1 tw="text-7xl mb-16 font-bold text-center">Matchup Details - {paramsObj.week}</h1>
                     <div tw="flex items-center mx-auto">
 
                         {/* Left Side Team Info */}
                         <div tw="flex items-center w-2/5 pl-8">
-                            <img tw="h-20 w-20 mr-4 rounded-full" src="https://sleepercdn.com/uploads/32b31d6b8bf8cda3baf19a723b82af3b.jpg" />
+                            <img tw="h-20 w-20 mr-4 rounded-full" src={`https://sleepercdn.com/avatars/thumbs/${paramsObj.teamTwoAvatar}`} />
                             <div tw="flex flex-col mr-4">
-                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">@bhastings1019</span>
-                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">Ben&apos;d me over Sidd</span>
-                                <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis">102.2</span>
+                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis">{paramsObj.teamOneDisplayName}</span>
+                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis">{paramsObj.teamOneName}</span>
+                                <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis">{paramsObj.teamOnePoints}</span>
                             </div>
                         </div>
 
@@ -40,14 +43,14 @@ export async function GET(req: NextRequest) {
                         {/* Right Side Team Info */}
                         <div tw="flex items-center justify-end w-2/5 pr-8">
                             <div tw="flex flex-col items-end ml-4">
-                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right">@jsngr</span>
-                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis text-right">FOR ALL THE DOGS</span>
+                                <span tw="text-sm text-2xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoDisplayName}</span>
+                                <span tw="font-bold text-3xl overflow-hidden overflow-ellipsis text-right">{paramsObj.teamTwoName}</span>
                                 <span tw="flex items-center text-2xl text-[#6B7280] overflow-hidden overflow-ellipsis text-right">
-                                    137.56
+                                    {paramsObj.teamTwoPoints}
                                     <span tw="ml-1 text-[#FFD700] text-2xl">🏆</span>
                                 </span>
                             </div>
-                            <img tw="h-20 w-20 rounded-full ml-4" src="https://sleepercdn.com/avatars/thumbs/918dc290ebefdd426d9d1341e02609ae" />
+                            <img tw="h-20 w-20 rounded-full ml-4" src={`https://sleepercdn.com/avatars/thumbs/${paramsObj.teamTwoAvatar}`} />
                         </div>
                     </div>
                 </div>

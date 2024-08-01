@@ -17,8 +17,35 @@ export async function generateMetadata(
     // Destructure the necessary parameters
     const { week, leagueId, matchup } = params;
 
+    const data = await getMatchupsWithMatchupID({ weekIndex: Number(week), leagueId: leagueId, matchupId: matchup });
+
+    const baseUrl = 'https://sleeper-dashboard.vercel.app/api/cards';
+
+    // Create a URL object from the base URL
+    let url = new URL(baseUrl);
+
+    const paramsObj = {
+        week: week,
+        leagueId: leagueId,
+        matchup: matchup,
+        teamTwoName: data[1].user.metadata.team_name,
+        teamOneName: data[0].user.metadata.team_name,
+        teamOneDisplayName: data[0].user.display_name,
+        teamTwoDisplayName: data[1].user.display_name,
+        teamOnePoints: data[0].points,
+        teamTwoPoints: data[1].points,
+        teamOneAvatar: data[0].user.avatar,
+        teamTwoAvatar: data[1].user.avatar,
+    }
+    // Append all parameters using a loop or Object.entries
+    for (const [key, value] of Object.entries(params)) {
+        url.searchParams.append(key, value);
+    }
+
+    console.log("paramsObj", paramsObj);
+
     // Fetch data if necessary, or use params to customize metadata
-    const imageUrl = `https://sleeper-dashboard.vercel.app/api/cards?week=${week}`;
+    const imageUrl = url.toString();
 
     return {
         title: `Matchup Details - Week ${week}`,
