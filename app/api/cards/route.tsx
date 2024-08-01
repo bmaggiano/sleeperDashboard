@@ -6,9 +6,12 @@ export const runtime = 'edge';
 // Use a named export for the GET method
 export async function GET(req: NextRequest) {
     try {
-        // Fetch the Inter-Bold font file
-        const font = await fetch(new URL("/public/Inter-Bold.ttf", import.meta.url));
-        const fontData = await font.arrayBuffer();
+        const font1 = await fetch(new URL("../../assets/fonts/Inter-Bold.ttf", import.meta.url));
+        const font2 = await fetch(new URL("../../assets/fonts/Inter-Regular.ttf", import.meta.url));
+        const font3 = await fetch(new URL("../../assets/fonts/Inter-SemiBold.ttf", import.meta.url));
+        const fontData1 = await font1.arrayBuffer();
+        const fontData2 = await font2.arrayBuffer();
+        const fontData3 = await font3.arrayBuffer();
 
         // Create a URL object from the request URL
         const { searchParams } = new URL(req.url);
@@ -24,8 +27,7 @@ export async function GET(req: NextRequest) {
                     <h1
                         tw="text-[80px] mb-16"
                         style={{
-                            fontFamily: "Inter", // Match the font family name used in the font file
-                            fontWeight: "700" // Bold weight
+                            fontFamily: "Inter-Bold", // Use font name directly
                         }}
                     >
                         Matchup Details - Week {paramsObj.week}
@@ -36,28 +38,28 @@ export async function GET(req: NextRequest) {
                             <img tw="h-20 w-20 mr-4 rounded-full" src={`${paramsObj.teamOneAvatar}`} />
                             <div tw="flex flex-col mr-4">
                                 <span
-                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden"
+                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis"
                                     style={{
-                                        fontFamily: "Inter", // Match the font family name used in the font file
-                                        fontWeight: "400" // Regular weight (note: it's still bold because only bold font file is used)
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     @{paramsObj.teamOneDisplayName}
                                 </span>
                                 <span
-                                    tw="text-4xl overflow-hidden"
+                                    tw="font-bold text-4xl overflow-hidden overflow-ellipsis"
                                     style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: "700" // Bold weight
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     {paramsObj.teamOneName}
                                 </span>
                                 <span
-                                    tw="flex items-center text-3xl text-[#6B7280] overflow-hidden"
+                                    tw="flex items-center text-3xl font-bold text-[#6B7280] overflow-hidden overflow-ellipsis"
                                     style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: "700" // Bold weight
+                                        fontFamily: "Inter-Bold", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     {paramsObj.teamOneWin === "true" ? <span tw="mr-1 text-[#FFD700] text-3xl">🏆</span> : null}
@@ -70,8 +72,8 @@ export async function GET(req: NextRequest) {
                             <h1
                                 tw="text-[#111827] font-bold text-3xl m-0"
                                 style={{
-                                    fontFamily: "Inter",
-                                    fontWeight: "700" // Bold weight
+                                    fontFamily: "Inter-Regular", // Use regular font
+                                    fontWeight: "normal"
                                 }}
                             >
                                 VS
@@ -81,28 +83,28 @@ export async function GET(req: NextRequest) {
                         <div tw="flex items-center justify-end w-2/5 pr-8">
                             <div tw="flex flex-col items-end ml-4">
                                 <span
-                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden text-right"
+                                    tw="text-sm text-3xl text-[#9CA3AF] overflow-hidden overflow-ellipsis text-right"
                                     style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: "400" // Regular weight (note: it's still bold because only bold font file is used)
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     @{paramsObj.teamTwoDisplayName}
                                 </span>
                                 <span
-                                    tw="text-4xl overflow-hidden text-right"
+                                    tw="font-bold text-4xl overflow-hidden overflow-ellipsis text-right"
                                     style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: "700" // Bold weight
+                                        fontFamily: "Inter-Regular", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     {paramsObj.teamTwoName}
                                 </span>
                                 <span
-                                    tw="flex items-center text-3xl text-[#6B7280] overflow-hidden text-right"
+                                    tw="flex items-center text-3xl text-bold text-[#6B7280] overflow-hidden overflow-ellipsis text-right"
                                     style={{
-                                        fontFamily: "Inter",
-                                        fontWeight: "700" // Bold weight
+                                        fontFamily: "Inter-Semi", // Use regular font
+                                        fontWeight: "normal"
                                     }}
                                 >
                                     {paramsObj.teamTwoPoints}
@@ -111,16 +113,26 @@ export async function GET(req: NextRequest) {
                             </div>
                             <img tw="h-20 w-20 rounded-full ml-4" src={`${paramsObj.teamTwoAvatar}`} />
                         </div>
-                    </div >
-                </div >
+                    </div>
+                </div>
             ),
             {
                 width: 1200,
                 height: 630,
                 fonts: [
                     {
-                        name: "Inter",
-                        data: fontData,
+                        name: "Inter-Bold",
+                        data: fontData1,
+                        style: "normal",
+                    },
+                    {
+                        name: "Inter-Regular",
+                        data: fontData2,
+                        style: "normal",
+                    },
+                    {
+                        name: "Inter-Semi",
+                        data: fontData3,
                         style: "normal",
                     }
                 ]
