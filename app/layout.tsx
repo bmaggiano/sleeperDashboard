@@ -8,14 +8,14 @@ import { Separator } from "@/components/ui/separator";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Fantasy Dashboard",
-  description: "Your one-stop dashboard for all your Fantasy data.",
+  title: "Stuart AI",
+  description: "Your fantasy football knowledge base.",
   openGraph: {
     images: [{
       url: `https://sleeper-dashboard.vercel.app/api/og`,
       width: 1200,
       height: 630,
-      alt: 'Fantasy Dashboard Default Image',
+      alt: 'Stuart AI, Your fantasy football knowledge base.',
     }],
   },
 };
