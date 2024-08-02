@@ -1,14 +1,7 @@
 import { NextRequest } from "next/server"
 import { ImageResponse } from "@vercel/og"
 
-import { getAppUrl } from "@/lib/utils"
-import { ogImageSchema } from "@/lib/validations/og"
-
 export const runtime = "edge"
-
-const interRegular = fetch(
-  new URL("/public/assets/fonts/Inter-Regular.ttf", import.meta.url)
-).then((res) => res.arrayBuffer())
 
 const interBold = fetch(
   new URL("/public/assets/fonts/Inter-Bold.ttf", import.meta.url)
@@ -16,28 +9,16 @@ const interBold = fetch(
 
 export async function GET(req: NextRequest) {
   try {
-    const fontRegular = await interRegular
     const fontBold = await interBold
 
-    const url = new URL(req.url)
-    const values = ogImageSchema.parse(Object.fromEntries(url.searchParams))
-    const heading =
-      values.heading.length > 140
-        ? `${values.heading.substring(0, 140)}...`
-        : values.heading
-
-    const { mode } = values
-    const paint = mode === "dark" ? "#fff" : "#000"
-
-    const fontSize = heading.length > 100 ? "70px" : "100px"
-    console.log("step 5")
+    const fontSize = "80px"
 
     return new ImageResponse(
       (
         <div
           tw="flex relative flex-col p-12 w-full h-full items-start"
           style={{
-            color: paint,
+            color: "fff",
             background:
 
               "linear-gradient(90deg, #000 0%, #111 100%)"
@@ -51,7 +32,7 @@ export async function GET(req: NextRequest) {
               {/* {values.type} */}
             </div>
             <div
-              tw="flex leading-[1.1] text-[80px] font-bold tracking-tighter"
+              tw="flex leading-[1.1] text-white text-[80px] font-bold tracking-tighter"
               style={{
                 fontFamily: "Inter",
                 fontWeight: "bolder",
@@ -59,8 +40,9 @@ export async function GET(req: NextRequest) {
                 fontSize,
               }}
             >
-              {heading}
+              Stuart Ai
             </div>
+            <div tw="flex leading-[1.1] text-gray-400 text-[50px] font-bold">The power of AI in Fantasy Football</div>
           </div>
           <div tw="flex flex-col space-y-8 items-start w-full justify-between">
             <div tw="flex items-center space-x-2">
@@ -85,12 +67,6 @@ export async function GET(req: NextRequest) {
         width: 1200,
         height: 630,
         fonts: [
-          {
-            name: "Inter",
-            data: fontRegular,
-            weight: 400,
-            style: "normal",
-          },
           {
             name: "Inter",
             data: fontBold,
