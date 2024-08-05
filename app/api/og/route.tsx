@@ -49,23 +49,10 @@ export async function GET(req: NextRequest) {
             </div>
             <div tw="flex leading-[1.1] text-gray-400 text-[50px] font-bold">Your fantasy football knowledge base</div>
           </div>
-          <div tw="flex flex-col items-start w-full">
-            <div tw="flex flex-row items-center">
-              <img
-                src="https://sleeper-dashboard.vercel.app/logo.png"
-                tw="h-12 w-12 rounded-full mr-4"
-                alt="football"
-              />
-              <div tw="flex flex-col items-start font-bold text-gray-400">
-                <p tw="mb-0">
-                  Connect with Sleeper
-                </p>
-                <p tw="mt-0">
-                  v1.0.0
-                </p>
-              </div>
-            </div>
-          </div>
+
+          <p tw="mb-0 ml-2 text-gray-400">
+            Connect with Sleeper
+          </p>
         </div>
       ),
       {

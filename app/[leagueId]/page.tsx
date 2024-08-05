@@ -44,6 +44,7 @@ export default async function Page({ params }: { params: { leagueId: string } })
                 <h1 className="font-medium">Matchups - {getLeagueName(leagueId)}</h1>
                 <Combobox leagueId={leagueId} data={weeks} />
             </div>
+            {/* <PlayersServer leagueId={leagueId} /> */}
             <ScoresComponent leagueId={leagueId} week={1} />
         </main>
     );
