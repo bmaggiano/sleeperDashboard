@@ -11,7 +11,7 @@ export default function UserCard({ user, champion, width, viewRoster = false }: 
     return (
         <motion.div className={cn(
             "flex p-4 flex mx-auto flex-col items-center h-[90px] ring-1 ring-gray-200 rounded-lg",
-            width ? `w-1/2` : `w-full`,
+            width ? `w-full sm:w-1/2` : `w-full`,
             viewRoster ? 'overflow-hidden curosr-pointer' : '',
         )}
             whileHover={viewRoster ? { height: "150px" } : undefined}
