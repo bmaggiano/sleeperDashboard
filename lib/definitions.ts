@@ -4,7 +4,6 @@ export interface Player {
     last_name: string | null;
     position: string | null;
     team: string | null;
-    gsis_id: string | null;
 }
 
 export interface Team {
