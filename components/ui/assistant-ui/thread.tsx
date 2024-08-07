@@ -6,16 +6,19 @@ import {
   ThreadPrimitive,
 } from "@assistant-ui/react";
 import type { FC } from "react";
-import { SendHorizontalIcon } from "lucide-react";
+import { BotIcon, SendHorizontalIcon } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/ui/assistant-ui/tooltip-icon-button";
+import { Button } from "../button";
 
 export const Thread: FC = () => {
   return (
     <ThreadPrimitive.Root className="bg-background h-full">
-      <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
-        <ThreadWelcome />
+      <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4">
+        {/* <ThreadWelcome /> */}
+        <WaitlistWelcome />
+
 
         <ThreadPrimitive.Messages
           components={{
@@ -24,9 +27,9 @@ export const Thread: FC = () => {
           }}
         />
 
-        <div className="sticky bottom-0 mt-4 flex w-full max-w-2xl flex-grow flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
+        {/* <div className="sticky bottom-0 mt-4 flex w-full max-w-2xl flex-grow flex-col items-center justify-end rounded-t-lg bg-inherit pb-4">
           <Composer />
-        </div>
+        </div> */}
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
   );
@@ -40,6 +43,19 @@ const ThreadWelcome: FC = () => {
           <AvatarFallback>C</AvatarFallback>
         </Avatar>
         <p className="mt-4 font-medium">How can I help you today?</p>
+      </div>
+    </ThreadPrimitive.Empty>
+  );
+};
+
+const WaitlistWelcome: FC = () => {
+  return (
+    <ThreadPrimitive.Empty>
+      <div className="flex flex-grow basis-full flex-col items-center justify-center space-y-3">
+        <BotIcon className="h-12 w-12 text-gray-600" />
+        <p className="text-xl font-bold">Stuart <span className="bg-black text-white rounded-md pl-[0.4rem] pr-[0.5rem]">AI</span></p>
+        <p className="my-0 text-gray-500">AI coming soon</p>
+        <Button>Enter Waitlist</Button>
       </div>
     </ThreadPrimitive.Empty>
   );

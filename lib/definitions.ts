@@ -1,14 +1,20 @@
 export interface Player {
-    full_name: string | null;
+    full_name: string;
     first_name: string | null;
     last_name: string | null;
     position: string | null;
     team: string | null;
+    gsis_id: string | null;
 }
 
 export interface Team {
+    points: number;
     user: {
         display_name: string | null;
+        metadata: {
+            avatar: string;
+            team_name: string;
+        };
     };
     starters: string[] | null;
     starters_points: number[] | null;
