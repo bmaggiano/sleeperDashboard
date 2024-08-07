@@ -25,7 +25,7 @@ const FuzzySearch = () => {
     const fuse = new Fuse(playerData, options);
 
     // Handle input change
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const input = e.target.value;
         setQuery(input);
 
