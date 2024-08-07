@@ -9,9 +9,17 @@ import playerData from '../lib/sleeper/players_id_mapping.json'
 const fallbackImage = "/NFL.svg";
 
 const FuzzySearch = () => {
+    type Player = {
+        display_name: string;
+        team_abbr: string;
+        position: string;
+        status: string;
+        gsis_id: string;
+        headshot?: string;
+    };
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
-    const [selectedPlayer, setSelectedPlayer] = useState(null);
+    const [results, setResults] = useState<Player[]>([]);
+    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null); // Specify type for selectedPlayer
 
     // Configure Fuse.js options
     const options = {
@@ -22,23 +30,23 @@ const FuzzySearch = () => {
     };
 
     // Create Fuse instance
-    const fuse = new Fuse(playerData, options);
+    const fuse = new Fuse<Player>(playerData as Player[], options); // Specify the type for Fuse
 
     // Handle input change
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
         setQuery(input);
 
         if (input.length > 1) {
-            const result = fuse.search(input);
-            setResults(result.map(res => res.item).filter(player => player.status === "ACT")); // Filter out retired players
+            const result = fuse.search(input) as { item: Player }[]; // Cast result to the correct type
+            setResults(result.map(res => res.item).filter((player: Player) => player.status === "ACT")); // Filter out retired players
         } else {
             setResults([]);
         }
     };
 
     // Handle player selection
-    const handleSelect = (player) => {
+    const handleSelect = (player: any) => {
         setQuery(player.display_name);
         setSelectedPlayer(player);
         setResults([]);
