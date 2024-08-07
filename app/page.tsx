@@ -4,8 +4,6 @@ import LeaguesMarquee from "./leaguesMarquee";
 import LeagueSearchForm from "./leagueSearchForm";
 import { AssistantModal } from "@/components/ui/assistant-ui/assistant-modal";
 import FuzzySearch from "./fuzzySearch";
-import { MatchupTableObj, columns } from "./columns"
-import { DataTable } from "./data-table"
 
 export default function Home() {
 
