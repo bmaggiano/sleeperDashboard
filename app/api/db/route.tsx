@@ -6,7 +6,7 @@ import { z } from "zod";
 
 interface Play {
     game_id: string;
-    play_id: string;
+    play_id: any;
     desc: string;
     rushing_yards: number | null;
     receiving_yards: number | null;
