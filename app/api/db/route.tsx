@@ -6,8 +6,8 @@ import { z } from "zod";
 
 interface Play {
     game_id: string;
-    play_id: any;
-    desc: string;
+    play_id: number | null;
+    desc: string | null;
     rushing_yards: number | null;
     receiving_yards: number | null;
     td_player_id: string | null;
@@ -69,7 +69,7 @@ function calculatePlayerStats(
         }
         if (totalYards > acc[play.game_id].biggest_yardage_play) {
             acc[play.game_id].biggest_yardage_play = totalYards;
-            acc[play.game_id].play_description = play.desc;
+            acc[play.game_id].play_description = play.desc || "";
         }
         return acc;
     }, {});
