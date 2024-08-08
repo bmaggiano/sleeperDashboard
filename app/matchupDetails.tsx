@@ -26,7 +26,7 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
     return (
         <div className="flex flex-col space-y-1">
             {teamOne.starters.map((starter, index) => (
-                <div key={index} className="text-xs sm:text-sm flex justify-evenly items-center ring-1 ring-gray-200 rounded-md p-2">
+                <div key={index} className="text-xs sm:text-sm flex justify-evenly items-center rounded-md p-2">
                     <div className="px-2 flex-1 flex flex-row justify-center items-center">
                         <div className="w-full  justify-between flex flex-col">
                             <p className="font-semibold hidden sm:block">{getPlayerInfo(starter).full_name} </p>
@@ -35,7 +35,7 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
                             </p>
                             <p className=" text-gray-500">{getPlayerInfo(starter).team}</p>
                         </div>
-                        <p className="pr-4 font-medium">{teamOne.starters_points![index]}</p>
+                        <p className="pr-4 font-semibold">{teamOne.starters_points![index]}</p>
                     </div>
                     <div className="flex-initial flex justify-center items-center">
                         <h1 className="">{getPlayerInfo(starter).position}</h1>
@@ -43,7 +43,7 @@ function PlayerMatchupCards({ teamOne, teamTwo }: PlayerMatchupCardsProps) {
                     <div className="flex-1 flex flex-row justify-center items-center px-2">
                         {teamTwo.starters && (
                             <>
-                                <p className="pl-4 font-medium">{teamTwo.starters_points![index]}</p>
+                                <p className="pl-4 font-semibold">{teamTwo.starters_points![index]}</p>
                                 <div className="text-right  flex-row justify-between w-full items-center">
                                     <p className="font-semibold hidden sm:block">{getPlayerInfo(teamTwo.starters[index]).full_name} </p>
                                     <p className="font-semibold sm:hidden">

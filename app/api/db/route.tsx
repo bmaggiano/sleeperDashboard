@@ -1,8 +1,9 @@
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { generateObject, generateText, streamObject } from "ai";
+import { generateObject, streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
+import { ffDataSchema } from "./schema";
 
 interface Play {
     game_id: string;
@@ -75,10 +76,14 @@ function calculatePlayerStats(
     }, {});
 }
 
-export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const playerId1 = searchParams.get("pid1");
-    const playerId2 = searchParams.get("pid2");
+export async function POST(request: NextRequest) {
+    const context = await request.json();
+    const { playerId1, playerId2 } = context;
+    console.log("hey")
+    console.log(context);
+    // const { searchParams } = new URL(request.url);
+    // const playerId1 = searchParams.get("pid1");
+    // const playerId2 = searchParams.get("pid2");
 
     if (!playerId1 || !playerId2) {
         return NextResponse.json(
@@ -149,8 +154,7 @@ export async function GET(request: NextRequest) {
 
     const result1 = Object.values(playerStats1).map((stats) => ({
         game_id: stats.game_id,
-        average_yards:
-            stats.total_yards.reduce((a, b) => a + b, 0) / stats.total_yards.length,
+        average_yards: stats.total_yards.reduce((a, b) => a + b, 0) / stats.total_yards.length,
         biggest_yardage_play: stats.biggest_yardage_play,
         play_description: stats.play_description,
         touchdowns: stats.touchdowns,
@@ -166,8 +170,7 @@ export async function GET(request: NextRequest) {
 
     const result2 = Object.values(playerStats2).map((stats) => ({
         game_id: stats.game_id,
-        average_yards:
-            stats.total_yards.reduce((a, b) => a + b, 0) / stats.total_yards.length,
+        average_yards: stats.total_yards.reduce((a, b) => a + b, 0) / stats.total_yards.length,
         biggest_yardage_play: stats.biggest_yardage_play,
         play_description: stats.play_description,
         touchdowns: stats.touchdowns,
@@ -181,30 +184,12 @@ export async function GET(request: NextRequest) {
         defteam_score: stats.defteam_score,
     }));
 
-    const { object } = await generateObject({
+    const result = await streamObject({
         model: openai("gpt-4-turbo"),
         seed: 100,
-        schema: z.object({
-            explanation: z.string(),
-            safe_pick: z.string(),
-            risky_pick: z.string(),
-            recommended_pick: z.string().optional(),
-            undecided: z.string().optional(),
-        }),
-        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.display_name
-            }): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.display_name
-            }): ${JSON.stringify(
-                result2,
-                null,
-                2
-            )}\n\nConsider the number of games played (Player 1: ${result1.length
-            } games, Player 2: ${result2.length
-            } games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation, safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
+        schema: ffDataSchema,
+        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.display_name}): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.display_name}): ${JSON.stringify(result2, null, 2)}\n\nConsider the number of games played (Player 1: ${result1.length} games, Player 2: ${result2.length} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation, safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
     });
 
-    return NextResponse.json({
-        object,
-        player1Stats: result1,
-        player2Stats: result2,
-    });
+    return result.toTextStreamResponse();
 }

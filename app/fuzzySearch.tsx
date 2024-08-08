@@ -1,55 +1,57 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Fuse from 'fuse.js';
 import Image from 'next/image';
-import playerData from '../lib/sleeper/players_id_mapping.json'
+import playerData from '../lib/sleeper/players_id_mapping.json';
 
 // Default fallback image URL
 const fallbackImage = "/NFL.svg";
 
-const FuzzySearch = () => {
-    type Player = {
-        display_name: string;
-        team_abbr: string;
-        position: string;
-        status: string;
-        gsis_id: string;
-        headshot?: string;
-    };
+type Player = {
+    display_name: string;
+    team_abbr: string;
+    position: string;
+    status: string;
+    gsis_id: string;
+    headshot?: string;
+};
+
+interface FuzzySearchProps {
+    onPlayerSelect: (player: Player) => void;
+}
+
+const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<Player[]>([]);
-    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null); // Specify type for selectedPlayer
+    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
-    // Configure Fuse.js options
     const options = {
-        keys: ['display_name', 'team_abbr', 'position'], // Adjust keys according to your data
-        threshold: 0.3, // Controls fuzziness
+        keys: ['display_name', 'team_abbr', 'position'],
+        threshold: 0.3,
         includeScore: true,
         minMatchCharLength: 2,
     };
 
-    // Create Fuse instance
-    const fuse = new Fuse<Player>(playerData as Player[], options); // Specify the type for Fuse
+    const fuse = new Fuse<Player>(playerData as Player[], options);
 
-    // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
         setQuery(input);
 
         if (input.length > 1) {
-            const result = fuse.search(input) as { item: Player }[]; // Cast result to the correct type
-            setResults(result.map(res => res.item).filter((player: Player) => player.status === "ACT")); // Filter out retired players
+            const result = fuse.search(input) as { item: Player }[];
+            setResults(result.map(res => res.item).filter((player: Player) => player.status === "ACT"));
         } else {
             setResults([]);
         }
     };
 
-    // Handle player selection
-    const handleSelect = (player: any) => {
+    const handleSelect = (player: Player) => {
         setQuery(player.display_name);
         setSelectedPlayer(player);
         setResults([]);
+        onPlayerSelect(player);
     };
 
     return (
@@ -61,7 +63,6 @@ const FuzzySearch = () => {
                 placeholder="Search for a player..."
                 className="p-2 border rounded"
             />
-
             {results.length > 0 && (
                 <ul className="search-results bg-white border rounded mt-2 overflow-y-auto">
                     {results.slice(0, 5).map((player, index) => (
