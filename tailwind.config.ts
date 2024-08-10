@@ -1,12 +1,12 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -59,9 +59,9 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        "shine": {
-          from: { backgroundPosition: '200% 0' },
-          to: { backgroundPosition: '-200% 0' },
+        shine: {
+          from: { backgroundPosition: "200% 0" },
+          to: { backgroundPosition: "-200% 0" },
         },
         marquee: {
           from: { transform: "translateX(0)" },
@@ -79,23 +79,32 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        meteor: {
+          "0%": { transform: "rotate(215deg) translateX(0)", opacity: "1" },
+          "70%": { opacity: "1" },
+          "100%": {
+            transform: "rotate(215deg) translateX(-500px)",
+            opacity: "0",
+          },
+        },
       },
       animation: {
-        "shine": "shine 8s ease-in-out infinite",
+        shine: "shine 8s ease-in-out infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         marquee: "marquee var(--duration) linear infinite",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+        "meteor-effect": "meteor 5s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),
-  require("@assistant-ui/react/tailwindcss")({
-    components: ["assistant-modal"],
-    shadcn: true
-  })
-
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@assistant-ui/react/tailwindcss")({
+      components: ["assistant-modal"],
+      shadcn: true,
+    }),
   ],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
