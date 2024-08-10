@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { useAtom } from "jotai";
 import { leagueNameAtom, leagueAtom } from "./atoms/atom";
@@ -11,9 +11,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const debounce = <T extends (...args: any[]) => void>(
+  func: T,
+  delay: number
+): ((...args: Parameters<T>) => void) => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
 
 export default function LeagueSearchForm() {
   const { toast } = useToast();
@@ -22,30 +32,32 @@ export default function LeagueSearchForm() {
   const [leagueId, setLeagueId] = useAtom(leagueAtom);
   const [userLeagues, setUserLeagues] = useState<any[]>([]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await searchLeague();
-  };
-
-  const searchLeague = async () => {
-    const leagueResponse = await getLeagueName(localLeagueId);
+  const searchLeague = async (searchTerm: string) => {
+    const leagueResponse = await getLeagueName(searchTerm);
 
     if (leagueResponse.error) {
-      const userLeaguesResponse = await getLeagueByUserId(localLeagueId);
+      const userLeaguesResponse = await getLeagueByUserId(searchTerm);
       Array.isArray(userLeaguesResponse)
         ? setUserLeagues(userLeaguesResponse)
         : showErrorToast(
             userLeaguesResponse.error || "Failed to fetch leagues"
           );
     } else {
-      handleSuccessfulLeagueSearch(leagueResponse);
+      handleSuccessfulLeagueSearch(leagueResponse, searchTerm);
     }
   };
 
-  const handleSuccessfulLeagueSearch = (name: string) => {
-    setLeagueId(localLeagueId);
+  const debouncedSearch = useCallback(
+    debounce((searchTerm: string) => {
+      searchLeague(searchTerm);
+    }, 300),
+    []
+  );
+
+  const handleSuccessfulLeagueSearch = (name: string, id: string) => {
+    setLeagueId(id);
     setLeagueName(name);
-    updateRecentSearches(localLeagueId);
+    updateRecentSearches(id);
   };
 
   const updateRecentSearches = (id: string) => {
@@ -56,8 +68,11 @@ export default function LeagueSearchForm() {
   const showErrorToast = (message: string) =>
     toast({ title: "Error", description: message });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setLocalLeagueId(e.target.value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalLeagueId(value);
+    debouncedSearch(value);
+  };
 
   const handleLeagueSelection = (league: any) => {
     setLeagueId(league.league_id);
@@ -83,14 +98,12 @@ export default function LeagueSearchForm() {
 
   return (
     <div className="sm:w-1/2 w-full mx-auto pt-4 pb-2 text-center text-sm">
-      <form onSubmit={handleSubmit}>
-        <Input
-          placeholder="League ID or Username"
-          onChange={handleInputChange}
-          value={localLeagueId}
-          className="w-full"
-        />
-      </form>
+      <Input
+        placeholder="League ID or Username"
+        onChange={handleInputChange}
+        value={localLeagueId}
+        className="w-full"
+      />
       {userLeagues.length > 0 && (
         <div className="mt-4">
           <h3 className="text-base font-semibold mb-2">Select a league</h3>
