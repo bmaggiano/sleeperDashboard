@@ -10,7 +10,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +17,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function LeagueSearchForm() {
   const { toast } = useToast();
-  const router = useRouter();
   const [localLeagueId, setLocalLeagueId] = useState<string>("");
   const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
   const [leagueId, setLeagueId] = useAtom(leagueAtom);
@@ -48,7 +46,6 @@ export default function LeagueSearchForm() {
     setLeagueId(localLeagueId);
     setLeagueName(name);
     updateRecentSearches(localLeagueId);
-    router.push(`/${localLeagueId}`);
   };
 
   const updateRecentSearches = (id: string) => {
@@ -66,7 +63,6 @@ export default function LeagueSearchForm() {
     setLeagueId(league.league_id);
     setLeagueName(league.name);
     updateRecentSearches(league.league_id);
-    router.push(`/${league.league_id}`);
   };
 
   const getInitials = (name: string) =>
@@ -130,12 +126,14 @@ export default function LeagueSearchForm() {
                       {league.name} ({league.season})
                     </span>
                   </div>
-                  <Button
-                    size="xs"
-                    onClick={() => handleLeagueSelection(league)}
-                  >
-                    Select
-                  </Button>
+                  <Link href={`/${league.league_id}`}>
+                    <Button
+                      size="xs"
+                      onClick={() => handleLeagueSelection(league)}
+                    >
+                      Select
+                    </Button>
+                  </Link>
                 </li>
               );
             })}
