@@ -203,8 +203,8 @@ const MobileNavigation = () => (
 
 export default function Header() {
   return (
-    <header className="py-4 px-6 bg-white dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+    <header className="max-w-7xl bg-white dark:bg-gray-900">
+      <div className="mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">

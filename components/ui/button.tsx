@@ -34,6 +34,7 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-10 px-4 py-2 rounded-full",
+        xs: "h-8 px-2 rounded-full text-xs",
         sm: "h-9 px-3 rounded-full",
         lg: "h-11 px-8 rounded-full",
         icon: "h-10 w-10 rounded-full",
@@ -56,7 +57,7 @@ const buttonVariants = cva(
           "linkHover1",
           "linkHover2",
         ],
-        size: ["default", "sm", "lg", "icon"],
+        size: ["default", "xs", "sm", "lg", "icon"],
         class: "",
       },
     ],

@@ -1,8 +1,10 @@
 "use server";
 
+import { cache } from "react";
+
 const LEAGUE_DEFAULT_YEAR = 2023;
 
-export const getTotalWeeks = async (leagueId: string) => {
+export const getTotalWeeks = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}`
@@ -13,9 +15,25 @@ export const getTotalWeeks = async (leagueId: string) => {
   } catch (error: any) {
     return 0;
   }
-};
+});
 
-export const getLeagueWeeks = async (leagueId: string) => {
+export const getMostRecentWeek = cache(async (leagueId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.sleeper.app/v1/league/${leagueId}`
+    );
+    if (!response.ok) throw new Error("Failed to fetch most recent week");
+    const leagueData = await response.json();
+    return {
+      index: leagueData.settings.last_scored_leg,
+      week: `Week ${leagueData.settings.last_scored_leg}`,
+    };
+  } catch (error: any) {
+    return { index: 0, week: "Week 1" };
+  }
+});
+
+export const getLeagueWeeks = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}`
@@ -35,9 +53,9 @@ export const getLeagueWeeks = async (leagueId: string) => {
   } catch (error: any) {
     return [];
   }
-};
+});
 
-export const getLeagueName = async (leagueId: string) => {
+export const getLeagueName = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}`
@@ -48,9 +66,9 @@ export const getLeagueName = async (leagueId: string) => {
   } catch (error: any) {
     return { error: error.message };
   }
-};
+});
 
-export const getLeagueByUserId = async (username: string) => {
+export const getLeagueByUserId = cache(async (username: string) => {
   try {
     // First, get the user ID from the username
     const userResponse = await fetch(
@@ -85,9 +103,9 @@ export const getLeagueByUserId = async (username: string) => {
   } catch (error: any) {
     return { error: error.message };
   }
-};
+});
 
-const getUsersInfo = async (leagueId: string) => {
+const getUsersInfo = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/users`
@@ -98,9 +116,9 @@ const getUsersInfo = async (leagueId: string) => {
   } catch (error: any) {
     return { error: error.message };
   }
-};
+});
 
-const getRosterInfo = async (leagueId: string) => {
+const getRosterInfo = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/rosters`
@@ -111,9 +129,9 @@ const getRosterInfo = async (leagueId: string) => {
   } catch (error: any) {
     return { error: error.message };
   }
-};
+});
 
-export const getChampionInfo = async (leagueId: string) => {
+export const getChampionInfo = cache(async (leagueId: string) => {
   // owner id on rosters is user id on users
   try {
     const response = await fetch(
@@ -138,9 +156,9 @@ export const getChampionInfo = async (leagueId: string) => {
   } catch (error: any) {
     return;
   }
-};
+});
 
-const getMatchupInfo = async (leagueId: string, weekIndex: number) => {
+const getMatchupInfo = cache(async (leagueId: string, weekIndex: number) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/matchups/${weekIndex}`
@@ -151,7 +169,7 @@ const getMatchupInfo = async (leagueId: string, weekIndex: number) => {
   } catch (error: any) {
     return { error: error.message };
   }
-};
+});
 
 const combineUserAndRosterInfo = (userInfo: any, rosterInfo: any) => {
   if (!userInfo || !rosterInfo) return [];
@@ -164,7 +182,7 @@ const combineUserAndRosterInfo = (userInfo: any, rosterInfo: any) => {
   });
 };
 
-export const combineUserAndRosterInfoCard = async (leagueId: string) => {
+export const combineUserAndRosterInfoCard = cache(async (leagueId: string) => {
   const userInfo = await getUsersInfo(leagueId);
   const rosterInfo = await getRosterInfo(leagueId);
   return rosterInfo.map((roster: any) => {
@@ -174,7 +192,7 @@ export const combineUserAndRosterInfoCard = async (leagueId: string) => {
       user,
     };
   });
-};
+});
 
 const combineRosterAndMatchupInfo = (rosterInfo: any, matchupInfo: any) => {
   if (!rosterInfo || !matchupInfo) return [];
@@ -189,132 +207,128 @@ const combineRosterAndMatchupInfo = (rosterInfo: any, matchupInfo: any) => {
   });
 };
 
-export const getMatchupsWithMatchupID = async ({
-  weekIndex,
-  leagueId,
-  matchupId,
-}: {
-  weekIndex: number;
-  leagueId: string;
-  matchupId: string;
-}) => {
-  const userInfo = await getUsersInfo(leagueId);
-  if (userInfo?.error) return userInfo;
+export const getMatchupsWithMatchupID = cache(
+  async ({
+    weekIndex,
+    leagueId,
+    matchupId,
+  }: {
+    weekIndex: number;
+    leagueId: string;
+    matchupId: string;
+  }) => {
+    const userInfo = await getUsersInfo(leagueId);
+    if (userInfo?.error) return userInfo;
 
-  const rosterInfo = await getRosterInfo(leagueId);
-  if (rosterInfo?.error) return rosterInfo;
+    const rosterInfo = await getRosterInfo(leagueId);
+    if (rosterInfo?.error) return rosterInfo;
 
-  const matchupInfo = await getMatchupInfo(leagueId, weekIndex);
-  if (matchupInfo?.error) return matchupInfo;
+    const matchupInfo = await getMatchupInfo(leagueId, weekIndex);
+    if (matchupInfo?.error) return matchupInfo;
 
-  const combinedUserAndRosterInfo = combineUserAndRosterInfo(
-    userInfo,
-    rosterInfo
-  );
-  const finalData = combineRosterAndMatchupInfo(
-    combinedUserAndRosterInfo,
-    matchupInfo
-  );
+    const combinedUserAndRosterInfo = combineUserAndRosterInfo(
+      userInfo,
+      rosterInfo
+    );
+    const finalData = combineRosterAndMatchupInfo(
+      combinedUserAndRosterInfo,
+      matchupInfo
+    );
 
-  const matchupIdNumber = Number(matchupId);
-  const filteredData = finalData.filter(
-    (matchup: any) => matchup.matchup_id === matchupIdNumber
-  );
+    const matchupIdNumber = Number(matchupId);
+    const filteredData = finalData.filter(
+      (matchup: any) => matchup.matchup_id === matchupIdNumber
+    );
 
-  return filteredData;
-};
-
-export const getMatchups = async ({
-  weekIndex,
-  leagueId,
-}: {
-  weekIndex: number;
-  leagueId: string;
-}) => {
-  const userInfo = await getUsersInfo(leagueId);
-  if (userInfo?.error) return userInfo;
-
-  const rosterInfo = await getRosterInfo(leagueId);
-  if (rosterInfo?.error) return rosterInfo;
-
-  const matchupInfo = await getMatchupInfo(leagueId, weekIndex);
-  if (matchupInfo?.error) return matchupInfo;
-
-  const combinedUserAndRosterInfo = combineUserAndRosterInfo(
-    userInfo,
-    rosterInfo
-  );
-  const finalData = combineRosterAndMatchupInfo(
-    combinedUserAndRosterInfo,
-    matchupInfo
-  );
-
-  finalData.sort((a: any, b: any) => a.matchup_id - b.matchup_id);
-
-  return finalData;
-};
-
-export const getWinnersBracket = async ({ leagueId }: { leagueId: string }) => {
-  const response = await fetch(
-    `https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`
-  );
-  if (!response.ok) throw new Error("Failed to fetch winners bracket");
-  const winnersBracket = await response.json();
-  return winnersBracket;
-};
-
-export const matchBracketToMatchup = async ({
-  leagueId,
-  week,
-}: {
-  leagueId: string;
-  week: number;
-}) => {
-  const winnersBracket = await getWinnersBracket({ leagueId });
-  const matchupResults: any[] = []; // Array to store matchup results
-
-  const numBracketLength = winnersBracket.length;
-  let roundsLength = winnersBracket[numBracketLength - 1].r;
-
-  // Start from the initial week
-  let currentWeek = week;
-
-  // Iterate through rounds from the highest to the lowest
-  while (roundsLength > 0) {
-    // Get matchup details for the current week
-    const matchupDetailsInfo = await getMatchups({
-      weekIndex: currentWeek,
-      leagueId,
-    });
-
-    // Filter for matchups corresponding to the current round
-    winnersBracket.forEach((bracketMatchup: any) => {
-      if (bracketMatchup.r === roundsLength) {
-        // Find the corresponding teams
-        const matchupTeam1 = matchupDetailsInfo.find(
-          (matchup: any) => matchup.roster_id === bracketMatchup.t1
-        );
-        const matchupTeam2 = matchupDetailsInfo.find(
-          (matchup: any) => matchup.roster_id === bracketMatchup.t2
-        );
-
-        // If both teams are found, add to the results array
-        if (matchupTeam1 && matchupTeam2) {
-          matchupResults.push({
-            round: roundsLength,
-            week: currentWeek, // Include the current week in the result
-            matchupId: bracketMatchup.m,
-            team1: matchupTeam1,
-            team2: matchupTeam2,
-          });
-        }
-      }
-    });
-
-    // Move to the next round and week
-    roundsLength--;
-    currentWeek--;
+    return filteredData;
   }
+);
 
-  return matchupResults; // Return the array of matchup results
-};
+export const getMatchups = cache(
+  async ({ weekIndex, leagueId }: { weekIndex: number; leagueId: string }) => {
+    const userInfo = await getUsersInfo(leagueId);
+    if (userInfo?.error) return userInfo;
+
+    const rosterInfo = await getRosterInfo(leagueId);
+    if (rosterInfo?.error) return rosterInfo;
+
+    const matchupInfo = await getMatchupInfo(leagueId, weekIndex);
+    if (matchupInfo?.error) return matchupInfo;
+
+    const combinedUserAndRosterInfo = combineUserAndRosterInfo(
+      userInfo,
+      rosterInfo
+    );
+    const finalData = combineRosterAndMatchupInfo(
+      combinedUserAndRosterInfo,
+      matchupInfo
+    );
+
+    finalData.sort((a: any, b: any) => a.matchup_id - b.matchup_id);
+
+    return finalData;
+  }
+);
+
+export const getWinnersBracket = cache(
+  async ({ leagueId }: { leagueId: string }) => {
+    const response = await fetch(
+      `https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`
+    );
+    if (!response.ok) throw new Error("Failed to fetch winners bracket");
+    const winnersBracket = await response.json();
+    return winnersBracket;
+  }
+);
+
+export const matchBracketToMatchup = cache(
+  async ({ leagueId, week }: { leagueId: string; week: number }) => {
+    const winnersBracket = await getWinnersBracket({ leagueId });
+    const matchupResults: any[] = []; // Array to store matchup results
+
+    const numBracketLength = winnersBracket.length;
+    let roundsLength = winnersBracket[numBracketLength - 1].r;
+
+    // Start from the initial week
+    let currentWeek = week;
+
+    // Iterate through rounds from the highest to the lowest
+    while (roundsLength > 0) {
+      // Get matchup details for the current week
+      const matchupDetailsInfo = await getMatchups({
+        weekIndex: currentWeek,
+        leagueId,
+      });
+
+      // Filter for matchups corresponding to the current round
+      winnersBracket.forEach((bracketMatchup: any) => {
+        if (bracketMatchup.r === roundsLength) {
+          // Find the corresponding teams
+          const matchupTeam1 = matchupDetailsInfo.find(
+            (matchup: any) => matchup.roster_id === bracketMatchup.t1
+          );
+          const matchupTeam2 = matchupDetailsInfo.find(
+            (matchup: any) => matchup.roster_id === bracketMatchup.t2
+          );
+
+          // If both teams are found, add to the results array
+          if (matchupTeam1 && matchupTeam2) {
+            matchupResults.push({
+              round: roundsLength,
+              week: currentWeek, // Include the current week in the result
+              matchupId: bracketMatchup.m,
+              team1: matchupTeam1,
+              team2: matchupTeam2,
+            });
+          }
+        }
+      });
+
+      // Move to the next round and week
+      roundsLength--;
+      currentWeek--;
+    }
+
+    return matchupResults; // Return the array of matchup results
+  }
+);
