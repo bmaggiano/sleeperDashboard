@@ -1,13 +1,16 @@
 "use server";
 
 import { cache } from "react";
+import { getPlayerDetails } from "@/lib/sleeper/helpers";
+import { getESPNPlayerInfo } from "@/lib/espn";
 
 const LEAGUE_DEFAULT_YEAR = 2023;
 
 export const getTotalWeeks = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch league weeks");
     const leagueWeeks = await response.json();
@@ -20,7 +23,8 @@ export const getTotalWeeks = cache(async (leagueId: string) => {
 export const getMostRecentWeek = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch most recent week");
     const leagueData = await response.json();
@@ -36,7 +40,8 @@ export const getMostRecentWeek = cache(async (leagueId: string) => {
 export const getLeagueWeeks = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch league weeks");
     const leagueWeeks = await response.json();
@@ -58,7 +63,8 @@ export const getLeagueWeeks = cache(async (leagueId: string) => {
 export const getLeagueName = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch league info");
     const leagueInfo = await response.json();
@@ -72,7 +78,8 @@ export const getLeagueByUserId = cache(async (username: string) => {
   try {
     // First, get the user ID from the username
     const userResponse = await fetch(
-      `https://api.sleeper.app/v1/user/${username}`
+      `https://api.sleeper.app/v1/user/${username}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!userResponse.ok) throw new Error("Failed to fetch user info");
     const userData = await userResponse.json();
@@ -83,7 +90,8 @@ export const getLeagueByUserId = cache(async (username: string) => {
 
     // Try current year first
     const currentYearResponse = await fetch(
-      `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${currentYear}`
+      `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${currentYear}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (currentYearResponse.ok) {
       leagues = await currentYearResponse.json();
@@ -92,7 +100,8 @@ export const getLeagueByUserId = cache(async (username: string) => {
     // If no results for current year, try LEAGUE_DEFAULT_YEAR
     if (leagues.length === 0) {
       const fallbackResponse = await fetch(
-        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${LEAGUE_DEFAULT_YEAR}`
+        `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${LEAGUE_DEFAULT_YEAR}`,
+        { next: { revalidate: 3600 } } // Cache for 1 hour
       );
       if (fallbackResponse.ok) {
         leagues = await fallbackResponse.json();
@@ -108,7 +117,8 @@ export const getLeagueByUserId = cache(async (username: string) => {
 const getUsersInfo = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}/users`
+      `https://api.sleeper.app/v1/league/${leagueId}/users`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch user info");
     const userInfo = await response.json();
@@ -121,7 +131,8 @@ const getUsersInfo = cache(async (leagueId: string) => {
 const getRosterInfo = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}/rosters`
+      `https://api.sleeper.app/v1/league/${leagueId}/rosters`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch roster info");
     const rosterInfo = await response.json();
@@ -135,7 +146,8 @@ export const getChampionInfo = cache(async (leagueId: string) => {
   // owner id on rosters is user id on users
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch champion info");
     const championInfo = await response.json();
@@ -161,7 +173,8 @@ export const getChampionInfo = cache(async (leagueId: string) => {
 const getMatchupInfo = cache(async (leagueId: string, weekIndex: number) => {
   try {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}/matchups/${weekIndex}`
+      `https://api.sleeper.app/v1/league/${leagueId}/matchups/${weekIndex}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch matchup info");
     const matchupInfo = await response.json();
@@ -273,7 +286,8 @@ export const getMatchups = cache(
 export const getWinnersBracket = cache(
   async ({ leagueId }: { leagueId: string }) => {
     const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`
+      `https://api.sleeper.app/v1/league/${leagueId}/winners_bracket`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
     );
     if (!response.ok) throw new Error("Failed to fetch winners bracket");
     const winnersBracket = await response.json();
@@ -332,3 +346,72 @@ export const matchBracketToMatchup = cache(
     return matchupResults; // Return the array of matchup results
   }
 );
+
+export const sleeperToESPNMapping = cache(async (playerId: string) => {
+  try {
+    // Get player details from Sleeper
+    const playerDetails = await getPlayerDetails(playerId);
+
+    if (!playerDetails) {
+      console.warn(`No player details found for Sleeper ID: ${playerId}`);
+      return null;
+    }
+
+    // Check if we have an ESPN ID
+    if (!playerDetails.espn_info?.id) {
+      console.warn(`No ESPN ID found for Sleeper ID: ${playerId}`);
+      return null;
+    }
+
+    // Get ESPN player info
+    const espnInfo = await getESPNPlayerInfo(String(playerDetails.espn_id));
+
+    if (!espnInfo) {
+      console.warn(`No ESPN info found for ESPN ID: ${playerDetails.espn_id}`);
+      return null;
+    }
+
+    // Handle DEF position separately
+    if (playerDetails.position === "DEF") {
+      return {
+        sleeper_id: playerId,
+        espn_id: playerDetails.espn_id,
+        full_name: playerDetails.full_name,
+        first_name: playerDetails.first_name,
+        last_name: playerDetails.last_name,
+        position: playerDetails.position,
+        team: playerDetails.team,
+        espn_full_name: espnInfo.fullName,
+        espn_position: "DEF",
+        espn_team: playerDetails.team,
+        image_url: espnInfo.imageUrl || null,
+        jersey_number: null,
+        age: null,
+        height: null,
+        weight: null,
+      };
+    }
+
+    // Combine Sleeper and ESPN data for non-DEF players
+    return {
+      sleeper_id: playerId,
+      espn_id: playerDetails.espn_id,
+      full_name: playerDetails.full_name,
+      first_name: playerDetails.first_name,
+      last_name: playerDetails.last_name,
+      position: playerDetails.position,
+      team: playerDetails.team,
+      espn_full_name: espnInfo.fullName,
+      espn_position: espnInfo.position || playerDetails.position,
+      espn_team: espnInfo.team?.abbreviation || playerDetails.team,
+      image_url: espnInfo.imageUrl,
+      jersey_number: espnInfo.jersey,
+      age: null, // ESPN data doesn't include age
+      height: null, // ESPN data doesn't include height
+      weight: null, // ESPN data doesn't include weight
+    };
+  } catch (error) {
+    console.error("Error in sleeperToESPNMapping:", error);
+    return null;
+  }
+});
