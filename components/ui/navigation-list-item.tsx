@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Badge } from "./badge";
 import { cn } from "@/lib/utils";
 import { NavigationMenuLink } from "@/components/ui/navigation-menu";
+
+const DISABLE_NAVIGATION = true;
 
 export interface ListItemProps extends React.ComponentPropsWithoutRef<"a"> {
   icon?: React.ReactNode;
@@ -25,10 +26,17 @@ export const ListItem = React.forwardRef<React.ElementRef<"a">, ListItemProps>(
           <a
             ref={ref}
             className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
+              DISABLE_NAVIGATION
+                ? "cursor-not-allowed opacity-50"
+                : "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
               className
             )}
-            href={href}
+            onClick={(e) => {
+              if (DISABLE_NAVIGATION) {
+                e.preventDefault();
+              }
+            }}
             {...props}
           >
             <div className="flex items-center">
