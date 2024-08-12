@@ -37,11 +37,11 @@ export default function LeagueSearchForm() {
 
     if (leagueResponse.error) {
       const userLeaguesResponse = await getLeagueByUserId(searchTerm);
-      Array.isArray(userLeaguesResponse)
+      Array.isArray(userLeaguesResponse) && userLeaguesResponse.length > 0
         ? setUserLeagues(userLeaguesResponse)
         : showErrorToast(
-            userLeaguesResponse.error || "Failed to fetch leagues"
-          );
+          `No leagues found for "${searchTerm}"`
+        );
     } else {
       handleSuccessfulLeagueSearch(leagueResponse, searchTerm);
     }
