@@ -70,8 +70,8 @@ const PendingWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex flex-grow basis-full flex-col items-center justify-center space-y-3">
         <p className="text-xl font-bold">Stuart <span className="bg-black text-white rounded-md pl-[0.4rem] pr-[0.5rem]">AI</span></p>
-        <p className="my-0 text-gray-500">You're on the waitlist.</p>
-        <p className="my-0 text-gray-500">We'll notify you when AI features are ready.</p>
+        <p className="my-0 text-gray-500">You&apos;re on the waitlist.</p>
+        <p className="my-0 text-gray-500">We&apos;ll notify you when AI features are ready.</p>
       </div>
     </ThreadPrimitive.Empty>
   );
