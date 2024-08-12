@@ -110,7 +110,7 @@ export const getLeagueByUserId = cache(async (username: string) => {
 
     return leagues;
   } catch (error: any) {
-    return { error: error.message };
+    return [];
   }
 });
 
