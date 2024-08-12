@@ -1,13 +1,14 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { FaSearch } from "react-icons/fa" // Import an icon from react-icons
-import { FiArrowRight } from "react-icons/fi"
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { FaSearch } from "react-icons/fa"; // Import an icon from react-icons
+import { FiArrowRight } from "react-icons/fi";
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> { }
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  showArrowButton?: boolean; // New prop to control arrow button rendering
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, showArrowButton = true, ...props }, ref) => {
     return (
       <div className="w-full relative flex items-center">
         <input
@@ -19,13 +20,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        <button type="submit" className="absolute right-2 p-1">
-          <FiArrowRight />
-        </button>
+        {showArrowButton && (
+          <button type="submit" className="absolute right-2 p-1">
+            <FiArrowRight />
+          </button>
+        )}
       </div>
-    )
+    );
   }
-)
-Input.displayName = "Input"
+);
 
-export { Input }
+Input.displayName = "Input";
+
+export { Input };
