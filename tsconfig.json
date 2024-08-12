@@ -33,7 +33,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/api/route.js"
-  ],
+, "app/playerCompare"  ],
   "exclude": [
     "node_modules"
   ]

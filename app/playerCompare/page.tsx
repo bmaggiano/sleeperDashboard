@@ -50,8 +50,8 @@ export default function PlayerCompare() {
                         <p>Analysis: {data?.explanation}</p>
                         <p>Safe pick: {data?.safe_pick}</p>
                         <p>Risky pick: {data?.risky_pick}</p>
-                        <p>Recommended pick: {data?.recommended_pick}</p>
-                        <p>Tossup: {data?.undecided}</p>
+                        {data?.recommended_pick ? <p>Recommended pick: {data?.recommended_pick}</p> : null}
+                        {data?.undecided ? <p>Tossup: {data?.undecided}</p> : null}
                     </div>
                 ))}
             </div>
