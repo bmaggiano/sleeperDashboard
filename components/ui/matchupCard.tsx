@@ -9,6 +9,7 @@ import { useAtom } from "jotai";
 import { weekNumberAtom } from "@/app/atoms/atom";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const MatchupCard = ({
   team1,
@@ -109,9 +110,9 @@ const TeamInfo = ({
         <span className="font-bold text-sm truncate">
           {team.user.metadata.team_name || team.user.display_name}
         </span>
-        <div className="flex items-center text-sm mt-2">
+        <div className={cn("flex text-sm mt-2 items-center", isLeft ? "justify-start" : "justify-end")}>
           <span className="font-semibold text-lg">{team.score}</span>
-          <span className="text-gray-400 ml-3">({team.points} pts)</span>
+          <span className="text-gray-400">({team.points} pts)</span>
           {team.points > otherTeam.points && (
             <FaTrophy className="text-amber-400 ml-2" />
           )}
