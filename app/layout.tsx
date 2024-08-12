@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import Header from "@/components/ui/header";
 import { Separator } from "@/components/ui/separator";
-import { MyRuntimeProvider } from '@/app/MyRuntimeProvider';
+import { MyRuntimeProvider } from "@/app/MyRuntimeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,12 +12,14 @@ export const metadata: Metadata = {
   title: "Stuart AI",
   description: "Your fantasy football knowledge base.",
   openGraph: {
-    images: [{
-      url: `https://sleeper-dashboard.vercel.app/api/og`,
-      width: 1200,
-      height: 630,
-      alt: 'Stuart AI, Your fantasy football knowledge base.',
-    }],
+    images: [
+      {
+        url: `https://sleeper-dashboard.vercel.app/api/og`,
+        width: 1200,
+        height: 630,
+        alt: "Stuart AI, Your fantasy football knowledge base.",
+      },
+    ],
   },
 };
 
@@ -28,7 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <MyRuntimeProvider>
-
       <html lang="en">
         <head>
           {/* 
@@ -43,7 +44,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <div className="p-2 sm:p-4 max-w-3xl mx-auto">
             <Header />
-            <Separator />
+            {/* <Separator /> */}
             {children}
             <Toaster />
           </div>
