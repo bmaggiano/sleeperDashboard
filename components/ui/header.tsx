@@ -1,5 +1,6 @@
 "use client";
 
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   Dialog,
   DialogClose,
@@ -32,7 +33,7 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "./button";
-import { Sheet, SheetContent, SheetTrigger } from "./sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "./sheet";
 import { Textarea } from "./textarea";
 
 const navigationItems = [
@@ -176,21 +177,33 @@ const MobileNavigation = () => (
     </SheetTrigger>
     <SheetContent
       side="right"
-      className="w-[85vw] sm:w-[350px] max-w-[350px] pt-10"
+      className="w-[85vw] sm:w-[350px] max-w-[350px] pt-10 overflow-y-auto"
     >
+      <SheetDescription>
+        <VisuallyHidden.Root>
+          A list of Stuart AI features that are currently in development.
+        </VisuallyHidden.Root>
+      </SheetDescription>
+      <SheetTitle>
+        <VisuallyHidden.Root>
+          Menu
+        </VisuallyHidden.Root>
+      </SheetTitle>
       <nav className="flex flex-col gap-6">
         {navigationItems.map((item) => (
           <div key={item.title}>
             <h2 className="text-lg font-semibold mb-3">{item.title}</h2>
-            <ul className="space-y-2">
-              {item.items.map((component) => (
-                <ListItem
-                  key={component.title}
-                  {...component}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
-                />
-              ))}
-            </ul>
+            <NavigationMenu>
+              <ul className="space-y-2">
+                {item.items.map((component) => (
+                  <ListItem
+                    key={component.title}
+                    {...component}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                  />
+                ))}
+              </ul>
+            </NavigationMenu>
           </div>
         ))}
         <div className="mt-6">
