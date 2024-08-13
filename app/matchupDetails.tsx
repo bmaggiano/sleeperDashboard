@@ -219,7 +219,7 @@ const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
   if (!teamOne || !teamTwo || !teamOne.starters || !teamTwo.starters)
     return <Skeleton className="w-full h-screen" />;
   return (
-    <div className="max-h-screen flex flex-col p-2 sm:p-6">
+    <div className="max-h-screen flex flex-col sm:p-6">
       <div className="mx-auto w-full max-w-4xl">
         <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
         <Suspense fallback={<Skeleton className="w-full h-96" />}>
