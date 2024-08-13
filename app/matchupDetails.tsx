@@ -8,6 +8,16 @@ import { MatchupDetailProps, PlayerMatchupCardsProps } from "@/lib/definitions";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const findMatchupPosition = (player1: string, player2: string) => {
+  if (player1 !== player2) {
+    return "WRT";
+  }
+  if (player1 === player2) {
+    return player1;
+  }
+  return "BN";
+};
+
 const NFL_TEAM_COLORS = {
   ARI: "#97233F",
   ATL: "#A71930",
@@ -90,14 +100,13 @@ const PlayerInfo = ({
     >
       <PlayerAvatar player={player} />
       <div
-        className={`flex flex-col ${isLeft ? "ml-3" : "mr-3"} ${
-          isLeft ? "" : "items-end"
-        }`}
+        className={`flex flex-col ${isLeft ? "ml-3" : "mr-3"} ${isLeft ? "" : "items-end"
+          }`}
       >
         <p className="text-sm">{player.full_name || "Unknown Player"}</p>
-        <p className="text-xs text-gray-500">{player.team || "N/A"}</p>
+        <p className="text-xs text-gray-500">{player.position} - {player.team || "N/A"}</p>
       </div>
-      <p className={`text-sm ${isLeft ? "ml-auto" : "mr-auto"}`}>
+      <p className={`text-sm font-medium ${isLeft ? "ml-auto" : "mr-auto"}`}>
         {points !== null ? points.toFixed(1) : "0.0"}
       </p>
     </div>
@@ -120,9 +129,8 @@ const PlayerMatchupCard = ({
   if (!player1 && !player2) return null;
   return (
     <div
-      className={`flex items-center justify-between p-4 rounded-lg ${
-        isStarter ? "bg-gray-50" : "bg-gray-100"
-      } mb-4 shadow-sm`}
+      className={`flex items-center justify-between p-2 sm:p-4 rounded-lg ${isStarter ? "bg-gray-50" : "bg-gray-100"
+        } mb-4 shadow-sm`}
     >
       <div className="w-5/12">
         {player1 && (
@@ -130,9 +138,9 @@ const PlayerMatchupCard = ({
         )}
       </div>
       <div className="mx-2 text-xs text-gray-400">
-        {(player1 || player2)?.position || "N/A"}
+        {isStarter ? findMatchupPosition(player1.position, player2.position) : "BN"}
       </div>
-      <div className="w-5/12">
+      <div className="w-5/12 text-right">
         {player2 && (
           <PlayerInfo player={player2} points={points2 || 0} isLeft={false} />
         )}
@@ -211,7 +219,7 @@ const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
   if (!teamOne || !teamTwo || !teamOne.starters || !teamTwo.starters)
     return <Skeleton className="w-full h-screen" />;
   return (
-    <div className="max-h-screen flex flex-col p-6">
+    <div className="max-h-screen flex flex-col p-2 sm:p-6">
       <div className="mx-auto w-full max-w-4xl">
         <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
         <Suspense fallback={<Skeleton className="w-full h-96" />}>

@@ -36,14 +36,14 @@ const MatchupCard = ({
   const CardContent = () => (
     <div className="flex items-center justify-between">
       <TeamInfo team={team1} otherTeam={team2} isLeft={true} />
-      <div className="text-2xl font-bold text-gray-400 mx-4">VS</div>
+      <div className="text-sm sm:text-2xl font-bold text-gray-400 w-[5%]">VS</div>
       <TeamInfo team={team2} otherTeam={team1} isLeft={false} />
     </div>
   );
 
   return (
     <motion.div
-      className="w-full bg-white rounded-lg p-6 my-4 text-black shadow-sm"
+      className="w-full bg-white rounded-lg p-2 sm:p-6 my-4 text-black shadow-sm"
       whileHover={
         withVsLink
           ? { scale: 1.02, boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)" }
@@ -92,7 +92,7 @@ const TeamInfo = ({
   );
 
   return (
-    <div className={`flex ${flexDirection} items-center w-[45%]`}>
+    <div className={`flex ${flexDirection} items-center overflow-hidden text-ellipsis w-[45%]`}>
       <Avatar className={isLeft ? "mr-4" : "ml-4"}>
         {avatarSrc ? (
           <AvatarImage
@@ -104,15 +104,15 @@ const TeamInfo = ({
         )}
       </Avatar>
       <div className={`flex flex-col ${alignClass}`}>
-        <span className="text-xs text-gray-400 truncate">
+        <span className="text-xs text-gray-400 w-[100px] sm:w-full truncate">
           @{team.user.display_name}
         </span>
-        <span className="font-bold text-sm truncate">
+        <span className="font-bold text-sm w-[100px] sm:w-full truncate">
           {team.user.metadata.team_name || team.user.display_name}
         </span>
         <div className={cn("flex text-sm mt-2 items-center", isLeft ? "justify-start" : "justify-end")}>
           <span className="font-semibold text-lg">{team.score}</span>
-          <span className="text-gray-400">({team.points} pts)</span>
+          <span className="text-black font-medium">{team.points} pts</span>
           {team.points > otherTeam.points && (
             <FaTrophy className="text-amber-400 ml-2" />
           )}
