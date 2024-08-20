@@ -91,6 +91,11 @@ export async function POST(request: NextRequest) {
     const player1 = await getPlayerDetails(playerId1);
     const player2 = await getPlayerDetails(playerId2);
 
+    const player1Gsis = player1.gsis_id;
+    const player2Gsis = player2.gsis_id;
+
+    console.log(player1, player2);
+
     if (!playerId1 || !playerId2) {
         return NextResponse.json(
             { error: "Both Player IDs are required" },
@@ -117,7 +122,7 @@ export async function POST(request: NextRequest) {
 
     const playerYards1: Play[] = await db.nflverse_Play_by_Play.findMany({
         where: {
-            OR: [{ rusher_player_id: playerId1 }, { receiver_player_id: playerId1 }],
+            OR: [{ rusher_player_id: player1Gsis }, { receiver_player_id: player1Gsis }],
         },
         select: {
             game_id: true,
@@ -137,7 +142,7 @@ export async function POST(request: NextRequest) {
 
     const playerYards2: Play[] = await db.nflverse_Play_by_Play.findMany({
         where: {
-            OR: [{ rusher_player_id: playerId2 }, { receiver_player_id: playerId2 }],
+            OR: [{ rusher_player_id: player2Gsis }, { receiver_player_id: player2Gsis }],
         },
         select: {
             game_id: true,
