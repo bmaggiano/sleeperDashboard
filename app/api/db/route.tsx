@@ -4,6 +4,8 @@ import { generateObject, streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { ffDataSchema } from "./schema";
+import { getPlayerIdMappingsFromRedis } from "@/lib/sleeper/cache";
+import { getPlayerDetails } from "@/lib/sleeper/helpers";
 
 interface Play {
     game_id: string;
@@ -78,12 +80,16 @@ function calculatePlayerStats(
 
 export async function POST(request: NextRequest) {
     const context = await request.json();
+    console.log(context)
     const { playerId1, playerId2 } = context;
     console.log("hey")
     console.log(context);
     // const { searchParams } = new URL(request.url);
     // const playerId1 = searchParams.get("pid1");
     // const playerId2 = searchParams.get("pid2");
+
+    const player1 = await getPlayerDetails(playerId1);
+    const player2 = await getPlayerDetails(playerId2);
 
     if (!playerId1 || !playerId2) {
         return NextResponse.json(
@@ -92,15 +98,15 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    const player1 = await db.players.findUnique({
-        where: { id: playerId1 },
-        select: { display_name: true },
-    });
+    // const player1 = await db.players.findUnique({
+    //     where: { id: playerId1 },
+    //     select: { display_name: true },
+    // });
 
-    const player2 = await db.players.findUnique({
-        where: { id: playerId2 },
-        select: { display_name: true },
-    });
+    // const player2 = await db.players.findUnique({
+    //     where: { id: playerId2 },
+    //     select: { display_name: true },
+    // });
 
     if (!player1 || !player2) {
         return NextResponse.json(
@@ -188,7 +194,7 @@ export async function POST(request: NextRequest) {
         model: openai("gpt-4-turbo"),
         seed: 100,
         schema: ffDataSchema,
-        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.display_name}): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.display_name}): ${JSON.stringify(result2, null, 2)}\n\nConsider the number of games played (Player 1: ${result1.length} games, Player 2: ${result2.length} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation, safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
+        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(result2, null, 2)}\n\nConsider the number of games played (Player 1: ${result1.length} games, Player 2: ${result2.length} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation, safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
     });
 
     return result.toTextStreamResponse();

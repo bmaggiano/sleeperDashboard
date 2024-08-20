@@ -34,7 +34,7 @@ export default function PlayerCompare() {
             {selectedPlayer1 && selectedPlayer2 && (
                 <Button onClick={() => {
                     console.log(selectedPlayer1.gsis_id, selectedPlayer2.gsis_id)
-                    submit({ playerId1: selectedPlayer1.gsis_id, playerId2: selectedPlayer2.gsis_id })
+                    submit({ playerId1: selectedPlayer1.player_id, playerId2: selectedPlayer2.player_id })
                 }
                 }>
                     Compare Players

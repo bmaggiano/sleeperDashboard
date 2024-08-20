@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Fuse from 'fuse.js';
 import Image from 'next/image';
-import playerData from '../lib/sleeper/players_id_mapping.json';
+import playerData from './playerIds_updated.json'; // Assuming your JSON file is named `playerIds_updated.json`
 
 // Default fallback image URL
 const fallbackImage = "/NFL.svg";
 
 type Player = {
-    display_name: string;
-    team_abbr: string;
+    player_id: string;
+    full_name: string;
+    team: string | null;
     position: string;
     status: string;
     gsis_id: string;
@@ -27,13 +28,20 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
     const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
     const options = {
-        keys: ['display_name', 'team_abbr', 'position'],
+        keys: ['full_name', 'team', 'position'],
         threshold: 0.3,
         includeScore: true,
         minMatchCharLength: 2,
     };
 
-    const fuse = new Fuse<Player>(playerData as Player[], options);
+    // Convert the player data object into an array of players
+    const playersArray = Object.values(playerData) as Player[];
+
+    const fuse = new Fuse<Player>(playersArray, options);
+
+    useEffect(() => {
+        console.log(results);
+    }, [results]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -41,14 +49,14 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
 
         if (input.length > 1) {
             const result = fuse.search(input) as { item: Player }[];
-            setResults(result.map(res => res.item).filter((player: Player) => player.status === "ACT"));
+            setResults(result.map(res => res.item).filter((player: Player) => player.status === "Active"));
         } else {
             setResults([]);
         }
     };
 
     const handleSelect = (player: Player) => {
-        setQuery(player.display_name);
+        setQuery(player.full_name);
         setSelectedPlayer(player);
         setResults([]);
         onPlayerSelect(player);
@@ -75,7 +83,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                                 {player.headshot ? (
                                     <Image
                                         src={player.headshot}
-                                        alt={player.display_name}
+                                        alt={player.full_name}
                                         width={50}
                                         height={50}
                                     />
@@ -87,8 +95,8 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                                         height={50}
                                     />
                                 )}
-                                <div>
-                                    <strong>{player.display_name}</strong> - {player.team_abbr} ({player.position})
+                                <div className="ml-2">
+                                    <strong>{player.full_name}</strong> - {player.team ?? 'Free Agent'} ({player.position})
                                 </div>
                             </div>
                         </li>
@@ -97,7 +105,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
             )}
             {selectedPlayer && (
                 <div className="mt-4">
-                    <p><strong>Selected Player:</strong> {selectedPlayer.display_name}</p>
+                    <p><strong>Selected Player:</strong> {selectedPlayer.full_name}</p>
                     <p><strong>GSIS ID:</strong> {selectedPlayer.gsis_id}</p>
                 </div>
             )}
