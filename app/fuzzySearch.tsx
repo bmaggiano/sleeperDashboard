@@ -14,6 +14,7 @@ type Player = {
     team: string | null;
     position: string;
     status: string;
+    espn_id: string;
     gsis_id: string;
     headshot?: string;
 };
@@ -38,10 +39,6 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
     const playersArray = Object.values(playerData) as Player[];
 
     const fuse = new Fuse<Player>(playersArray, options);
-
-    useEffect(() => {
-        console.log(results);
-    }, [results]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const input = e.target.value;
@@ -80,9 +77,9 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                             className={`p-2 hover:bg-gray-100 cursor-pointer ${selectedPlayer?.gsis_id === player.gsis_id ? 'bg-green-200' : ''}`}
                         >
                             <div className="flex items-center">
-                                {player.headshot ? (
+                                {player.espn_id !== null ? (
                                     <Image
-                                        src={player.headshot}
+                                        src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
                                         alt={player.full_name}
                                         width={50}
                                         height={50}
@@ -102,12 +99,6 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                         </li>
                     ))}
                 </ul>
-            )}
-            {selectedPlayer && (
-                <div className="mt-4">
-                    <p><strong>Selected Player:</strong> {selectedPlayer.full_name}</p>
-                    <p><strong>GSIS ID:</strong> {selectedPlayer.gsis_id}</p>
-                </div>
             )}
         </div>
     );

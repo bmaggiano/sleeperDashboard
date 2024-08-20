@@ -33,7 +33,6 @@ export default function PlayerCompare() {
             </div>
             {selectedPlayer1 && selectedPlayer2 && (
                 <Button onClick={() => {
-                    console.log(selectedPlayer1.gsis_id, selectedPlayer2.gsis_id)
                     submit({ playerId1: selectedPlayer1.player_id, playerId2: selectedPlayer2.player_id })
                 }
                 }>
@@ -41,17 +40,17 @@ export default function PlayerCompare() {
                 </Button>
             )}
             <div>
-                {selectedPlayer1 && <p><strong>Selected Player 1:</strong> {selectedPlayer1.display_name}</p>}
-                {selectedPlayer2 && <p><strong>Selected Player 2:</strong> {selectedPlayer2.display_name}</p>}
+                {selectedPlayer1 && <p><strong>Selected Player 1:</strong> {selectedPlayer1.full_name}</p>}
+                {selectedPlayer2 && <p><strong>Selected Player 2:</strong> {selectedPlayer2.full_name}</p>}
             </div>
             <div>
                 {object?.analysis?.map((data, index) => (
                     <div key={index}>
-                        <p>Analysis: {data?.explanation}</p>
-                        <p>Safe pick: {data?.safe_pick}</p>
-                        <p>Risky pick: {data?.risky_pick}</p>
-                        {data?.recommended_pick ? <p>Recommended pick: {data?.recommended_pick}</p> : null}
-                        {data?.undecided ? <p>Tossup: {data?.undecided}</p> : null}
+                        <p><strong>Analysis:</strong> {data?.explanation}</p>
+                        <p><strong>Safe pick:</strong> {data?.safe_pick}</p>
+                        <p><strong>Risky pick:</strong> {data?.risky_pick}</p>
+                        {data?.recommended_pick ? <p><strong>Recommended pick:</strong> {data?.recommended_pick}</p> : null}
+                        {data?.undecided ? <p><strong>Tossup:</strong> {data?.undecided}</p> : null}
                     </div>
                 ))}
             </div>
