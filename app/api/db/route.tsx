@@ -186,7 +186,8 @@ export async function POST(request: NextRequest) {
         model: openai("gpt-4-turbo"),
         seed: 100,
         schema: ffDataSchema,
-        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(result2, null, 2)}\n\nConsider the number of games played (Player 1: ${result1.length} games, Player 2: ${result2.length} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation, safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
+        system: `You are a fantasty footabll expert. You are an expert at analyzing player stats and making decisions based on that analysis. Users using this tool will be relying on you to provide accurate assessments of player stats and make informed decisions.`,
+        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(result1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(result2, null, 2)}\n\nConsider the number of games played (Player 1: ${result1.length} games, Player 2: ${result2.length} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation (list the yards, tds, games played and provide a brief explanation), safe_pick, risky_pick, and recommended_pick. If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
         onFinish: async ({ object }) => {
             await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600); // Cache for 1 hour
         },
