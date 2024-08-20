@@ -94,8 +94,6 @@ export async function POST(request: NextRequest) {
     const cachedResponse = await redisClient?.get(cacheKey);
 
     if (cachedResponse) {
-        console.log("Cache hit!");
-        console.log(JSON.parse(cachedResponse));
         return NextResponse.json(JSON.parse(cachedResponse));
     }
 

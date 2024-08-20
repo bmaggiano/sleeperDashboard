@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Fuse from 'fuse.js';
 import Image from 'next/image';
 import playerData from './playerIds_updated.json'; // Assuming your JSON file is named `playerIds_updated.json`
+import { Input } from '@/components/ui/input';
 
 // Default fallback image URL
 const fallbackImage = "/NFL.svg";
@@ -11,11 +12,11 @@ const fallbackImage = "/NFL.svg";
 type Player = {
     player_id: string;
     full_name: string;
-    team: string | null;
-    position: string;
-    status: string;
-    espn_id: string;
-    gsis_id: string;
+    team?: string | null;
+    position?: string;
+    status?: string;
+    espn_id?: string;
+    gsis_id?: string;
     headshot?: string;
 };
 
@@ -61,7 +62,8 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
 
     return (
         <div className="player-search">
-            <input
+            <Input
+                showArrowButton={false}
                 type="text"
                 value={query}
                 onChange={handleChange}
