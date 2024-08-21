@@ -12,8 +12,9 @@ import { GoVerified } from "react-icons/go";
 import { MdNotes } from "react-icons/md";
 import { IoStatsChart } from "react-icons/io5";
 import { IoDiceOutline } from "react-icons/io5";
-import { User } from 'lucide-react';
+import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
     return (
@@ -67,7 +68,38 @@ export default function PlayerCompare() {
 
     return (
         <div className="flex flex-col gap-4 mt-4">
-            <h1 className="text-xl font-bold">Player Compare</h1>
+            <div className='flex items-center justify-between'>
+
+                <h1 className="text-2xl my-2 font-bold">Player Compare</h1>
+                {selectedPlayer1 && selectedPlayer2 && (
+                    <Button
+                        variant={"outline"}
+                        className='flex self-end rounded-md'
+                        disabled={loading}
+                        onClick={async () => {
+                            setLoading(true);
+                            try {
+                                await submit({ playerId1: selectedPlayer1.player_id, playerId2: selectedPlayer2.player_id });
+                            } catch (error) {
+                                console.error("An error occurred during submission:", error);
+                            } finally {
+                                setLoading(false);
+                            }
+                        }}
+                    >
+                        {loading ?
+                            <div className='flex items-center gap-x-2'>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Analyzing...
+                            </div> :
+                            <div className='flex items-center gap-x-2'>
+                                <ArrowRightLeft className='h-4 w-4' />
+                                <p>Compare Players</p>
+                            </div>
+                        }
+                    </Button>
+                )}
+            </div>
             <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
                 <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
                     {selectedPlayer1 ? (
@@ -86,24 +118,6 @@ export default function PlayerCompare() {
                     <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
                 </div>
             </div>
-            {selectedPlayer1 && selectedPlayer2 && (
-                <Button
-                    className='bg-black rounded-md'
-                    disabled={loading}
-                    onClick={async () => {
-                        setLoading(true);
-                        try {
-                            await submit({ playerId1: selectedPlayer1.player_id, playerId2: selectedPlayer2.player_id });
-                        } catch (error) {
-                            console.error("An error occurred during submission:", error);
-                        } finally {
-                            setLoading(false);
-                        }
-                    }}
-                >
-                    {loading ? "Analyzing..." : "Compare Players"}
-                </Button>
-            )}
             {object && (
                 <Tabs defaultValue="analysis" className="w-full">
                     <TabsList>
