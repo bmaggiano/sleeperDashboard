@@ -8,6 +8,7 @@ export const ffDataSchema = z.object({
             safe_pick: z.string(),
             risky_pick: z.string(),
             recommended_pick: z.string().optional(),
+            certainty: z.string().optional(),
             undecided: z.string().optional(),
         }),
     ),
