@@ -14,7 +14,7 @@ import { IoStatsChart } from "react-icons/io5";
 import { IoDiceOutline } from "react-icons/io5";
 import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Shield, Sparkles } from 'lucide-react';
 
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
     return (
@@ -62,10 +62,6 @@ export default function PlayerCompare() {
         }
     };
 
-    useEffect(() => {
-        console.log(selectedPlayer1, selectedPlayer2);
-    }, [selectedPlayer1, selectedPlayer2]);
-
     return (
         <div className="flex flex-col gap-4 mt-4">
             <div className='flex items-center justify-between'>
@@ -101,77 +97,114 @@ export default function PlayerCompare() {
                 )}
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
-                <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
-                    {selectedPlayer1 ? (
-                        <PlayerProfile player={selectedPlayer1} />
-                    ) :
-                        <PlayerProfileSkeleton playerIndex={1} />
-                    }
-                    <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 1)} />
+                <div className='flex flex-col w-full sm:w-1/2'>
+
+                    <div className='ring-1 ring-gray-200 p-4 rounded-md'>
+                        {selectedPlayer1 ? (
+                            <PlayerProfile player={selectedPlayer1} />
+                        ) :
+                            <PlayerProfileSkeleton playerIndex={1} />
+                        }
+                        <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 1)} />
+                    </div>
+                    {object?.analysis?.map((data, index) => (
+                        <div key={index} className="grid grid-cols-2 gap-4 mt-4">
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards</p>
+                                <strong className='text-xl'>{data?.playerOneYards}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Touchdowns</p>
+                                <strong className='text-xl'>{data?.playerOneTouchdowns}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Receptions</p>
+                                <strong className='text-xl'>{data?.playerOneReceptions}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards per Reception</p>
+                                <strong className='text-xl'>{data?.playerOneYardsPerReception}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards After Catch</p>
+                                <strong className='text-xl'>{data?.playerOneYardsAfterCatch}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Air Yards</p>
+                                <strong className='text-xl'>{data?.playerOneAirYards}</strong>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
-                    {selectedPlayer2 ? (
-                        <PlayerProfile player={selectedPlayer2} />
-                    ) :
-                        <PlayerProfileSkeleton playerIndex={2} />
-                    }
-                    <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
+                <div className='flex flex-col w-full sm:w-1/2'>
+                    <div className='ring-1 ring-gray-200 p-4 rounded-md'>
+                        {selectedPlayer2 ? (
+                            <PlayerProfile player={selectedPlayer2} />
+                        ) :
+                            <PlayerProfileSkeleton playerIndex={2} />
+                        }
+                        <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
+                    </div>
+                    {object?.analysis?.map((data, index) => (
+                        <div key={index} className="grid grid-cols-2 gap-4 mt-4">
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards</p>
+                                <strong className='text-xl'>{data?.playerTwoYards}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Touchdowns</p>
+                                <strong className='text-xl'>{data?.playerTwoTouchdowns}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Receptions</p>
+                                <strong className='text-xl'>{data?.playerTwoReceptions}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards per Reception</p>
+                                <strong className='text-xl'>{data?.playerTwoYardsPerReception}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Yards After Catch</p>
+                                <strong className='text-xl'>{data?.playerTwoYardsAfterCatch}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Air Yards</p>
+                                <strong className='text-xl'>{data?.playerTwoAirYards}</strong>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
-            {object && (
-                <Tabs defaultValue="analysis" className="w-full">
-                    <TabsList>
-                        <TabsTrigger className='flex items-center gap-x-1' value="analysis"><MdNotes /> Analysis</TabsTrigger>
-                        <TabsTrigger className='flex items-center gap-x-1' value="picks"><GoVerified /> Picks</TabsTrigger>
-                        <TabsTrigger className='flex items-center gap-x-1' value="stats"><IoStatsChart /> Stats</TabsTrigger>
-                    </TabsList>
-
-                    {/* Analysis Tab */}
-                    <TabsContent className='ring-1 ring-gray-200 p-4' value="analysis">
-                        {object?.analysis?.map((data, index) => (
-                            <div key={index} className='space-y-2'>
-                                <strong className='flex items-center gap-x-2 text-lg'><MdNotes className='text-gray-500' /> Analysis</strong>
-                                <p>{data?.explanation}</p>
-                            </div>
-                        ))}
-                    </TabsContent>
-
-                    <TabsContent className='' value="picks">
-                        {object?.analysis?.map((data, index) => (
-                            <div key={index} className='space-y-2'>
-                                <div className='bg-green-50 p-4 rounded-md'>
-                                    <strong className='flex items-center gap-x-2 text-lg'><AiOutlineSafety className='text-green-400' /> Safe pick</strong>
-                                    <p>{data?.safe_pick}</p>
-                                </div>
-                                <div className='bg-red-50 p-4 rounded-md'>
-                                    <strong className='flex items-center gap-x-2 text-lg'><IoDiceOutline className='text-red-400' /> Risky pick</strong>
-                                    <p>{data?.risky_pick}</p>
-                                </div>
-                                {data?.undecided ? (
-                                    <div className='bg-yellow-50 p-4 rounded-md'>
-                                        <strong className='flex items-center gap-x-2 text-lg'><IoDiceOutline className='text-yellow-400' /> Toss-up</strong>
-                                        <p>{data?.undecided}</p>
-                                    </div>
-                                ) : (
-                                    <div className='bg-blue-50 p-4 rounded-md'>
-                                        <strong className='flex items-center gap-x-2 text-lg'><GoVerified className='text-blue-400' /> Recommended pick</strong>
-                                        <p>{data?.recommended_pick}</p>
-                                        {data?.certainty && <p>Certainty: {data?.certainty}%</p>}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </TabsContent>
-                    <TabsContent className='ring-1 ring-gray-200 p-4' value="stats">
-                        <div className='space-y-2'>
-                            <strong className='flex items-center gap-x-2 text-lg'><IoStatsChart className='text-gray-500' /> Stats</strong>
-                            <p>Player stats are currently in development. Please check back later for access to every play, from every player all the way back to 1999!</p>
+            <div className='p-4'>
+                {object?.analysis?.map((data, index) => (
+                    <div key={index} className='space-y-2'>
+                        <strong className='flex items-center gap-x-2 text-lg'><MdNotes className='text-gray-500' /> AI Analysis</strong>
+                        <p>{data?.explanation}</p>
+                    </div>
+                ))}
+            </div>
+            {object?.analysis?.map((data, index) => (
+                <div key={index} className='space-y-2'>
+                    <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
+                        <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
+                            <strong className='flex items-center gap-x-2 text-lg'><Shield className='h-4 w-4' /> Safe pick</strong>
+                            <p className='ml-6'>{data?.safe_pick}</p>
                         </div>
-
-                    </TabsContent>
-                </Tabs >
-            )
-            }
+                        {data?.undecided ? (
+                            <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
+                                <strong className='flex items-center gap-x-2 text-lg'><IoDiceOutline /> Toss-up</strong>
+                                <p>{data?.undecided}</p>
+                            </div>
+                        ) : (
+                            <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
+                                <strong className='flex items-center gap-x-2 text-lg'><Sparkles className='h-4 w-4' /> Recommended pick</strong>
+                                <p className='ml-6'>{data?.recommended_pick}</p>
+                                {data?.certainty && <p className='ml-6'>Certainty: {data?.certainty}%</p>}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
         </div >
     );
 }
