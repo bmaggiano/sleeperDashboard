@@ -62,10 +62,6 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
         onPlayerSelect(player);
     };
 
-    useEffect(() => {
-        console.log(results);
-    }, [results]);
-
     return (
         <div className="player-search">
             <Input
