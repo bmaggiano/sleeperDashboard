@@ -375,6 +375,8 @@ AND "season_type" = 'REG';
             fullName: player2.full_name,
             totalRecYards: totalYardsRecPlayer2,
             totalRushYards: totalYardsRushPlayer2,
+            totalAirYards: totalAirYardsPlayer2,
+            totalYac: totalYACPlayer2,
             totalTds: totalTdsPlayer2,
             totalTouchdowns: totalTdsPlayer2,
             weeks: totalWeeksPlayer2,

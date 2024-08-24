@@ -47,7 +47,9 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
 
         if (input.length > 1) {
             const result = fuse.search(input) as { item: Player }[];
-            setResults(result.map(res => res.item).filter((player: Player) => player.status === "Active"));
+            setResults(result.map(res => res.item).filter((player: Player) =>
+                player.status === "Active" &&
+                (player.position === "QB" || player.position === "RB" || player.position === "TE" || player.position === "WR")));
         } else {
             setResults([]);
         }
@@ -59,6 +61,10 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
         setResults([]);
         onPlayerSelect(player);
     };
+
+    useEffect(() => {
+        console.log(results);
+    }, [results]);
 
     return (
         <div className="player-search">
