@@ -101,8 +101,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(JSON.parse(cachedResponse));
     }
 
-    const player1 = await getPlayerDetails(playerId1);
-    const player2 = await getPlayerDetails(playerId2);
+    const player1 = await getPlayerDetails(playerId1.trim());
+    const player2 = await getPlayerDetails(playerId2.trim());
+
+    console.log(player1, player2)
 
     if (!player1 || !player2) {
         return NextResponse.json(
@@ -158,22 +160,65 @@ export async function POST(request: NextRequest) {
 
     // TODO: WE WANT YAC,
 
-
     const roundToTwoDecimals = (value: number) => Math.round(value * 100) / 100;
+    const player1Gsis = player1.gsis_id?.trim();
+    const player2Gsis = player2.gsis_id?.trim();
 
-    const playerTotalYards1 = await db.$queryRaw<
+
+
+    const playerLongestPlay1 = await db.$queryRaw<
+        {
+            max_yards_gained: number; total_yards: BigInt
+        }[]
+    >(Prisma.sql`
+SELECT MAX(yards_gained) AS max_yards_gained
+  FROM "Nflverse_Play_by_Play"
+  WHERE ("receiver_player_id" = ${player1Gsis}
+  OR "rusher_player_id" = ${player1Gsis})
+  AND "season_type" = 'REG';
+  `);
+    const playerLongestPlay2 = await db.$queryRaw<
+        {
+            max_yards_gained: number; total_yards: BigInt
+        }[]
+    >(Prisma.sql`
+ SELECT MAX(yards_gained) AS max_yards_gained
+  FROM "Nflverse_Play_by_Play"
+  WHERE ("receiver_player_id" = ${player2Gsis}
+  OR "rusher_player_id" = ${player2Gsis})
+  AND "season_type" = 'REG';
+  `);
+    const playerTotalRecYards1 = await db.$queryRaw<
         { total_yards: BigInt }[]
     >(Prisma.sql`
     SELECT SUM(yards_gained) AS total_yards
     FROM "Nflverse_Play_by_Play"
-    WHERE "receiver_player_id" = ${player1.gsis_id}
+    WHERE "receiver_player_id" = ${player1Gsis}
+    AND "season_type" = 'REG';
+  `);
+
+    const playerTotalRushYards1 = await db.$queryRaw<
+        { total_yards: BigInt }[]
+    >(Prisma.sql`
+    SELECT SUM(yards_gained) AS total_yards
+    FROM "Nflverse_Play_by_Play"
+    WHERE "rusher_player_id" = ${player1Gsis}
+    AND "season_type" = 'REG';
+  `);
+    const playerTotalRushYards2 = await db.$queryRaw<
+        { total_yards: BigInt }[]
+    >(Prisma.sql`
+    SELECT SUM(yards_gained) AS total_yards
+    FROM "Nflverse_Play_by_Play"
+    WHERE "rusher_player_id" = ${player2Gsis}
     AND "season_type" = 'REG';
   `);
 
     const playerTotalAirYards1 = await db.$queryRaw<{ total_air_yards: number }[]>(Prisma.sql`
   SELECT SUM(air_yards) AS total_air_yards
   FROM "Nflverse_Play_by_Play"
-  WHERE "receiver_player_id" = ${player1.gsis_id}
+  WHERE ("receiver_player_id" = ${player1Gsis}
+  OR "rusher_player_id" = ${player1Gsis})
   AND "season_type" = 'REG'
   AND "yards_gained" != 0;
 `);
@@ -181,7 +226,8 @@ export async function POST(request: NextRequest) {
     const playerTotalAirYards2 = await db.$queryRaw<{ total_air_yards: number }[]>(Prisma.sql`
 SELECT SUM(air_yards) AS total_air_yards
 FROM "Nflverse_Play_by_Play"
-WHERE "receiver_player_id" = ${player2.gsis_id}
+WHERE ("receiver_player_id" = ${player2Gsis}
+OR "rusher_player_id" = ${player2Gsis})
 AND "season_type" = 'REG'
 AND "yards_gained" != 0;
 `);
@@ -189,7 +235,8 @@ AND "yards_gained" != 0;
     const playerTotalYAC1 = await db.$queryRaw<{ total_yac: number }[]>(Prisma.sql`
 SELECT SUM(yards_after_catch) AS total_yac
 FROM "Nflverse_Play_by_Play"
-WHERE "receiver_player_id" = ${player1.gsis_id}
+WHERE ("receiver_player_id" = ${player1Gsis}
+OR "rusher_player_id" = ${player1Gsis})
 AND "season_type" = 'REG'
 AND "yards_gained" != 0;
 `);
@@ -197,7 +244,8 @@ AND "yards_gained" != 0;
     const playerTotalYAC2 = await db.$queryRaw<{ total_yac: number }[]>(Prisma.sql`
 SELECT SUM(yards_after_catch) AS total_yac
 FROM "Nflverse_Play_by_Play"
-WHERE "receiver_player_id" = ${player2.gsis_id}
+WHERE ("receiver_player_id" = ${player2Gsis}
+OR "rusher_player_id" = ${player2Gsis})
 AND "season_type" = 'REG'
 AND "yards_gained" != 0;
 `);
@@ -205,8 +253,7 @@ AND "yards_gained" != 0;
     const playerTotalTds1 = await db.$queryRaw<{ total_tds: number }[]>(Prisma.sql`
     SELECT COUNT(*) AS total_tds
     FROM "Nflverse_Play_by_Play"
-    WHERE "td_player_id" = ${player1.gsis_id}
-    AND "receiver_player_id" = ${player1.gsis_id}
+    WHERE "td_player_id" = ${player1Gsis}
     AND "season_type" = 'REG'
     AND "td_player_id" IS NOT NULL;
     `);
@@ -214,31 +261,30 @@ AND "yards_gained" != 0;
     const player1Receptions = await db.$queryRaw<{ total_receptions: number }[]>(Prisma.sql`
         SELECT sum(complete_pass) AS total_receptions
         FROM "Nflverse_Play_by_Play"
-        WHERE "receiver_player_id" = ${player1.gsis_id}
+        WHERE "receiver_player_id" = ${player1Gsis}
         AND "season_type" = 'REG';
         `);
 
     const player2Receptions = await db.$queryRaw<{ total_receptions: number }[]>(Prisma.sql`
         SELECT sum(complete_pass) AS total_receptions
         FROM "Nflverse_Play_by_Play"
-        WHERE "receiver_player_id" = ${player2.gsis_id}
+        WHERE "receiver_player_id" = ${player2Gsis}
         AND "season_type" = 'REG';
         `);
 
-    const playerTotalYards2 = await db.$queryRaw<
+    const playerTotalRecYards2 = await db.$queryRaw<
         { total_yards: BigInt }[]
     >(Prisma.sql`
     SELECT SUM(yards_gained) AS total_yards
     FROM "Nflverse_Play_by_Play"
-    WHERE "receiver_player_id" = ${player2.gsis_id}
+    WHERE "receiver_player_id" = ${player2Gsis}
     AND "season_type" = 'REG';
   `);
 
     const playerTotalTds2 = await db.$queryRaw<{ total_tds: number }[]>(Prisma.sql`
     SELECT COUNT(*) AS total_tds
     FROM "Nflverse_Play_by_Play"
-    WHERE "receiver_player_id" = ${player2.gsis_id}
-    AND "td_player_id" = ${player2.gsis_id}
+    WHERE "td_player_id" = ${player2Gsis}
     AND "season_type" = 'REG'
     AND "td_player_id" IS NOT NULL;
     `);
@@ -246,18 +292,22 @@ AND "yards_gained" != 0;
     const player1Weeks = await db.$queryRaw<{ weeks: number }[]>(Prisma.sql`
         SELECT COUNT(DISTINCT "week") AS weeks
 FROM "Nflverse_Play_by_Play"
-WHERE "receiver_player_id" = ${player1.gsis_id}
+WHERE "receiver_player_id" = ${player1Gsis}
 AND "season_type" = 'REG';
 `);
     const player2Weeks = await db.$queryRaw<{ weeks: number }[]>(Prisma.sql`
         SELECT COUNT(DISTINCT "week") AS weeks
 FROM "Nflverse_Play_by_Play"
-WHERE "receiver_player_id" = ${player2.gsis_id}
+WHERE "receiver_player_id" = ${player2Gsis}
 AND "season_type" = 'REG';
 `);
 
-    const totalYardsPlayer1 = Number(playerTotalYards1[0]?.total_yards || 0);
-    const totalYardsPlayer2 = Number(playerTotalYards2[0]?.total_yards || 0);
+    const totalYardsRecPlayer1 = Number(playerTotalRecYards1[0]?.total_yards || 0);
+    const totalYardsRecPlayer2 = Number(playerTotalRecYards2[0]?.total_yards || 0);
+    const longestPlay1 = Number(playerLongestPlay1[0]?.max_yards_gained || 0);
+    const longestPlay2 = Number(playerLongestPlay2[0]?.max_yards_gained || 0);
+    const totalYardsRushPlayer1 = Number(playerTotalRushYards1[0]?.total_yards || 0);
+    const totalYardsRushPlayer2 = Number(playerTotalRushYards2[0]?.total_yards || 0);
     const totalTdsPlayer1 = Number(playerTotalTds1[0]?.total_tds || 0);
     const totalTdsPlayer2 = Number(playerTotalTds2[0]?.total_tds || 0);
     const totalAirYardsPlayer1 = Number(playerTotalAirYards1[0]?.total_air_yards || 0);
@@ -269,37 +319,77 @@ AND "season_type" = 'REG';
     const totalReceptionsPlayer1 = Number(player1Receptions[0]?.total_receptions || 0);
     const totalReceptionsPlayer2 = Number(player2Receptions[0]?.total_receptions || 0);
 
-    const player1Details = {
-        playerId: player1.gsis_id,
-        fullName: player1.full_name,
-        totalYards: totalYardsPlayer1,
-        totalAirYards: totalAirYardsPlayer1,
-        totalTds: totalTdsPlayer1,
-        totalYac: totalYACPlayer1,
-        totalTouchdowns: totalTdsPlayer1,
-        yardsPerReception: totalTdsPlayer1 > 0 ? roundToTwoDecimals(totalYardsPlayer1 / totalTdsPlayer1) : 0,
-        weeks: totalWeeksPlayer1,
-        receptions: totalReceptionsPlayer1,
-    };
-    const player2Details = {
-        playerId: player2.gsis_id,
-        fullName: player2.full_name,
-        totalYards: totalYardsPlayer2,
-        totalAirYards: totalAirYardsPlayer2,
-        totalTds: totalTdsPlayer2,
-        totalYac: totalYACPlayer2,
-        totalTouchdowns: totalTdsPlayer2,
-        yardsPerReception: totalTdsPlayer2 > 0 ? roundToTwoDecimals(totalYardsPlayer2 / totalTdsPlayer2) : 0,
-        weeks: totalWeeksPlayer2,
-        receptions: totalReceptionsPlayer2,
-    };
+    let player1Details;
+    if (player1.position === "WR") {
+        player1Details = {
+            playerId: player1Gsis,
+            fullName: player1.full_name,
+            totalRecYards: totalYardsRecPlayer1,
+            totalRushYards: totalYardsRushPlayer1,
+            totalAirYards: totalAirYardsPlayer1,
+            totalTds: totalTdsPlayer1,
+            totalYac: totalYACPlayer1,
+            totalTouchdowns: totalTdsPlayer1,
+            yardsPerReception: totalTdsPlayer1 > 0 ? roundToTwoDecimals(totalYardsRecPlayer1 / totalReceptionsPlayer1) : 0,
+            weeks: totalWeeksPlayer1,
+            receptions: totalReceptionsPlayer1,
+            longestPlay: longestPlay1,
+        };
+    }
+    if (player1.position === "RB") {
+        player1Details = {
+            playerId: player1Gsis,
+            fullName: player1.full_name,
+            totalRecYards: totalYardsRecPlayer1,
+            totalRushYards: totalYardsRushPlayer1,
+            totalAirYards: totalAirYardsPlayer1,
+            totalTds: totalTdsPlayer1,
+            totalYac: totalYACPlayer1,
+            totalTouchdowns: totalTdsPlayer1,
+            yardsPerReception: totalTdsPlayer1 > 0 ? roundToTwoDecimals(totalYardsRecPlayer1 / totalReceptionsPlayer1) : 0,
+            weeks: totalWeeksPlayer1,
+            receptions: totalReceptionsPlayer1,
+            longestPlay: longestPlay1,
+        };
+    }
+    let player2Details;
+    if (player2.position === "WR") {
+        player2Details = {
+            playerId: player2Gsis,
+            fullName: player2.full_name,
+            totalRecYards: totalYardsRecPlayer2,
+            totalRushYards: totalYardsRushPlayer2,
+            totalAirYards: totalAirYardsPlayer2,
+            totalTds: totalTdsPlayer2,
+            totalYac: totalYACPlayer2,
+            totalTouchdowns: totalTdsPlayer2,
+            yardsPerReception: totalTdsPlayer2 > 0 ? roundToTwoDecimals(totalYardsRecPlayer2 / totalReceptionsPlayer2) : 0,
+            weeks: totalWeeksPlayer2,
+            receptions: totalReceptionsPlayer2,
+            longestPlay: longestPlay2,
+        };
+    }
+    if (player2.position === "RB") {
+        player2Details = {
+            playerId: player2Gsis,
+            fullName: player2.full_name,
+            totalRecYards: totalYardsRecPlayer2,
+            totalRushYards: totalYardsRushPlayer2,
+            totalTds: totalTdsPlayer2,
+            totalTouchdowns: totalTdsPlayer2,
+            weeks: totalWeeksPlayer2,
+            receptions: totalReceptionsPlayer2,
+            longestPlay: longestPlay2,
+        };
+    }
 
-    console.log(totalYardsPlayer1, totalYardsPlayer2);
-    console.log(totalTdsPlayer1, totalTdsPlayer2)
-    console.log(totalAirYardsPlayer1, totalAirYardsPlayer2)
-    console.log(totalYACPlayer1, totalYACPlayer2)
-    console.log(totalWeeksPlayer1, totalWeeksPlayer2)
-    console.log(totalReceptionsPlayer1, totalReceptionsPlayer2)
+    // console.log(totalYardsPlayer1, totalYardsPlayer2);
+    // console.log(totalTdsPlayer1, totalTdsPlayer2)
+    // console.log(totalAirYardsPlayer1, totalAirYardsPlayer2)
+    // console.log(totalYACPlayer1, totalYACPlayer2)
+    // console.log(totalWeeksPlayer1, totalWeeksPlayer2)
+    // console.log(totalReceptionsPlayer1, totalReceptionsPlayer2)
+    console.log(player1Details, player2Details)
     // const result1 = Object.values(playerStats1).map((stats) => ({
     //     game_id: stats.game_id,
     //     average_yards: stats.total_yards.reduce((a, b) => a + b, 0) / stats.total_yards.length,
@@ -337,7 +427,7 @@ AND "season_type" = 'REG';
         seed: 100,
         schema: ffDataSchema,
         system: `You are a fantasty footabll expert. You are an expert at analyzing player stats and making decisions based on that analysis. Users using this tool will be relying on you to provide accurate assessments of player stats and make informed decisions.`,
-        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(player1Details, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(player2Details, null, 2)}\n\nConsider the number of games played (Player 1: ${player1Details.weeks} games, Player 2: ${player2Details.weeks} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation (list the yards, tds, games played and provide a brief explanation), safe_pick, risky_pick, and recommended_pick. Please also compile their season stats that were provided and return playerOneYards, PlayerTwoYards, PlayerOneTouchdowns, PlayerTwoTouchdowns, PlayerOneYardsAfterCatch, PlayerTwoYardsAfterCatch, PlayerOneAirYards, PlayerTwoAirYards, PlayerOneYardsPerReception, PlayerTwoYardsPerReception, PlayerOneReceptions, PlayerTwoReceptions. With the recommended pick can you throw in a percentage of certainty (0-100)? If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
+        prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(player1Details, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(player2Details, null, 2)}\n\nConsider the number of games played (Player 1: ${player1Details?.weeks} games, Player 2: ${player2Details?.weeks} games) and the availability of each player. Provide a detailed comparison and categorize the players into the following: explanation (list the yards, tds, games played and provide a brief explanation), safe_pick, risky_pick, and recommended_pick. Please also compile their season stats that were provided and return playerOneRecYards, PlayerTwoRecYards, playerOneRushYards, PlayerTwoRushYards, PlayerOneTouchdowns, PlayerTwoTouchdowns, PlayerOneYardsAfterCatch, PlayerTwoYardsAfterCatch, PlayerOneAirYards, PlayerTwoAirYards, PlayerOneYardsPerReception, PlayerTwoYardsPerReception, PlayerOneReceptions, PlayerTwoReceptions LongestPlayOne, LongestPlayTwo. With the recommended pick can you throw in a percentage of certainty (0-100)? If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
         onFinish: async ({ object }) => {
             await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600); // Cache for 1 hour
         },

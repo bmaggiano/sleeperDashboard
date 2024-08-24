@@ -5,8 +5,10 @@ export const ffDataSchema = z.object({
     analysis: z.array(
         z.object({
             explanation: z.string(),
-            playerOneYards: z.number(),
-            playerTwoYards: z.number(),
+            playerOneRecYards: z.number(),
+            playerTwoRecYards: z.number(),
+            playerOneRushYards: z.number(),
+            playerTwoRushYards: z.number(),
             playerOneTouchdowns: z.number(),
             playerTwoTouchdowns: z.number(),
             playerOneReceptions: z.number(),
@@ -17,6 +19,8 @@ export const ffDataSchema = z.object({
             playerTwoYardsAfterCatch: z.number(),
             playerOneYardsPerReception: z.number(),
             playerTwoYardsPerReception: z.number(),
+            longestPlayOne: z.number(),
+            longestPlayTwo: z.number(),
             safe_pick: z.string(),
             risky_pick: z.string(),
             recommended_pick: z.string().optional(),

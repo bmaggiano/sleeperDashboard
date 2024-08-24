@@ -15,6 +15,7 @@ import { IoDiceOutline } from "react-icons/io5";
 import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Loader2, Shield, Sparkles } from 'lucide-react';
+import StatsGraph from './graph';
 
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
     return (
@@ -110,8 +111,12 @@ export default function PlayerCompare() {
                     {object?.analysis?.map((data, index) => (
                         <div key={index} className="grid grid-cols-2 gap-4 mt-4">
                             <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards</p>
-                                <strong className='text-xl'>{data?.playerOneYards}</strong>
+                                <p className='text-gray-500'>Receiving Yards</p>
+                                <strong className='text-xl'>{data?.playerOneRecYards}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Rushing Yards</p>
+                                <strong className='text-xl'>{data?.playerOneRushYards}</strong>
                             </div>
                             <div className='ring-1 ring-gray-200 p-2 rounded-md'>
                                 <p className='text-gray-500'>Touchdowns</p>
@@ -133,6 +138,10 @@ export default function PlayerCompare() {
                                 <p className='text-gray-500'>Air Yards</p>
                                 <strong className='text-xl'>{data?.playerOneAirYards}</strong>
                             </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Longest Play</p>
+                                <strong className='text-xl'>{data?.longestPlayOne}</strong>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -148,8 +157,12 @@ export default function PlayerCompare() {
                     {object?.analysis?.map((data, index) => (
                         <div key={index} className="grid grid-cols-2 gap-4 mt-4">
                             <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards</p>
-                                <strong className='text-xl'>{data?.playerTwoYards}</strong>
+                                <p className='text-gray-500'>Receiving Yards</p>
+                                <strong className='text-xl'>{data?.playerTwoRecYards}</strong>
+                            </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Rushing Yards</p>
+                                <strong className='text-xl'>{data?.playerTwoRushYards}</strong>
                             </div>
                             <div className='ring-1 ring-gray-200 p-2 rounded-md'>
                                 <p className='text-gray-500'>Touchdowns</p>
@@ -171,11 +184,18 @@ export default function PlayerCompare() {
                                 <p className='text-gray-500'>Air Yards</p>
                                 <strong className='text-xl'>{data?.playerTwoAirYards}</strong>
                             </div>
+                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
+                                <p className='text-gray-500'>Longest Play</p>
+                                <strong className='text-xl'>{data?.longestPlayTwo}</strong>
+                            </div>
                         </div>
                     ))}
                 </div>
             </div>
-            <div className='p-4'>
+            {object?.analysis?.map((data, index) => (
+                <StatsGraph key={index} data={data} />
+            ))}
+            <div className='p-2'>
                 {object?.analysis?.map((data, index) => (
                     <div key={index} className='space-y-2'>
                         <strong className='flex items-center gap-x-2 text-lg'><MdNotes className='text-gray-500' /> AI Analysis</strong>
