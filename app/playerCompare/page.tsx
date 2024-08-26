@@ -67,7 +67,7 @@ export default function PlayerCompare() {
         <div className="flex flex-col gap-4 mt-4">
             <div className='flex items-center justify-between'>
 
-                <h1 className="text-2xl my-2 font-bold">Player Compare</h1>
+                <h1 className="text-lg my-2 font-bold">Player Compare</h1>
                 {selectedPlayer1 && selectedPlayer2 && (
                     <Button
                         variant={"outline"}
