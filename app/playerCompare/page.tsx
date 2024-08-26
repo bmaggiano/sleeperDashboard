@@ -1,21 +1,29 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import React, { useState } from 'react';
 import { experimental_useObject as useObject } from 'ai/react';
 import FuzzySearch from "../fuzzySearch";
 import { Button } from '@/components/ui/button';
-import { z } from 'zod';
 import { ffDataSchema } from '../api/db/schema';
-import { AiOutlineSafety } from "react-icons/ai";
-import { RiSkullLine } from "react-icons/ri";
-import { GoVerified } from "react-icons/go";
 import { MdNotes } from "react-icons/md";
-import { IoStatsChart } from "react-icons/io5";
 import { IoDiceOutline } from "react-icons/io5";
 import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Loader2, Shield, Sparkles } from 'lucide-react';
 import StatsGraph from './graph';
+
+function PlayerProfile({ player }: { player: any }) {
+    return (
+        <div className="w-full flex items-center space-x-4 mb-4">
+            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
+                <Image src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`} height={50} width={50} alt={player.full_name} />
+            </div>
+            <div>
+                <h3 className="text-xl font-semibold">{player.full_name}</h3>
+                <p className="text-gray-500">{player.position} - {player.team}</p>
+            </div>
+        </div>
+    );
+}
 
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
     return (
@@ -28,19 +36,46 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
                 <p className="text-gray-500">Search for a player</p>
             </div>
         </div>
-    )
+    );
 }
 
-function PlayerProfile({ player }: { player: any }) {
+function RenderStats({ data, playerNum }: { data: any, playerNum: number }) {
+    console.log(data);
+    const stats = [];
+    // Base stats that apply to all players
+    if (data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") {
+        stats.push(
+            { label: 'Receptions', value: playerNum === 1 ? data?.playerOneReceptions : data?.playerTwoReceptions },
+            { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneRecYards : data?.playerTwoRecYards },
+            { label: 'Rushing Yards', value: playerNum === 1 ? data?.playerOneRushYards : data?.playerTwoRushYards },
+            { label: 'Yards per Reception', value: playerNum === 1 ? data?.playerOneYardsPerReception : data?.playerTwoYardsPerReception },
+            { label: 'Yards After Catch', value: playerNum === 1 ? data?.playerOneYardsAfterCatch : data?.playerTwoYardsAfterCatch },
+            { label: 'Air Yards', value: playerNum === 1 ? data?.playerOneAirYards : data?.playerTwoAirYards },
+            { label: 'Longest Play', value: playerNum === 1 ? data?.longestPlayOne : data?.longestPlayTwo },
+            { label: 'Touchdowns', value: playerNum === 1 ? data?.playerOneTouchdowns : data?.playerTwoTouchdowns },
+        );
+    }
+
+    // Conditionally add QB stats if the player is a QB
+    if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
+        stats.push(
+            { label: 'Pass Completions', value: playerNum === 1 ? data?.playerOnePassCompletion : data?.playerTwoPassCompletion },
+            { label: 'Pass Attempts', value: playerNum === 1 ? data?.playerOnePassAttempt : data?.playerTwoPassAttempt },
+            { label: 'Pass Yards', value: playerNum === 1 ? data?.playerOnePassYards : data?.playerTwoPassYards },
+            { label: 'Interceptions', value: playerNum === 1 ? data?.playerOneInterceptions : data?.playerTwoInterceptions },
+            { label: 'Pass Touchdowns', value: playerNum === 1 ? data?.playerOnePassTouchdowns : data?.playerTwoPassTouchdowns },
+            { label: 'Total Touchdowns', value: playerNum === 1 ? data?.playerOneTouchdowns : data?.playerTwoTouchdowns }
+        );
+    }
+
     return (
-        <div className="w-full flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
-                <Image src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`} height={50} width={50} alt={player.full_name} />
-            </div>
-            <div>
-                <h3 className="text-xl font-semibold">{player.full_name}</h3>
-                <p className="text-gray-500">{player.position} - {player.team}</p>
-            </div>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+            {stats.map((stat, index) => (
+                <div key={index} className='ring-1 ring-gray-200 p-2 rounded-md'>
+                    <p className='text-gray-500'>{stat.label}</p>
+                    <strong className='text-xl'>{stat.value}</strong>
+                </div>
+            ))}
         </div>
     );
 }
@@ -66,7 +101,6 @@ export default function PlayerCompare() {
     return (
         <div className="flex flex-col gap-4 mt-4">
             <div className='flex items-center justify-between'>
-
                 <h1 className="text-lg my-2 font-bold">Player Compare</h1>
                 {selectedPlayer1 && selectedPlayer2 && (
                     <Button
@@ -99,97 +133,26 @@ export default function PlayerCompare() {
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
                 <div className='flex flex-col w-full sm:w-1/2'>
-
                     <div className='ring-1 ring-gray-200 p-4 rounded-md'>
                         {selectedPlayer1 ? (
                             <PlayerProfile player={selectedPlayer1} />
-                        ) :
+                        ) : (
                             <PlayerProfileSkeleton playerIndex={1} />
-                        }
+                        )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 1)} />
                     </div>
-                    {object?.analysis?.map((data, index) => (
-                        <div key={index} className="grid grid-cols-2 gap-4 mt-4">
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Receiving Yards</p>
-                                <strong className='text-xl'>{data?.playerOneRecYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Rushing Yards</p>
-                                <strong className='text-xl'>{data?.playerOneRushYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Touchdowns</p>
-                                <strong className='text-xl'>{data?.playerOneTouchdowns}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Receptions</p>
-                                <strong className='text-xl'>{data?.playerOneReceptions}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards per Reception</p>
-                                <strong className='text-xl'>{data?.playerOneYardsPerReception}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards After Catch</p>
-                                <strong className='text-xl'>{data?.playerOneYardsAfterCatch}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Air Yards</p>
-                                <strong className='text-xl'>{data?.playerOneAirYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Longest Play</p>
-                                <strong className='text-xl'>{data?.longestPlayOne}</strong>
-                            </div>
-                        </div>
-                    ))}
+                    {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={1} />}
                 </div>
                 <div className='flex flex-col w-full sm:w-1/2'>
                     <div className='ring-1 ring-gray-200 p-4 rounded-md'>
                         {selectedPlayer2 ? (
                             <PlayerProfile player={selectedPlayer2} />
-                        ) :
+                        ) : (
                             <PlayerProfileSkeleton playerIndex={2} />
-                        }
+                        )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
                     </div>
-                    {object?.analysis?.map((data, index) => (
-                        <div key={index} className="grid grid-cols-2 gap-4 mt-4">
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Receiving Yards</p>
-                                <strong className='text-xl'>{data?.playerTwoRecYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Rushing Yards</p>
-                                <strong className='text-xl'>{data?.playerTwoRushYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Touchdowns</p>
-                                <strong className='text-xl'>{data?.playerTwoTouchdowns}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Receptions</p>
-                                <strong className='text-xl'>{data?.playerTwoReceptions}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards per Reception</p>
-                                <strong className='text-xl'>{data?.playerTwoYardsPerReception}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Yards After Catch</p>
-                                <strong className='text-xl'>{data?.playerTwoYardsAfterCatch}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Air Yards</p>
-                                <strong className='text-xl'>{data?.playerTwoAirYards}</strong>
-                            </div>
-                            <div className='ring-1 ring-gray-200 p-2 rounded-md'>
-                                <p className='text-gray-500'>Longest Play</p>
-                                <strong className='text-xl'>{data?.longestPlayTwo}</strong>
-                            </div>
-                        </div>
-                    ))}
+                    {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={2} />}
                 </div>
             </div>
             {object?.analysis?.map((data, index) => (
@@ -205,18 +168,14 @@ export default function PlayerCompare() {
             </div>
             {object?.analysis?.map((data, index) => (
                 <div key={index} className='space-y-2'>
-                    <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
-                        <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
-                            <strong className='flex items-center gap-x-2 text-lg'><Shield className='h-4 w-4' /> Safe pick</strong>
-                            <p className='ml-6'>{data?.safe_pick}</p>
-                        </div>
+                    <div className='flex items-center sm:flex-row space-y-2 sm:space-y-0'>
                         {data?.undecided ? (
-                            <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
+                            <div className='w-full ring-1 ring-gray-200 p-4 rounded-md'>
                                 <strong className='flex items-center gap-x-2 text-lg'><IoDiceOutline /> Toss-up</strong>
                                 <p>{data?.undecided}</p>
                             </div>
                         ) : (
-                            <div className='w-full sm:w-1/2 ring-1 ring-gray-200 p-4 rounded-md'>
+                            <div className='w-full ring-1 ring-gray-200 p-4 rounded-md'>
                                 <strong className='flex items-center gap-x-2 text-lg'><Sparkles className='h-4 w-4' /> Recommended pick</strong>
                                 <p className='ml-6'>{data?.recommended_pick}</p>
                                 {data?.certainty && <p className='ml-6'>Certainty: {data?.certainty}%</p>}
@@ -225,6 +184,6 @@ export default function PlayerCompare() {
                     </div>
                 </div>
             ))}
-        </div >
+        </div>
     );
 }
