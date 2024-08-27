@@ -10,6 +10,7 @@ import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Loader2, Shield, Sparkles } from 'lucide-react';
 import StatsGraph from './graph';
+import { YearByYear } from './yearByYear';
 
 function PlayerProfile({ player }: { player: any }) {
     return (
@@ -40,31 +41,30 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
 }
 
 function RenderStats({ data, playerNum }: { data: any, playerNum: number }) {
-    console.log(data);
     const stats = [];
     // Base stats that apply to all players
     if (data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") {
         stats.push(
-            { label: 'Receptions', value: playerNum === 1 ? data?.playerOneReceptions : data?.playerTwoReceptions },
-            { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneRecYards : data?.playerTwoRecYards },
-            { label: 'Rushing Yards', value: playerNum === 1 ? data?.playerOneRushYards : data?.playerTwoRushYards },
-            { label: 'Yards per Reception', value: playerNum === 1 ? data?.playerOneYardsPerReception : data?.playerTwoYardsPerReception },
-            { label: 'Yards After Catch', value: playerNum === 1 ? data?.playerOneYardsAfterCatch : data?.playerTwoYardsAfterCatch },
-            { label: 'Air Yards', value: playerNum === 1 ? data?.playerOneAirYards : data?.playerTwoAirYards },
+            { label: 'Receptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.receptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions },
+            { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.recYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards },
+            { label: 'Rushing Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards },
+            { label: 'Yards per Reception', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception : data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception },
+            { label: 'Yards After Catch', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.yardsAfterCatch : data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsAfterCatch },
+            { label: 'Air Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.airYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.airYards },
             { label: 'Longest Play', value: playerNum === 1 ? data?.longestPlayOne : data?.longestPlayTwo },
-            { label: 'Touchdowns', value: playerNum === 1 ? data?.playerOneTouchdowns : data?.playerTwoTouchdowns },
+            { label: 'Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns },
         );
     }
 
     // Conditionally add QB stats if the player is a QB
     if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
         stats.push(
-            { label: 'Pass Completions', value: playerNum === 1 ? data?.playerOnePassCompletion : data?.playerTwoPassCompletion },
-            { label: 'Pass Attempts', value: playerNum === 1 ? data?.playerOnePassAttempt : data?.playerTwoPassAttempt },
-            { label: 'Pass Yards', value: playerNum === 1 ? data?.playerOnePassYards : data?.playerTwoPassYards },
-            { label: 'Interceptions', value: playerNum === 1 ? data?.playerOneInterceptions : data?.playerTwoInterceptions },
-            { label: 'Pass Touchdowns', value: playerNum === 1 ? data?.playerOnePassTouchdowns : data?.playerTwoPassTouchdowns },
-            { label: 'Total Touchdowns', value: playerNum === 1 ? data?.playerOneTouchdowns : data?.playerTwoTouchdowns }
+            { label: 'Pass Completions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletion : data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletion },
+            { label: 'Pass Attempts', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passAttempt : data?.playerTwoStats?.nflverse_play_by_play_2023?.passAttempt },
+            { label: 'Pass Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.passYards },
+            { label: 'Interceptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.interceptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.interceptions },
+            { label: 'Pass Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passTouchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.passTouchdowns },
+            { label: 'Rush Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns }
         );
     }
 
@@ -158,6 +158,7 @@ export default function PlayerCompare() {
             {object?.analysis?.map((data, index) => (
                 <StatsGraph key={index} data={data} />
             ))}
+            <YearByYear stats={object?.analysis as any} />
             <div className='p-2'>
                 {object?.analysis?.map((data, index) => (
                     <div key={index} className='space-y-2'>

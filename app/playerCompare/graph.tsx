@@ -30,26 +30,26 @@ export default function StatsGraph({ data }: { data: any }) {
     // Base stats for WR
     if (data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") {
         stats.push(
-            { label: 'Receptions', value1: data?.playerOneReceptions, value2: data?.playerTwoReceptions },
-            { label: 'Receiving Yards', value1: data?.playerOneRecYards, value2: data?.playerTwoRecYards },
-            { label: 'Rushing Yards', value1: data?.playerOneRushYards, value2: data?.playerTwoRushYards },
-            { label: 'Yards per Reception', value1: data?.playerOneYardsPerReception, value2: data?.playerTwoYardsPerReception },
-            { label: 'Yards After Catch', value1: data?.playerOneYardsAfterCatch, value2: data?.playerTwoYardsAfterCatch },
-            { label: 'Air Yards', value1: data?.playerOneAirYards, value2: data?.playerTwoAirYards },
+            { label: 'Receptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.receptions ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions ?? 0 },
+            { label: 'Receiving Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.recYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards ?? 0 },
+            { label: 'Rushing Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards ?? 0 },
+            { label: 'Yards per Reception', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception ?? 0 },
+            { label: 'Yards After Catch', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.yardsAfterCatch ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsAfterCatch ?? 0 },
+            { label: 'Air Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.airYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.airYards ?? 0 },
             { label: 'Longest Play', value1: data?.longestPlayOne, value2: data?.longestPlayTwo },
-            { label: 'Touchdowns', value1: data?.playerOneTouchdowns, value2: data?.playerTwoTouchdowns }
+            { label: 'Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns ?? 0 }
         );
     }
 
     // QB-specific stats
     if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
         stats.push(
-            { label: 'Pass Completions', value1: data?.playerOnePassCompletion, value2: data?.playerTwoPassCompletion },
-            { label: 'Pass Attempts', value1: data?.playerOnePassAttempt, value2: data?.playerTwoPassAttempt },
-            { label: 'Pass Yards', value1: data?.playerOnePassYards, value2: data?.playerTwoPassYards },
-            { label: 'Interceptions', value1: data?.playerOneInterceptions, value2: data?.playerTwoInterceptions },
-            { label: 'Pass Touchdowns', value1: data?.playerOnePassTouchdowns, value2: data?.playerTwoPassTouchdowns },
-            { label: 'Total Touchdowns', value1: data?.playerOneTouchdowns, value2: data?.playerTwoTouchdowns }
+            { label: 'Pass Completions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletions, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletions },
+            { label: 'Pass Attempts', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passAttemp, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passAttempt },
+            { label: 'Pass Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passYards, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passYards },
+            { label: 'Interceptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.interceptions, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.interceptions },
+            { label: 'Pass Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passTouchdowns, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passTouchdowns },
+            { label: 'Total Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns }
         );
     }
 

@@ -50,7 +50,7 @@ model User {
   createdAt DateTime @default(now())
 }
 
-model Nflverse_Play_by_Play_2021 {
+model nflverse_play_by_play_2021 {
   play_id                              Int
   game_id                              String
   old_game_id                          Int?
@@ -423,10 +423,10 @@ model Nflverse_Play_by_Play_2021 {
   xpass                                String?
   pass_oe                              String?
 
-  @@id([play_id, game_id, home_team, away_team, season_type, week])
+  @@id([play_id, game_id, home_team, away_team, season_type, week], map: "Nflverse_Play_by_Play_2021_pkey")
 }
 
-model Nflverse_Play_by_Play_2022 {
+model nflverse_play_by_play_2022 {
   play_id                              Int
   game_id                              String
   old_game_id                          Int?
@@ -799,10 +799,10 @@ model Nflverse_Play_by_Play_2022 {
   xpass                                String?
   pass_oe                              String?
 
-  @@id([play_id, game_id, home_team, away_team, season_type, week])
+  @@id([play_id, game_id, home_team, away_team, season_type, week], map: "Nflverse_Play_by_Play_2022_pkey")
 }
 
-model Nflverse_Play_by_Play_2023 {
+model nflverse_play_by_play_2023 {
   play_id                              Int
   game_id                              String
   old_game_id                          Int?
@@ -1175,5 +1175,5 @@ model Nflverse_Play_by_Play_2023 {
   xpass                                String?
   pass_oe                              String?
 
-  @@id([play_id, game_id, home_team, away_team, season_type, week])
+  @@id([play_id, game_id, home_team, away_team, season_type, week], map: "Nflverse_Play_by_Play_2023_pkey")
 }
