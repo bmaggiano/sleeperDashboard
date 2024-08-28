@@ -10,11 +10,10 @@ import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Loader2, Shield, Sparkles } from 'lucide-react';
 import StatsGraph from './graph';
-import { CircleCheckBig } from 'lucide-react';
+import { CircleCheckBig, TrendingUp } from 'lucide-react';
 import { YearByYear } from './yearByYear';
 import CompareTable from './compareTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Recommended from './recommended';
 
 function PlayerProfile({ player }: { player: any }) {
     return (
@@ -44,54 +43,34 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
     );
 }
 
-function RenderStats({ data, playerNum }: { data: any, playerNum: number }) {
-    const stats = [];
-    // Base stats that apply to all players
-    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") || (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE")) {
-        stats.push(
-            { label: 'Receptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.receptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions },
-            { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.recYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards },
-            { label: 'Rushing Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards },
-            { label: 'Yards per Reception', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception : data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception },
-            { label: 'Yards After Catch', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.yardsAfterCatch : data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsAfterCatch },
-            { label: 'Air Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.airYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.airYards },
-            { label: 'Longest Play', value: playerNum === 1 ? data?.longestPlayOne : data?.longestPlayTwo },
-            { label: 'Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns },
-        );
-    }
-    if (data?.playerOnePosition === 'RB' || data?.playerTwoPosition === 'RB') {
-        stats.push(
-            { label: 'Receptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.receptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions },
-            { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.recYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards },
-            { label: 'Rushing Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards },
-            { label: 'Yards per Reception', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception : data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception },
-            { label: 'Longest Play', value: playerNum === 1 ? data?.longestPlayOne : data?.longestPlayTwo },
-            { label: 'Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns },
-        )
-    }
-    // Conditionally add QB stats if the player is a QB
-    if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
-        stats.push(
-            { label: 'Pass Completions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletion : data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletion },
-            { label: 'Pass Attempts', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passAttempt : data?.playerTwoStats?.nflverse_play_by_play_2023?.passAttempt },
-            { label: 'Pass Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.passYards },
-            { label: 'Interceptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.interceptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.interceptions },
-            { label: 'Pass Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.passTouchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.passTouchdowns },
-            { label: 'Rush Touchdowns', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns : data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns }
-        );
-    }
+function RenderKeyStats({ data, player }: { data: any, player: any }) {
+    const recommendedStats = data?.recommended_pick === data?.playerOneName
+        ? data?.playerOneStats?.nflverse_play_by_play_2023
+        : data?.playerTwoStats?.nflverse_play_by_play_2023;
 
-    return (
-        <div className="grid grid-cols-2 gap-4 mt-4">
-            {stats.map((stat, index) => (
-                <div key={index} className='ring-1 ring-gray-200 p-2 rounded-md'>
-                    <p className='text-gray-500'>{stat.label}</p>
-                    <strong className='text-xl'>{stat.value}</strong>
-                </div>
-            ))}
-        </div>
-    );
-}
+    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") ||
+        (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE") ||
+        (data?.playerOnePosition === "RB" || data?.playerTwoPosition === "RB")) {
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Receptions: {recommendedStats?.receptions}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Receiving Yards: {recommendedStats?.recYards}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Rushing Yards: {recommendedStats?.rushYards}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Touchdowns: {recommendedStats?.touchdowns}</p>
+            </div>
+        );
+    }
+    if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
+        return (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Pass Completions: {recommendedStats?.passCompletion}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Pass Yards: {recommendedStats?.passYards}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Pass Touchdowns: {recommendedStats?.passTouchdowns}</p>
+                <p className='inline-flex items-center gap-2'><TrendingUp className='h-4 w-4' />Rush Touchdowns: {recommendedStats?.touchdowns}</p>
+            </div>
+        );
+    }
+};
 
 export default function PlayerCompare() {
     const [selectedPlayer1, setSelectedPlayer1] = useState<any>(null);
@@ -180,7 +159,7 @@ export default function PlayerCompare() {
                     <Card key={index} className='flex flex-col'>
                         <CardHeader className='border-b p-6'>
                             <CardTitle className='flex items-center justify-between text-lg'>
-                                AI Analysis <MdNotes className='h-5 w-5' />
+                                Analysis <MdNotes className='h-5 w-5' />
                             </CardTitle>
                         </CardHeader>
                         <CardContent className='p-6'>
@@ -190,7 +169,6 @@ export default function PlayerCompare() {
                     </Card>
                 ))}
             </div>
-            {/* <Recommended /> */}
             {object?.analysis?.map((data, index) => (
                 <div key={index}>
                     {data?.undecided ? (
@@ -219,9 +197,14 @@ export default function PlayerCompare() {
                                         {data?.recommended_pick === data?.playerOneName ? `${data?.playerOneTeam}` : `${data?.playerTwoTeam}`}
                                     </span>
                                 </p>
-                                <p className='flex items-center text-base text-gray-500'>
+                                <p className='flex items-center text-base text-gray-500 mb-2'>
                                     <CircleCheckBig className='h-4 w-4 mr-2' />{data?.certainty && <p>Certainty: {data?.certainty}%</p>}
                                 </p>
+                                <div>
+                                    <p className='pt-2 pb-1 font-semibold'>Key Stats (2023):</p>
+                                    <RenderKeyStats data={data} player={data?.recommended_pick === data?.playerOneName ? data?.playerOneStats : data?.playerTwoStats} />
+                                </div>
+
                             </CardContent>
                         </Card>
                     )}
