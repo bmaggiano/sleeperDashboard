@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BetweenHorizonalStart } from "lucide-react";
+import { BetweenHorizonalStart, CircleChevronLeft, CircleChevronRight, Check, X } from "lucide-react";
 
 export default function CompareTable({ data }: { data: any }) {
     // Extracted data preparation logic
@@ -39,11 +39,25 @@ export default function CompareTable({ data }: { data: any }) {
 }
 
 function StatsCard({ title, stats, playerOneName, playerTwoName }: { title: string, stats: any[], playerOneName: string, playerTwoName: string }) {
+
+    const renderStatWithChevron = (player1: number, player2: number) => {
+        if (player1 > player2) {
+            return (
+                <p className="inline-flex items-center"><Check className="text-green-600 w-5 h-5" />&nbsp;{player1}</p>
+
+            );
+        } else {
+            return (
+                <p className="inline-flex items-center"><X className="text-red-600 w-5 h-5" />&nbsp;{player1}</p>
+            );
+        }
+    };
+
     const getColorClass = (player1: number, player2: number) => {
         if (player1 > player2) {
             return "text-green-600";
         } else {
-            return "text-gray-600";
+            return "text-red-600";
         }
     };
 
@@ -61,9 +75,11 @@ function StatsCard({ title, stats, playerOneName, playerTwoName }: { title: stri
                     <tbody>
                         {stats.map((stat, index) => (
                             <tr key={stat.label} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                                <td className={`py-3 px-6 font-medium ${getColorClass(stat.player1, stat.player2)}`}>{stat.player1}</td>
-                                <td className="py-3 px-6 text-center text-gray-700">{stat.label}</td>
-                                <td className={`py-3 px-6 text-right font-medium ${getColorClass(stat.player2, stat.player1)}`}>{stat.player2}</td>
+                                <td className={`py-3 px-6 font-medium ${getColorClass(stat.player1, stat.player2)}`}>{renderStatWithChevron(stat.player1, stat.player2)}</td>
+                                <td className="py-3 px-6 text-center text-gray-700">
+                                    {stat.label}
+                                </td>
+                                <td className={`py-3 px-6 text-right font-medium ${getColorClass(stat.player2, stat.player1)}`}>{renderStatWithChevron(stat.player2, stat.player1)}</td>
                             </tr>
                         ))}
                     </tbody>
