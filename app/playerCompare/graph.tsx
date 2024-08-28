@@ -28,7 +28,7 @@ export default function StatsGraph({ data }: { data: any }) {
     const stats = [];
 
     // Base stats for WR
-    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") || (data?.playerOnePosition === "RB" || data?.playerTwoPosition === "RB") || (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE")) {
+    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") || (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE")) {
         stats.push(
             { label: 'Receptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.receptions ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions ?? 0 },
             { label: 'Receiving Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.recYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards ?? 0 },
@@ -40,7 +40,16 @@ export default function StatsGraph({ data }: { data: any }) {
             { label: 'Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns ?? 0 }
         );
     }
-
+    if (data?.playerOnePosition === 'RB' || data?.playerTwoPosition === 'RB') {
+        stats.push(
+            { label: 'Receptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.receptions ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions ?? 0 },
+            { label: 'Receiving Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.recYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards ?? 0 },
+            { label: 'Rushing Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards ?? 0 },
+            { label: 'Yards per Reception', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception ?? 0 },
+            { label: 'Longest Play', value1: data?.longestPlayOne, value2: data?.longestPlayTwo },
+            { label: 'Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns ?? 0 }
+        )
+    }
     // QB-specific stats
     if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
         stats.push(
