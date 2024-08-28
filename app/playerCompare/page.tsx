@@ -13,6 +13,7 @@ import { CircleCheckBig, TrendingUp } from 'lucide-react';
 import { YearByYear } from './yearByYear';
 import CompareTable from './compareTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Certainty } from './certainty';
 
 function PlayerProfile({ player }: { player: any }) {
     return (
@@ -142,8 +143,6 @@ export default function PlayerCompare() {
                         )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
                     </div>
-
-                    {/* {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={2} />} */}
                 </div>
             </div>
             {object?.analysis?.map((data, index) => (
@@ -187,20 +186,20 @@ export default function PlayerCompare() {
                                     Recommended pick <Sparkles className='h-5 w-5' />
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className='p-6'>
-                                <p className='text-lg font-semibold mb-2'>
-                                    {data?.recommended_pick}
-                                    <span className='ml-2 font-normal text-gray-500'>
-                                        {data?.recommended_pick === data?.playerOneName ? `${data?.playerOnePosition}` : `${data?.playerTwoPosition}`} -&nbsp;
-                                        {data?.recommended_pick === data?.playerOneName ? `${data?.playerOneTeam}` : `${data?.playerTwoTeam}`}
-                                    </span>
-                                </p>
-                                <p className='flex items-center text-base text-gray-500 mb-2'>
-                                    <CircleCheckBig className='h-4 w-4 mr-2' />{data?.certainty && <p>Certainty: {data?.certainty}%</p>}
-                                </p>
+                            <CardContent className='flex items-center justify-center p-6'>
+                                <Certainty data={data} />
                                 <div>
-                                    <p className='pt-2 pb-1 font-semibold'>Key Stats (2023):</p>
-                                    <RenderKeyStats data={data} player={data?.recommended_pick === data?.playerOneName ? data?.playerOneStats : data?.playerTwoStats} />
+                                    <p className='text-lg font-semibold mb-2'>
+                                        {data?.recommended_pick}
+                                        <span className='ml-2 font-normal text-gray-500'>
+                                            {data?.recommended_pick === data?.playerOneName ? `${data?.playerOnePosition}` : `${data?.playerTwoPosition}`} -&nbsp;
+                                            {data?.recommended_pick === data?.playerOneName ? `${data?.playerOneTeam}` : `${data?.playerTwoTeam}`}
+                                        </span>
+                                    </p>
+                                    <div>
+                                        <p className='pt-2 pb-1 font-semibold'>Key Stats (2023):</p>
+                                        <RenderKeyStats data={data} player={data?.recommended_pick === data?.playerOneName ? data?.playerOneStats : data?.playerTwoStats} />
+                                    </div>
                                 </div>
 
                             </CardContent>
