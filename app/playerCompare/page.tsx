@@ -133,7 +133,6 @@ export default function PlayerCompare() {
                         )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 1)} />
                     </div>
-                    {/* {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={1} />} */}
                 </div>
                 <div className='flex flex-col w-full sm:w-1/2'>
                     <div className='ring-1 ring-gray-200 p-4 rounded-md'>
