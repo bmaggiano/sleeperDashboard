@@ -178,12 +178,12 @@ export default function PlayerCompare() {
             <div>
                 {object?.analysis?.map((data, index) => (
                     <Card key={index} className='flex flex-col'>
-                        <CardHeader>
-                            <CardTitle className='flex items-center justify-between text-lg mb-2'>
+                        <CardHeader className='border-b p-6'>
+                            <CardTitle className='flex items-center justify-between text-lg'>
                                 AI Analysis <MdNotes className='h-5 w-5' />
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className='p-6'>
                             <p>{data?.explanation}</p>
                         </CardContent>
 
@@ -211,7 +211,7 @@ export default function PlayerCompare() {
                                     Recommended pick <Sparkles className='h-5 w-5' />
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className='p-4'>
+                            <CardContent className='p-6'>
                                 <p className='text-lg font-semibold mb-2'>
                                     {data?.recommended_pick}
                                     <span className='ml-2 font-normal text-gray-500'>
