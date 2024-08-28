@@ -15,7 +15,7 @@ export function calculateFantasyPoints(stats: {
     const passTouchdownsPoints = stats.totalPassTds * 6;
     const interceptionsPoints = stats.totalInterceptions * -2;
 
-    return (
+    const total = (
         recYardsPoints +
         rushYardsPoints +
         touchdownsPoints +
@@ -24,4 +24,5 @@ export function calculateFantasyPoints(stats: {
         passTouchdownsPoints +
         interceptionsPoints
     );
+    return Math.round(total * 100) / 100;
 }

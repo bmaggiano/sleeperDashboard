@@ -2,6 +2,7 @@
 
 import { TrendingUp, TrendingDown } from "lucide-react"
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
+import { ChartSpline } from "lucide-react"
 
 import {
     Card,
@@ -91,7 +92,6 @@ const transformData = (stats: FinalStats[]): ChartDataPoint[] => {
 
 export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
     const chartData = transformData(stats as any);
-    console.log(chartData);
     const playerOneName = stats?.[0]?.playerOneName ?? "Player 1";
     const playerTwoName = stats?.[0]?.playerTwoName ?? "Player 2";
     const playerOneTeam = stats?.[0]?.playerOneTeam ?? "DEFAULT";
@@ -146,8 +146,8 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Fantasy Points by Year</CardTitle>
+            <CardHeader className="flex justify-between">
+                <CardTitle className="flex justify-between text-lg">Fantasy Points by Year<ChartSpline className="w-5 h-5" /> </CardTitle>
                 <CardDescription>2021-2023</CardDescription>
             </CardHeader>
             <CardContent>
@@ -185,9 +185,9 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
                 </ChartContainer>
             </CardContent>
             <CardFooter>
-                <div className="flex w-full items-start gap-2 text-sm">
+                <div className="flex w-full items-center justify-center gap-2 text-sm">
                     <div className="grid gap-2">
-                        <div className="flex items-center gap-2 leading-none text-gray-700">
+                        <div className="flex justify-center items-center gap-2 leading-none text-gray-700">
                             <span
                                 className="flex items-center gap-2 font-semibold"
                                 style={{ color: NFL_TEAM_COLORS[playerOneTeam] }}

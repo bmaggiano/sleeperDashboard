@@ -1,11 +1,11 @@
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { createSqlQueries } from "./queryHelpers";
 import redisClient from "@/lib/redis/redisClient";
 import { getPlayerDetails } from "@/lib/sleeper/helpers";
 import { streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { ffDataSchema } from "./schema";
+import { createSqlQuery } from "./queryHelpers";
 import { calculateFantasyPoints } from "./fantasyPointsHelper";
 
 const years = ["nflverse_play_by_play_2023", "nflverse_play_by_play_2022", "nflverse_play_by_play_2021"];
@@ -48,30 +48,56 @@ export async function POST(request: NextRequest) {
 
         await Promise.all(
             years.map(async (year) => {
-                const query = createSqlQueries(playerGsis, year);
+                const query = createSqlQuery(playerGsis, year);
 
-                const yearResults = await Promise.all(
-                    Object.entries(query).map(async ([key, queryString]) => {
-                        const result = await db.$queryRaw(queryString) as any; // Cast result to any
-                        return { [key]: result[0] ? Number(Object.values(result[0])[0]) : 0 };
-                    })
-                );
+                // Assuming result is an array with one object
+                const [result] = await db.$queryRaw(query.playerStats) as any;
 
-                playerStats[year] = Object.assign({}, ...yearResults);
+                // Check if result is null or undefined, and handle it accordingly
+                const stats = result
+                    ? {
+                        longestPlay: Number(result.longest_play) || 0,
+                        totalRecYards: Number(result.total_rec_yards) || 0,
+                        totalRushYards: Number(result.total_rush_yards) || 0,
+                        totalAirYards: Number(result.total_air_yards) || 0,
+                        totalYac: Number(result.total_yac) || 0,
+                        totalTds: Number(result.total_tds) || 0,
+                        totalReceptions: Number(result.total_receptions) || 0,
+                        weeks: Number(result.weeks) || 0,
+                        totalPassAttempts: Number(result.total_pass_attempts) || 0,
+                        totalPassCompletions: Number(result.total_pass_completions) || 0,
+                        totalPassYards: Number(result.total_pass_yards) || 0,
+                        totalPassTds: Number(result.total_pass_tds) || 0,
+                        totalInterceptions: Number(result.total_interceptions) || 0,
+                    }
+                    : {
+                        longestPlay: 0,
+                        totalRecYards: 0,
+                        totalRushYards: 0,
+                        totalAirYards: 0,
+                        totalYac: 0,
+                        totalTds: 0,
+                        totalReceptions: 0,
+                        weeks: 0,
+                        totalPassAttempts: 0,
+                        totalPassCompletions: 0,
+                        totalPassYards: 0,
+                        totalPassTds: 0,
+                        totalInterceptions: 0,
+                    };
 
                 const fantasyPoints = calculateFantasyPoints({
-                    totalRecYards: playerStats[year].totalRecYards || 0,
-                    totalRushYards: playerStats[year].totalRushYards || 0,
-                    totalTds: playerStats[year].totalTds || 0,
-                    totalReceptions: playerStats[year].totalReceptions || 0,
-                    totalPassYards: playerStats[year].totalPassYards || 0,
-                    totalPassTds: playerStats[year].totalPassTds || 0,
-                    totalInterceptions: playerStats[year].totalInterceptions || 0,
+                    totalRecYards: stats.totalRecYards,
+                    totalRushYards: stats.totalRushYards,
+                    totalTds: stats.totalTds,
+                    totalReceptions: stats.totalReceptions,
+                    totalPassYards: stats.totalPassYards,
+                    totalPassTds: stats.totalPassTds,
+                    totalInterceptions: stats.totalInterceptions,
                 });
 
-                // Add fantasy points to the year's stats
                 playerStats[year] = {
-                    ...playerStats[year],
+                    ...stats,
                     fantasyPoints
                 };
             })
@@ -99,7 +125,6 @@ export async function POST(request: NextRequest) {
     };
 
     console.log("Final Stats:", combinedStats);
-
     const result = await streamObject({
         model: openai("gpt-4o-mini"),
         seed: 100,
@@ -111,4 +136,6 @@ export async function POST(request: NextRequest) {
         },
     });
     return result.toTextStreamResponse();
+    // console.log("Final Stats:", combinedStats);
+    // return NextResponse.json({ "hey": "this worked" });
 }

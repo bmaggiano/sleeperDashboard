@@ -11,6 +11,8 @@ export const ffDataSchema = z.object({
             playerTwoName: z.string(),
             playerOneTeam: z.string(),
             playerTwoTeam: z.string(),
+            longestPlayOne: z.number(),
+            longestPlayTwo: z.number(),
 
             // Historical data for player one
             playerOneStats: z.object({
@@ -110,8 +112,6 @@ export const ffDataSchema = z.object({
                 }),
             }),
 
-            longestPlayOne: z.number(),
-            longestPlayTwo: z.number(),
             explanation: z.string(),
             safe_pick: z.string(),
             risky_pick: z.string(),

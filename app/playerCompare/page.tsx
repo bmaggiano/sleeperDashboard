@@ -10,7 +10,11 @@ import { User, ArrowRightLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Loader2, Shield, Sparkles } from 'lucide-react';
 import StatsGraph from './graph';
+import { CircleCheckBig } from 'lucide-react';
 import { YearByYear } from './yearByYear';
+import CompareTable from './compareTable';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Recommended from './recommended';
 
 function PlayerProfile({ player }: { player: any }) {
     return (
@@ -150,7 +154,7 @@ export default function PlayerCompare() {
                         )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 1)} />
                     </div>
-                    {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={1} />}
+                    {/* {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={1} />} */}
                 </div>
                 <div className='flex flex-col w-full sm:w-1/2'>
                     <div className='ring-1 ring-gray-200 p-4 rounded-md'>
@@ -161,39 +165,66 @@ export default function PlayerCompare() {
                         )}
                         <FuzzySearch onPlayerSelect={(player) => handlePlayerSelect(player, 2)} />
                     </div>
-                    {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={2} />}
+
+                    {/* {object?.analysis && <RenderStats data={object.analysis[0]} playerNum={2} />} */}
                 </div>
             </div>
             {object?.analysis?.map((data, index) => (
-                <StatsGraph key={index} data={data} />
+                <CompareTable key={index} data={data} />
             ))}
             {object?.analysis && (
                 <YearByYear key={0} stats={object?.analysis as any} />
             )}
-            <div className='p-2'>
+            <div>
                 {object?.analysis?.map((data, index) => (
-                    <div key={index} className='space-y-2'>
-                        <strong className='flex items-center gap-x-2 text-lg'><MdNotes className='text-gray-500' /> AI Analysis</strong>
-                        <p>{data?.explanation}</p>
-                    </div>
+                    <Card key={index} className='flex flex-col'>
+                        <CardHeader>
+                            <CardTitle className='flex items-center justify-between text-lg mb-2'>
+                                AI Analysis <MdNotes className='h-5 w-5' />
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p>{data?.explanation}</p>
+                        </CardContent>
+
+                    </Card>
                 ))}
             </div>
+            {/* <Recommended /> */}
             {object?.analysis?.map((data, index) => (
-                <div key={index} className='space-y-2'>
-                    <div className='flex items-center sm:flex-row space-y-2 sm:space-y-0'>
-                        {data?.undecided ? (
-                            <div className='w-full ring-1 ring-gray-200 p-4 rounded-md'>
-                                <strong className='flex items-center gap-x-2 text-lg'><IoDiceOutline /> Toss-up</strong>
-                                <p>{data?.undecided}</p>
-                            </div>
-                        ) : (
-                            <div className='w-full ring-1 ring-gray-200 p-4 rounded-md'>
-                                <strong className='flex items-center gap-x-2 text-lg'><Sparkles className='h-4 w-4' /> Recommended pick</strong>
-                                <p className='ml-6'>{data?.recommended_pick}</p>
-                                {data?.certainty && <p className='ml-6'>Certainty: {data?.certainty}%</p>}
-                            </div>
-                        )}
-                    </div>
+                <div key={index}>
+                    {data?.undecided ? (
+                        <Card className='flex flex-col items-center'>
+                            <CardHeader>
+                                <CardTitle>
+                                    <IoDiceOutline /> Toss-up
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {data?.undecided}
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card>
+                            <CardHeader className='overflow-hidden rounded-t-md bg-green-50'>
+                                <CardTitle className='flex items-center justify-between text-black text-lg gap-x-2'>
+                                    Recommended pick <Sparkles className='h-5 w-5' />
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className='p-4'>
+                                <p className='text-lg font-semibold mb-2'>
+                                    {data?.recommended_pick}
+                                    <span className='ml-2 font-normal text-gray-500'>
+                                        {data?.recommended_pick === data?.playerOneName ? `${data?.playerOnePosition}` : `${data?.playerTwoPosition}`} -&nbsp;
+                                        {data?.recommended_pick === data?.playerOneName ? `${data?.playerOneTeam}` : `${data?.playerTwoTeam}`}
+                                    </span>
+                                </p>
+                                <p className='flex items-center text-base text-gray-500'>
+                                    <CircleCheckBig className='h-4 w-4 mr-2' />{data?.certainty && <p>Certainty: {data?.certainty}%</p>}
+                                </p>
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             ))}
         </div>
