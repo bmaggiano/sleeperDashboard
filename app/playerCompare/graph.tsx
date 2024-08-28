@@ -44,12 +44,12 @@ export default function StatsGraph({ data }: { data: any }) {
     // QB-specific stats
     if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
         stats.push(
-            { label: 'Pass Completions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletions, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletions },
-            { label: 'Pass Attempts', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passAttemp, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passAttempt },
+            { label: 'Pass Completions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletion, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletion },
+            { label: 'Pass Attempts', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passAttempt, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passAttempt },
             { label: 'Pass Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passYards, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passYards },
             { label: 'Interceptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.interceptions, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.interceptions },
             { label: 'Pass Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.passTouchdowns, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.passTouchdowns },
-            { label: 'Total Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns }
+            { label: 'Rush Touchdowns', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns }
         );
     }
 
