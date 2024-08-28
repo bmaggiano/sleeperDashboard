@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BetweenHorizonalStart, CircleChevronLeft, CircleChevronRight, Check, X } from "lucide-react";
+import { BetweenHorizonalStart, Check, X } from "lucide-react";
 
 export default function CompareTable({ data }: { data: any }) {
     // Extracted data preparation logic
