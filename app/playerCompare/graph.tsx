@@ -28,7 +28,7 @@ export default function StatsGraph({ data }: { data: any }) {
     const stats = [];
 
     // Base stats for WR
-    if (data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") {
+    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") || (data?.playerOnePosition === "RB" || data?.playerTwoPosition === "RB") || (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE")) {
         stats.push(
             { label: 'Receptions', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.receptions ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions ?? 0 },
             { label: 'Receiving Yards', value1: data?.playerOneStats?.nflverse_play_by_play_2023?.recYards ?? 0, value2: data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards ?? 0 },

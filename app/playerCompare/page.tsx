@@ -43,7 +43,7 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
 function RenderStats({ data, playerNum }: { data: any, playerNum: number }) {
     const stats = [];
     // Base stats that apply to all players
-    if (data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") {
+    if ((data?.playerOnePosition === "WR" || data?.playerTwoPosition === "WR") || (data?.playerOnePosition === "RB" || data?.playerTwoPosition === "RB") || (data?.playerOnePosition === "TE" || data?.playerTwoPosition === "TE")) {
         stats.push(
             { label: 'Receptions', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.receptions : data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions },
             { label: 'Receiving Yards', value: playerNum === 1 ? data?.playerOneStats?.nflverse_play_by_play_2023?.recYards : data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards },
