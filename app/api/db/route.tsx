@@ -6,6 +6,7 @@ import { getPlayerDetails } from "@/lib/sleeper/helpers";
 import { streamObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { ffDataSchema } from "./schema";
+import { calculateFantasyPoints } from "./fantasyPointsHelper";
 
 const years = ["nflverse_play_by_play_2023", "nflverse_play_by_play_2022", "nflverse_play_by_play_2021"];
 
@@ -57,6 +58,22 @@ export async function POST(request: NextRequest) {
                 );
 
                 playerStats[year] = Object.assign({}, ...yearResults);
+
+                const fantasyPoints = calculateFantasyPoints({
+                    totalRecYards: playerStats[year].totalRecYards || 0,
+                    totalRushYards: playerStats[year].totalRushYards || 0,
+                    totalTds: playerStats[year].totalTds || 0,
+                    totalReceptions: playerStats[year].totalReceptions || 0,
+                    totalPassYards: playerStats[year].totalPassYards || 0,
+                    totalPassTds: playerStats[year].totalPassTds || 0,
+                    totalInterceptions: playerStats[year].totalInterceptions || 0,
+                });
+
+                // Add fantasy points to the year's stats
+                playerStats[year] = {
+                    ...playerStats[year],
+                    fantasyPoints
+                };
             })
         );
 

@@ -3,13 +3,14 @@ import { z } from 'zod';
 export const ffDataSchema = z.object({
     analysis: z.array(
         z.object({
-            explanation: z.string(),
             playerOneWeeks: z.number(),
             playerTwoWeeks: z.number(),
             playerOnePosition: z.string(),
             playerTwoPosition: z.string(),
             playerOneName: z.string(),
             playerTwoName: z.string(),
+            playerOneTeam: z.string(),
+            playerTwoTeam: z.string(),
 
             // Historical data for player one
             playerOneStats: z.object({
@@ -26,6 +27,7 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
                 'nflverse_play_by_play_2022': z.object({
                     recYards: z.number(),
@@ -40,6 +42,7 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
                 'nflverse_play_by_play_2021': z.object({
                     recYards: z.number(),
@@ -54,6 +57,7 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
             }),
 
@@ -72,6 +76,7 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
                 'nflverse_play_by_play_2022': z.object({
                     recYards: z.number(),
@@ -86,6 +91,7 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
                 'nflverse_play_by_play_2021': z.object({
                     recYards: z.number(),
@@ -100,11 +106,13 @@ export const ffDataSchema = z.object({
                     interceptions: z.number(),
                     passYards: z.number(),
                     passTouchdowns: z.number(),
+                    fantasyPoints: z.number(),
                 }),
             }),
 
             longestPlayOne: z.number(),
             longestPlayTwo: z.number(),
+            explanation: z.string(),
             safe_pick: z.string(),
             risky_pick: z.string(),
             recommended_pick: z.string().optional(),

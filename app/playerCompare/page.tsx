@@ -167,7 +167,9 @@ export default function PlayerCompare() {
             {object?.analysis?.map((data, index) => (
                 <StatsGraph key={index} data={data} />
             ))}
-            <YearByYear stats={object?.analysis as any} />
+            {object?.analysis && (
+                <YearByYear key={0} stats={object?.analysis as any} />
+            )}
             <div className='p-2'>
                 {object?.analysis?.map((data, index) => (
                     <div key={index} className='space-y-2'>
