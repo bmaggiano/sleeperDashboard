@@ -49,7 +49,7 @@ function StatsCard({ title, stats, playerOneName, playerTwoName }: { title: stri
 
     return (
         <Card className="bg-white overflow-hidden">
-            <CardHeader className="p-4 border-b">
+            <CardHeader className="p-6 border-b">
                 <CardTitle className="flex items-center justify-between text-lg font-semibold text-center">{title}<BetweenHorizonalStart className="w-5 h-5" /> </CardTitle>
                 <CardDescription className="flex text-base justify-between text-gray-500">
                     <p>{playerOneName}</p>
@@ -61,9 +61,9 @@ function StatsCard({ title, stats, playerOneName, playerTwoName }: { title: stri
                     <tbody>
                         {stats.map((stat, index) => (
                             <tr key={stat.label} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                                <td className={`py-3 px-4 font-medium ${getColorClass(stat.player1, stat.player2)}`}>{stat.player1}</td>
-                                <td className="py-3 px-4 text-center text-gray-700">{stat.label}</td>
-                                <td className={`py-3 px-4 text-right font-medium ${getColorClass(stat.player2, stat.player1)}`}>{stat.player2}</td>
+                                <td className={`py-3 px-6 font-medium ${getColorClass(stat.player1, stat.player2)}`}>{stat.player1}</td>
+                                <td className="py-3 px-6 text-center text-gray-700">{stat.label}</td>
+                                <td className={`py-3 px-6 text-right font-medium ${getColorClass(stat.player2, stat.player1)}`}>{stat.player2}</td>
                             </tr>
                         ))}
                     </tbody>

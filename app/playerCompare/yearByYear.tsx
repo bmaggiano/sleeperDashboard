@@ -146,11 +146,11 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
 
     return (
         <Card>
-            <CardHeader className="flex justify-between">
+            <CardHeader className="flex justify-between border-b p-6">
                 <CardTitle className="flex justify-between text-lg">Fantasy Points by Year<ChartSpline className="w-5 h-5" /> </CardTitle>
                 <CardDescription>2021-2023</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
                 <ChartContainer config={chartConfig}>
                     <LineChart
                         accessibilityLayer
