@@ -186,7 +186,7 @@ export default function PlayerCompare() {
                                     Recommended pick <Sparkles className='h-5 w-5' />
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className='flex items-center justify-center p-6'>
+                            <CardContent className='flex sm:flex-row flex-col items-center justify-center p-6'>
                                 <Certainty data={data} />
                                 <div>
                                     <p className='text-lg font-semibold mb-2'>

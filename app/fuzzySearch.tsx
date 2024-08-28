@@ -60,6 +60,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
         setSelectedPlayer(player);
         setResults([]);
         onPlayerSelect(player);
+        setQuery('');
     };
 
     return (
