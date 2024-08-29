@@ -45,8 +45,10 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
     playerTeam: selectedPlayer2?.team || '',
   }
 
+  const baseUrl = 'https://sleeper-dashboard.vercel.app/playerCompare'
+
   // Create the base URL
-  const compareUrl = new URL('/playerCompare', window.location.origin)
+  const compareUrl = new URL(baseUrl)
 
   // Define the parameters with a specific type
   const params: { [key: string]: any } = {
