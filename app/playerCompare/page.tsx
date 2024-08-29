@@ -22,12 +22,16 @@ function PlayerProfile({ player }: { player: any }) {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full flex items-center space-x-4">
         <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
-          <Image
-            src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-            height={50}
-            width={50}
-            alt={player.full_name}
-          />
+          {player.espn_id ? (
+            <Image
+              src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
+              height={50}
+              width={50}
+              alt={player.full_name}
+            />
+          ) : (
+            <User size={32} />
+          )}
         </div>
         <div>
           <h3 className="text-xl font-semibold">{player.full_name}</h3>
