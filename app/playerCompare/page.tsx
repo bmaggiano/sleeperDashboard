@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import { ffDataSchema } from '../api/db/schema'
 import { MdNotes } from 'react-icons/md'
@@ -165,101 +165,105 @@ export default function PlayerCompare() {
   }, [player1Id, player2Id])
 
   return (
-    <div className="flex flex-col gap-4 mt-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg my-2 font-bold">Player Compare</h1>
-        <PlayerCompareModal />
-      </div>
-      <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
-        <div className="flex flex-col w-full sm:w-1/2">
-          <div className="ring-1 ring-gray-200 p-4 rounded-md">
-            {selectedPlayer1 ? (
-              <PlayerProfile player={selectedPlayer1} />
-            ) : (
-              <PlayerProfileSkeleton playerIndex={1} />
-            )}
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="flex flex-col gap-4 mt-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg my-2 font-bold">Player Compare</h1>
+          <PlayerCompareModal />
+        </div>
+        <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
+          <div className="flex flex-col w-full sm:w-1/2">
+            <div className="ring-1 ring-gray-200 p-4 rounded-md">
+              {selectedPlayer1 ? (
+                <PlayerProfile player={selectedPlayer1} />
+              ) : (
+                <PlayerProfileSkeleton playerIndex={1} />
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col w-full sm:w-1/2">
+            <div className="ring-1 ring-gray-200 p-4 rounded-md">
+              {selectedPlayer2 ? (
+                <PlayerProfile player={selectedPlayer2} />
+              ) : (
+                <PlayerProfileSkeleton playerIndex={2} />
+              )}
+            </div>
           </div>
         </div>
-        <div className="flex flex-col w-full sm:w-1/2">
-          <div className="ring-1 ring-gray-200 p-4 rounded-md">
-            {selectedPlayer2 ? (
-              <PlayerProfile player={selectedPlayer2} />
-            ) : (
-              <PlayerProfileSkeleton playerIndex={2} />
-            )}
-          </div>
-        </div>
-      </div>
-      {object?.analysis?.map((data, index) => (
-        <CompareTable key={index} data={data} />
-      ))}
-      {object?.analysis && (
-        <YearByYear key={0} stats={object?.analysis as any} />
-      )}
-      <div>
         {object?.analysis?.map((data, index) => (
-          <Card key={index} className="flex flex-col">
-            <CardHeader className="border-b p-6">
-              <CardTitle className="flex items-center justify-between text-lg">
-                Analysis <MdNotes className="h-5 w-5" />
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <p>{data?.explanation}</p>
-            </CardContent>
-          </Card>
+          <CompareTable key={index} data={data} />
         ))}
-      </div>
-      {object?.analysis?.map((data, index) => (
-        <div key={index}>
-          {data?.undecided ? (
-            <Card className="flex flex-col items-center">
-              <CardHeader>
-                <CardTitle>
-                  <IoDiceOutline /> Toss-up
+        {object?.analysis && (
+          <YearByYear key={0} stats={object?.analysis as any} />
+        )}
+        <div>
+          {object?.analysis?.map((data, index) => (
+            <Card key={index} className="flex flex-col">
+              <CardHeader className="border-b p-6">
+                <CardTitle className="flex items-center justify-between text-lg">
+                  Analysis <MdNotes className="h-5 w-5" />
                 </CardTitle>
               </CardHeader>
-              <CardContent>{data?.undecided}</CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-                <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-                  Recommended pick <Sparkles className="h-5 w-5" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex sm:flex-row flex-col items-center justify-center p-6">
-                <Certainty data={data} />
-                <div>
-                  <p className="text-lg font-semibold mb-2">
-                    {data?.recommended_pick}
-                    <span className="ml-2 font-normal text-gray-500">
-                      {data?.recommended_pick === data?.playerOneName
-                        ? `${data?.playerOnePosition}`
-                        : `${data?.playerTwoPosition}`}{' '}
-                      -&nbsp;
-                      {data?.recommended_pick === data?.playerOneName
-                        ? `${data?.playerOneTeam}`
-                        : `${data?.playerTwoTeam}`}
-                    </span>
-                  </p>
-                  <div>
-                    <p className="pt-2 pb-1 font-semibold">Key Stats (2023):</p>
-                    <RenderKeyStats
-                      data={data}
-                      player={
-                        data?.recommended_pick === data?.playerOneName
-                          ? data?.playerOneStats
-                          : data?.playerTwoStats
-                      }
-                    />
-                  </div>
-                </div>
+              <CardContent className="p-6">
+                <p>{data?.explanation}</p>
               </CardContent>
             </Card>
-          )}
+          ))}
         </div>
-      ))}
-    </div>
+        {object?.analysis?.map((data, index) => (
+          <div key={index}>
+            {data?.undecided ? (
+              <Card className="flex flex-col items-center">
+                <CardHeader>
+                  <CardTitle>
+                    <IoDiceOutline /> Toss-up
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>{data?.undecided}</CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                    Recommended pick <Sparkles className="h-5 w-5" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex sm:flex-row flex-col items-center justify-center p-6">
+                  <Certainty data={data} />
+                  <div>
+                    <p className="text-lg font-semibold mb-2">
+                      {data?.recommended_pick}
+                      <span className="ml-2 font-normal text-gray-500">
+                        {data?.recommended_pick === data?.playerOneName
+                          ? `${data?.playerOnePosition}`
+                          : `${data?.playerTwoPosition}`}{' '}
+                        -&nbsp;
+                        {data?.recommended_pick === data?.playerOneName
+                          ? `${data?.playerOneTeam}`
+                          : `${data?.playerTwoTeam}`}
+                      </span>
+                    </p>
+                    <div>
+                      <p className="pt-2 pb-1 font-semibold">
+                        Key Stats (2023):
+                      </p>
+                      <RenderKeyStats
+                        data={data}
+                        player={
+                          data?.recommended_pick === data?.playerOneName
+                            ? data?.playerOneStats
+                            : data?.playerTwoStats
+                        }
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        ))}
+      </div>
+    </Suspense>
   )
 }
