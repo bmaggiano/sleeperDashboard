@@ -4,9 +4,9 @@ import { z } from 'zod'
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const week = parseInt(searchParams.get('week') || '17', 10)
-    const matchupId = parseInt(searchParams.get('matchupId') || '1', 10)
+    const url = new URL(request.url)
+    const week = parseInt(url.searchParams.get('week') || '17', 10)
+    const matchupId = parseInt(url.searchParams.get('matchupId') || '1', 10)
 
     const matchup = await getIndividualMatchup(undefined, week, matchupId)
 
