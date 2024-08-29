@@ -3,6 +3,7 @@
 import { getMatchupsWithMatchupID } from '@/app/utils'
 import MatchupServer from './matchupServer'
 import type { Metadata, ResolvingMetadata } from 'next'
+import PlayerCompareModal from './playerCompareModal'
 
 type Props = {
   params: { week: string; leagueId: string; matchup: string }
@@ -79,7 +80,8 @@ export default function MatchupPage({
   const { week, leagueId, matchup } = params
 
   return (
-    <div>
+    <div className="sm:px-6">
+      <PlayerCompareModal />
       <MatchupServer week={week} leagueId={leagueId} matchup={matchup} />
     </div>
   )

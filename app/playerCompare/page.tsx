@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import FuzzySearch from '../fuzzySearch'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,8 @@ import { YearByYear } from './yearByYear'
 import CompareTable from './compareTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
+import { useRouter, useSearchParams } from 'next/navigation'
+import PlayerCompareModal from '../[leagueId]/[week]/[matchup]/playerCompareModal'
 
 function PlayerProfile({ player }: { player: any }) {
   return (
@@ -113,6 +115,18 @@ export default function PlayerCompare() {
   const [selectedPlayer1, setSelectedPlayer1] = useState<any>(null)
   const [selectedPlayer2, setSelectedPlayer2] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const searchParams = useSearchParams()
+  const player1Id = searchParams.get('p1Id')
+  const player2Id = searchParams.get('p2Id')
+  const player1Name = searchParams.get('p1Name')
+  const player1EID = searchParams.get('p1EID')
+  const player1Pos = searchParams.get('p1Pos')
+  const player1Team = searchParams.get('p1Team')
+  const player2Name = searchParams.get('p2Name')
+  const player2EID = searchParams.get('p2EID')
+  const player2Pos = searchParams.get('p2Pos')
+  const player2Team = searchParams.get('p2Team')
+  console.log(player1Id, player2Id)
 
   const { object, submit } = useObject({
     api: `/api/db`,
@@ -125,44 +139,64 @@ export default function PlayerCompare() {
     } else {
       setSelectedPlayer2(player)
     }
+    console.log(selectedPlayer1, selectedPlayer2)
   }
+
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement> | null = null
+  ) => {
+    event?.preventDefault()
+    setLoading(true)
+    try {
+      await submit({
+        playerId1: selectedPlayer1?.player_id,
+        playerId2: selectedPlayer2?.player_id,
+      })
+    } catch (error) {
+      console.error('An error occurred during submission:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    const handleAutoSubmit = async () => {
+      if (player1Id && player2Id) {
+        setSelectedPlayer1({
+          player_id: player1Id,
+          full_name: player1Name,
+          espn_id: player1EID,
+          position: player1Pos,
+          team: player1Team,
+        })
+        setSelectedPlayer2({
+          player_id: player2Id,
+          full_name: player2Name,
+          espn_id: player2EID,
+          position: player2Pos,
+          team: player2Team,
+        })
+
+        try {
+          await submit({
+            playerId1: player1Id,
+            playerId2: player2Id,
+          })
+        } catch (error) {
+          console.error('An error occurred during submission:', error)
+        } finally {
+          setLoading(false)
+        }
+      }
+    }
+
+    handleAutoSubmit()
+  }, [player1Id, player2Id])
 
   return (
     <div className="flex flex-col gap-4 mt-4">
       <div className="flex items-center justify-between">
         <h1 className="text-lg my-2 font-bold">Player Compare</h1>
-        {selectedPlayer1 && selectedPlayer2 && (
-          <Button
-            variant={'outline'}
-            className="flex self-end rounded-md"
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true)
-              try {
-                await submit({
-                  playerId1: selectedPlayer1.player_id,
-                  playerId2: selectedPlayer2.player_id,
-                })
-              } catch (error) {
-                console.error('An error occurred during submission:', error)
-              } finally {
-                setLoading(false)
-              }
-            }}
-          >
-            {loading ? (
-              <div className="flex items-center gap-x-2">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing...
-              </div>
-            ) : (
-              <div className="flex items-center gap-x-2">
-                <ArrowRightLeft className="h-4 w-4" />
-                <p>Compare Players</p>
-              </div>
-            )}
-          </Button>
-        )}
+        <PlayerCompareModal />
       </div>
       <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
         <div className="flex flex-col w-full sm:w-1/2">

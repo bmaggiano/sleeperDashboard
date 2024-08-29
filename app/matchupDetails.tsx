@@ -143,7 +143,7 @@ const PlayerMatchupCard = ({
       </div>
       <div className="mx-2 text-xs text-gray-400">
         {isStarter
-          ? findMatchupPosition(player1.position, player2.position)
+          ? findMatchupPosition(player1?.position, player2?.position)
           : 'BN'}
       </div>
       <div className="w-5/12 text-right">
@@ -225,7 +225,7 @@ const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
   if (!teamOne || !teamTwo || !teamOne.starters || !teamTwo.starters)
     return <Skeleton className="w-full h-screen" />
   return (
-    <div className="max-h-screen flex flex-col sm:p-6">
+    <div className="max-h-screen flex flex-col">
       <div className="mx-auto w-full max-w-4xl">
         <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
         <Suspense fallback={<Skeleton className="w-full h-96" />}>

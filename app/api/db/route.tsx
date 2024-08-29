@@ -18,6 +18,8 @@ export async function POST(request: NextRequest) {
   const context = await request.json()
   const { playerId1, playerId2 } = context
 
+  console.log(playerId1, playerId2)
+
   if (!playerId1 || !playerId2) {
     return NextResponse.json(
       { error: 'Both Player IDs are required' },
