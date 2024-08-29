@@ -2,11 +2,11 @@
 const nextConfig = {
   images: {
     domains: [
-      "static.www.nfl.com",
-      "sleepercdn.com",
-      "sleeper.app",
-      "a.espncdn.com",
+      'static.www.nfl.com',
+      'sleepercdn.com',
+      'sleeper.app',
+      'a.espncdn.com',
     ],
   },
-};
-export default nextConfig;
+}
+export default nextConfig

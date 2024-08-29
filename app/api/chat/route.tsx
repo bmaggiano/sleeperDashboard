@@ -1,17 +1,17 @@
-import { openai } from "@ai-sdk/openai";
-import { streamText, convertToCoreMessages } from "ai";
+import { openai } from '@ai-sdk/openai'
+import { streamText, convertToCoreMessages } from 'ai'
 
-export const maxDuration = 30;
+export const maxDuration = 30
 
 export async function POST(req: Request) {
-    const { messages } = await req.json();
+  const { messages } = await req.json()
 
-    const result = await streamText({
-        model: openai("gpt-4o"),
-        messages: convertToCoreMessages([
-            {
-                role: "system",
-                content: `
+  const result = await streamText({
+    model: openai('gpt-4o'),
+    messages: convertToCoreMessages([
+      {
+        role: 'system',
+        content: `
 You are an AI expert in fantasy football analysis. Your task is to analyze historical player data and provide detailed recommendations on which player to start in a given week. 
 
 Consider the following factors in your analysis:
@@ -23,11 +23,11 @@ Consider the following factors in your analysis:
 - Any other relevant trends or patterns.
 
 Your goal is to offer a detailed analysis and clear recommendation with a probability score or confidence level for each suggestion. Please format your response with these details.
-                `
-            },
-            ...messages
-        ]),
-    });
+                `,
+      },
+      ...messages,
+    ]),
+  })
 
-    return result.toAIStreamResponse();
+  return result.toAIStreamResponse()
 }

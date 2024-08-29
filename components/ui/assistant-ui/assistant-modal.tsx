@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { BotIcon, ChevronDownIcon } from "lucide-react";
+import { BotIcon, ChevronDownIcon } from 'lucide-react'
 
-import { type FC, forwardRef } from "react";
-import { AssistantModalPrimitive } from "@assistant-ui/react";
+import { type FC, forwardRef } from 'react'
+import { AssistantModalPrimitive } from '@assistant-ui/react'
 
-import { Thread } from "@/components/ui/assistant-ui/thread";
-import { TooltipIconButton } from "@/components/ui/assistant-ui/tooltip-icon-button";
+import { Thread } from '@/components/ui/assistant-ui/thread'
+import { TooltipIconButton } from '@/components/ui/assistant-ui/tooltip-icon-button'
 
 export const AssistantModal: FC = () => {
   return (
@@ -23,16 +23,16 @@ export const AssistantModal: FC = () => {
         <Thread />
       </AssistantModalPrimitive.Content>
     </AssistantModalPrimitive.Root>
-  );
-};
+  )
+}
 
-type FloatingAssistantButtonProps = { "data-state"?: "open" | "closed" };
+type FloatingAssistantButtonProps = { 'data-state'?: 'open' | 'closed' }
 
 const FloatingAssistantButton = forwardRef<
   HTMLButtonElement,
   FloatingAssistantButtonProps
->(({ "data-state": state, ...rest }, ref) => {
-  const tooltip = state === "open" ? "Close Assistant" : "Open Assistant";
+>(({ 'data-state': state, ...rest }, ref) => {
+  const tooltip = state === 'open' ? 'Close Assistant' : 'Open Assistant'
 
   return (
     <TooltipIconButton
@@ -54,7 +54,7 @@ const FloatingAssistantButton = forwardRef<
       />
       <span className="sr-only">{tooltip}</span>
     </TooltipIconButton>
-  );
-});
+  )
+})
 
-FloatingAssistantButton.displayName = "FloatingAssistantButton";
+FloatingAssistantButton.displayName = 'FloatingAssistantButton'

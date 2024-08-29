@@ -1,21 +1,21 @@
-import ScoresComponent from "../scoresServer";
-import { Combobox } from "@/components/ui/combobox";
-import { getLeagueName, getLeagueWeeks } from "../../utils";
+import ScoresComponent from '../scoresServer'
+import { Combobox } from '@/components/ui/combobox'
+import { getLeagueName, getLeagueWeeks } from '../../utils'
 
-import { Metadata, ResolvingMetadata } from "next";
-import Link from "next/link";
+import { Metadata, ResolvingMetadata } from 'next'
+import Link from 'next/link'
 
 type Props = {
-  params: { leagueId: string; week: number };
-};
+  params: { leagueId: string; week: number }
+}
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.leagueId;
-  const week = params.week;
-  const leagueName = await getLeagueName(id);
+  const id = params.leagueId
+  const week = params.week
+  const leagueName = await getLeagueName(id)
 
   return {
     title: `Matchups - ${leagueName} | Week ${week}`,
@@ -32,15 +32,15 @@ export async function generateMetadata(
         },
       ],
     },
-  };
+  }
 }
 export default async function WeekMatchup({
   params,
 }: {
-  params: { week: number; leagueId: string };
+  params: { week: number; leagueId: string }
 }) {
-  const { week, leagueId } = params;
-  const weeks = await getLeagueWeeks(leagueId);
+  const { week, leagueId } = params
+  const weeks = await getLeagueWeeks(leagueId)
   return (
     <div>
       <div className="pt-4 pb-2 flex justify-between items-center">
@@ -53,5 +53,5 @@ export default async function WeekMatchup({
       </div>
       <ScoresComponent leagueId={leagueId} week={week} />
     </div>
-  );
+  )
 }

@@ -1,20 +1,20 @@
-import WinnersBracket from "./winnersBracket";
-import WinnersBreadcrumb from "./winnersBreadcrumb";
-import { getLeagueName, getLeagueWeeks } from "../../utils";
-import Link from "next/link";
-import { Metadata, ResolvingMetadata } from "next";
-import { Combobox } from "@/components/ui/combobox";
+import WinnersBracket from './winnersBracket'
+import WinnersBreadcrumb from './winnersBreadcrumb'
+import { getLeagueName, getLeagueWeeks } from '../../utils'
+import Link from 'next/link'
+import { Metadata, ResolvingMetadata } from 'next'
+import { Combobox } from '@/components/ui/combobox'
 
 type Props = {
-  params: { leagueId: string };
-};
+  params: { leagueId: string }
+}
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.leagueId;
-  const leagueName = await getLeagueName(id);
+  const id = params.leagueId
+  const leagueName = await getLeagueName(id)
 
   return {
     title: `Winners Bracket - ${leagueName}`,
@@ -31,17 +31,17 @@ export async function generateMetadata(
         },
       ],
     },
-  };
+  }
 }
 
 export default async function WinnersPage({
   params,
 }: {
-  params: { leagueId: string };
+  params: { leagueId: string }
 }) {
-  const { leagueId } = params;
-  const leagueName = await getLeagueName(leagueId);
-  const weeks = await getLeagueWeeks(leagueId);
+  const { leagueId } = params
+  const leagueName = await getLeagueName(leagueId)
+  const weeks = await getLeagueWeeks(leagueId)
 
   return (
     <div>
@@ -61,5 +61,5 @@ export default async function WinnersPage({
       </div>
       <WinnersBracket leagueId={leagueId} />
     </div>
-  );
+  )
 }

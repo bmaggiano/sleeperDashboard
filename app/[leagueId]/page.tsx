@@ -1,22 +1,22 @@
 // pages/[leagueId]/page.tsx
-import Link from "next/link";
-import { getLeagueName, getLeagueWeeks } from "../utils";
-import PlayersServer from "./playersServer";
-import ScoresComponent from "./scoresServer";
-import { Combobox } from "@/components/ui/combobox";
-import { Metadata, ResolvingMetadata } from "next";
-import { redirect } from "next/navigation";
+import Link from 'next/link'
+import { getLeagueName, getLeagueWeeks } from '../utils'
+import PlayersServer from './playersServer'
+import ScoresComponent from './scoresServer'
+import { Combobox } from '@/components/ui/combobox'
+import { Metadata, ResolvingMetadata } from 'next'
+import { redirect } from 'next/navigation'
 
 type Props = {
-  params: { leagueId: string };
-};
+  params: { leagueId: string }
+}
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.leagueId;
-  const leagueName = await getLeagueName(id);
+  const id = params.leagueId
+  const leagueName = await getLeagueName(id)
 
   return {
     title: `Matchups - ${leagueName}`,
@@ -33,24 +33,24 @@ export async function generateMetadata(
         },
       ],
     },
-  };
+  }
 }
 
 export default async function Page({
   params,
 }: {
-  params: { leagueId: string };
+  params: { leagueId: string }
 }) {
-  const { leagueId } = params;
+  const { leagueId } = params
 
-  const weeks = await getLeagueWeeks(leagueId);
+  const weeks = await getLeagueWeeks(leagueId)
 
   // the last week is the most recent week
-  const mostRecentWeek = weeks[weeks.length - 1];
+  const mostRecentWeek = weeks[weeks.length - 1]
 
   // Check if the most recent week is "Winners Bracket"
-  if (mostRecentWeek.week === "Winners Bracket") {
-    return redirect(`/${leagueId}/winners`);
+  if (mostRecentWeek.week === 'Winners Bracket') {
+    return redirect(`/${leagueId}/winners`)
   }
 
   return (
@@ -70,5 +70,5 @@ export default async function Page({
       {/* <PlayersServer leagueId={leagueId} /> */}
       <ScoresComponent leagueId={leagueId} week={mostRecentWeek.index} />
     </main>
-  );
+  )
 }

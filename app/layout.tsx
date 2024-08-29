@@ -1,32 +1,32 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import Header from "@/components/ui/header";
-import { Separator } from "@/components/ui/separator";
-import { MyRuntimeProvider } from "@/app/MyRuntimeProvider";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Toaster } from '@/components/ui/toaster'
+import Header from '@/components/ui/header'
+import { Separator } from '@/components/ui/separator'
+import { MyRuntimeProvider } from '@/app/MyRuntimeProvider'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Stuart AI",
-  description: "Your fantasy football knowledge base.",
+  title: 'Stuart AI',
+  description: 'Your fantasy football knowledge base.',
   openGraph: {
     images: [
       {
         url: `https://sleeper-dashboard.vercel.app/api/og`,
         width: 1200,
         height: 630,
-        alt: "Stuart AI, Your fantasy football knowledge base.",
+        alt: 'Stuart AI, Your fantasy football knowledge base.',
       },
     ],
   },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <MyRuntimeProvider>
@@ -51,5 +51,5 @@ export default function RootLayout({
         </body>
       </html>
     </MyRuntimeProvider>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from '@prisma/client'
 
 export function createSqlQuery(playerGsis: string, year: string) {
-    const playerStats = Prisma.sql`
+  const playerStats = Prisma.sql`
         SELECT
             MAX(yards_gained) AS longest_play,
             SUM(CASE WHEN "receiver_player_id" = ${playerGsis} THEN yards_gained ELSE 0 END) AS total_rec_yards,
@@ -25,6 +25,6 @@ export function createSqlQuery(playerGsis: string, year: string) {
         OR "passer_player_id" = ${playerGsis})
         AND "season_type" = 'REG'
         AND "yards_gained" != 0;
-    `;
-    return { playerStats };
+    `
+  return { playerStats }
 }

@@ -1,100 +1,98 @@
-"use client";
-import { useState, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { useAtom } from "jotai";
-import { leagueNameAtom, leagueAtom } from "./atoms/atom";
-import { getLeagueByUserId, getLeagueName } from "./utils";
-import { useToast } from "@/components/ui/use-toast";
+'use client'
+import { useState, useCallback } from 'react'
+import { Input } from '@/components/ui/input'
+import { useAtom } from 'jotai'
+import { leagueNameAtom, leagueAtom } from './atoms/atom'
+import { getLeagueByUserId, getLeagueName } from './utils'
+import { useToast } from '@/components/ui/use-toast'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const debounce = <T extends (...args: any[]) => void>(
   func: T,
   delay: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: NodeJS.Timeout
   return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
-};
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func(...args), delay)
+  }
+}
 
 export default function LeagueSearchForm() {
-  const { toast } = useToast();
-  const [localLeagueId, setLocalLeagueId] = useState<string>("");
-  const [leagueName, setLeagueName] = useAtom(leagueNameAtom);
-  const [leagueId, setLeagueId] = useAtom(leagueAtom);
-  const [userLeagues, setUserLeagues] = useState<any[]>([]);
+  const { toast } = useToast()
+  const [localLeagueId, setLocalLeagueId] = useState<string>('')
+  const [leagueName, setLeagueName] = useAtom(leagueNameAtom)
+  const [leagueId, setLeagueId] = useAtom(leagueAtom)
+  const [userLeagues, setUserLeagues] = useState<any[]>([])
 
   const searchLeague = async (searchTerm: string) => {
-    const leagueResponse = await getLeagueName(searchTerm);
+    const leagueResponse = await getLeagueName(searchTerm)
 
     if (leagueResponse.error) {
-      const userLeaguesResponse = await getLeagueByUserId(searchTerm);
+      const userLeaguesResponse = await getLeagueByUserId(searchTerm)
       Array.isArray(userLeaguesResponse) && userLeaguesResponse.length > 0
         ? setUserLeagues(userLeaguesResponse)
-        : showErrorToast(
-          `No leagues found for "${searchTerm}"`
-        );
+        : showErrorToast(`No leagues found for "${searchTerm}"`)
     } else {
-      handleSuccessfulLeagueSearch(leagueResponse, searchTerm);
+      handleSuccessfulLeagueSearch(leagueResponse, searchTerm)
     }
-  };
+  }
 
   const debouncedSearch = useCallback(
     debounce((searchTerm: string) => {
-      searchLeague(searchTerm);
+      searchLeague(searchTerm)
     }, 300),
     []
-  );
+  )
 
   const handleSuccessfulLeagueSearch = (name: string, id: string) => {
-    setLeagueId(id);
-    setLeagueName(name);
-    updateRecentSearches(id);
-  };
+    setLeagueId(id)
+    setLeagueName(name)
+    updateRecentSearches(id)
+  }
 
   const updateRecentSearches = (id: string) => {
-    const searches = JSON.parse(localStorage.getItem("recentSearches") || "[]");
-    localStorage.setItem("recentSearches", JSON.stringify([...searches, id]));
-  };
+    const searches = JSON.parse(localStorage.getItem('recentSearches') || '[]')
+    localStorage.setItem('recentSearches', JSON.stringify([...searches, id]))
+  }
 
   const showErrorToast = (message: string) =>
-    toast({ title: "Error", description: message });
+    toast({ title: 'Error', description: message })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalLeagueId(value);
-    debouncedSearch(value);
-  };
+    const value = e.target.value
+    setLocalLeagueId(value)
+    debouncedSearch(value)
+  }
 
   const handleLeagueSelection = (league: any) => {
-    setLeagueId(league.league_id);
-    setLeagueName(league.name);
-    updateRecentSearches(league.league_id);
-  };
+    setLeagueId(league.league_id)
+    setLeagueName(league.name)
+    updateRecentSearches(league.league_id)
+  }
 
   const getInitials = (name: string) =>
     name
-      .split(" ")
+      .split(' ')
       .map((w) => w[0])
-      .join("")
+      .join('')
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2)
 
   const getColorFromInitials = (initials: string) => {
-    let hash = 0;
+    let hash = 0
     for (let i = 0; i < initials.length; i++) {
-      hash = initials.charCodeAt(i) + ((hash << 5) - hash);
+      hash = initials.charCodeAt(i) + ((hash << 5) - hash)
     }
-    return `hsl(${hash % 360}, 70%, 50%)`;
-  };
+    return `hsl(${hash % 360}, 70%, 50%)`
+  }
 
   return (
     <div className="sm:w-1/2 w-full mx-auto pt-4 pb-2 text-center text-sm">
@@ -109,8 +107,8 @@ export default function LeagueSearchForm() {
           <h3 className="text-base font-semibold mb-2">Select a league</h3>
           <ul className="space-y-2">
             {userLeagues.map((league) => {
-              const initials = getInitials(league.name);
-              const fallbackColor = getColorFromInitials(initials);
+              const initials = getInitials(league.name)
+              const fallbackColor = getColorFromInitials(initials)
               return (
                 <li
                   key={league.league_id}
@@ -122,14 +120,14 @@ export default function LeagueSearchForm() {
                         src={
                           league.avatar
                             ? `https://sleepercdn.com/avatars/${league.avatar}`
-                            : ""
+                            : ''
                         }
                         alt={`${league.name} avatar`}
                       />
                       <AvatarFallback
                         style={{
                           backgroundColor: fallbackColor,
-                          color: "white",
+                          color: 'white',
                         }}
                       >
                         {initials}
@@ -148,7 +146,7 @@ export default function LeagueSearchForm() {
                     </Button>
                   </Link>
                 </li>
-              );
+              )
             })}
           </ul>
         </div>
@@ -160,7 +158,7 @@ export default function LeagueSearchForm() {
         <PopoverContent>
           <ol className="list-decimal list-inside text-xs text-gray-500">
             <li>
-              Visit the{" "}
+              Visit the{' '}
               <Link
                 href="https://sleeper.app/leagues"
                 target="_blank"
@@ -168,7 +166,7 @@ export default function LeagueSearchForm() {
                 className="text-blue-500 underline"
               >
                 Leagues
-              </Link>{" "}
+              </Link>{' '}
               page
             </li>
             <li>Select your league</li>
@@ -177,5 +175,5 @@ export default function LeagueSearchForm() {
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import {
   Dialog,
   DialogClose,
@@ -9,15 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ListItem } from "@/components/ui/navigation-list-item";
+} from '@/components/ui/dialog'
+import { ListItem } from '@/components/ui/navigation-list-item'
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+} from '@/components/ui/navigation-menu'
 import {
   Bell,
   ChartBar,
@@ -30,87 +30,93 @@ import {
   Robot,
   Sparkle,
   Users,
-} from "@phosphor-icons/react";
-import Link from "next/link";
-import { Button } from "./button";
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "./sheet";
-import { Textarea } from "./textarea";
+} from '@phosphor-icons/react'
+import Link from 'next/link'
+import { Button } from './button'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from './sheet'
+import { Textarea } from './textarea'
 
 const navigationItems = [
   {
-    title: "AI Features",
+    title: 'AI Features',
     items: [
       {
-        title: "AI Assistant",
-        href: "/ai/assistant",
-        children: "AI-powered assistant for fantasy football insights",
+        title: 'AI Assistant',
+        href: '/ai/assistant',
+        children: 'AI-powered assistant for fantasy football insights',
         icon: <Robot weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "AI Predictions",
-        href: "/ai/predictions",
-        children: "Machine learning predictions for player performance",
+        title: 'AI Predictions',
+        href: '/ai/predictions',
+        children: 'Machine learning predictions for player performance',
         icon: <ChartBarHorizontal weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "AI Compare Players",
-        href: "/ai/compare",
-        children: "Compare players across your league",
+        title: 'AI Compare Players',
+        href: '/ai/compare',
+        children: 'Compare players across your league',
         icon: <Users weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "AI Start/Sit",
-        href: "/ai/start-sit",
-        children: "Notifications for optimal start and sit decisions",
+        title: 'AI Start/Sit',
+        href: '/ai/start-sit',
+        children: 'Notifications for optimal start and sit decisions',
         icon: <Bell weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "AI Waiver Claims",
-        href: "/ai/waiver-claims",
-        children: "Best player recommendations for your team",
+        title: 'AI Waiver Claims',
+        href: '/ai/waiver-claims',
+        children: 'Best player recommendations for your team',
         icon: <Mailbox weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "Historical Stats",
-        href: "/ai/historical-stats",
-        children: "Compare and analyze historical stats with regressions",
+        title: 'Historical Stats',
+        href: '/ai/historical-stats',
+        children: 'Compare and analyze historical stats with regressions',
         icon: <ChartLineUp weight="duotone" size={16} />,
         comingSoon: true,
       },
     ],
   },
   {
-    title: "League Management",
+    title: 'League Management',
     items: [
       {
-        title: "League Buy-ins",
-        href: "/league/buy-ins",
-        children: "Handle and track league buy-ins and payments",
+        title: 'League Buy-ins',
+        href: '/league/buy-ins',
+        children: 'Handle and track league buy-ins and payments',
         icon: <CurrencyDollar weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "Custom Polls",
-        href: "/league/polls",
-        children: "Create and manage custom polls for your league",
+        title: 'Custom Polls',
+        href: '/league/polls',
+        children: 'Create and manage custom polls for your league',
         icon: <ChartBar weight="duotone" size={16} />,
         comingSoon: true,
       },
       {
-        title: "Claim Your League",
-        href: "/league/claim",
-        children: "Claim ownership and manage your fantasy football league",
+        title: 'Claim Your League',
+        href: '/league/claim',
+        children: 'Claim ownership and manage your fantasy football league',
         icon: <Flag weight="duotone" size={16} />,
         comingSoon: true,
       },
     ],
   },
-];
+]
 
 const RequestFeatureDialog = () => (
   <Dialog>
@@ -138,7 +144,7 @@ const RequestFeatureDialog = () => (
       </DialogFooter>
     </DialogContent>
   </Dialog>
-);
+)
 
 const DesktopNavigation = () => (
   <NavigationMenu>
@@ -165,7 +171,7 @@ const DesktopNavigation = () => (
       ))}
     </NavigationMenuList>
   </NavigationMenu>
-);
+)
 
 const MobileNavigation = () => (
   <Sheet>
@@ -185,9 +191,7 @@ const MobileNavigation = () => (
         </VisuallyHidden.Root>
       </SheetDescription>
       <SheetTitle>
-        <VisuallyHidden.Root>
-          Menu
-        </VisuallyHidden.Root>
+        <VisuallyHidden.Root>Menu</VisuallyHidden.Root>
       </SheetTitle>
       <nav className="flex flex-col gap-6">
         {navigationItems.map((item) => (
@@ -212,7 +216,7 @@ const MobileNavigation = () => (
       </nav>
     </SheetContent>
   </Sheet>
-);
+)
 
 export default function Header() {
   return (
@@ -233,5 +237,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }

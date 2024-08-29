@@ -1,60 +1,60 @@
-"use server";
+'use server'
 
-import React from "react";
+import React from 'react'
 import {
   matchBracketToMatchup,
   getChampionInfo,
   getTotalWeeks,
   getLeagueWeeks,
-} from "../../utils";
-import MatchupCard from "@/components/ui/matchupCard";
-import MatchupCardSkeleton from "@/components/ui/matchupCardSkeleton";
-import UserCard from "@/components/ui/userCard";
+} from '../../utils'
+import MatchupCard from '@/components/ui/matchupCard'
+import MatchupCardSkeleton from '@/components/ui/matchupCardSkeleton'
+import UserCard from '@/components/ui/userCard'
 
 type TeamInfo = {
-  displayName: string;
-  rosterId: number;
-  points: number;
-  starters: string[];
-  players: string[];
-};
+  displayName: string
+  rosterId: number
+  points: number
+  starters: string[]
+  players: string[]
+}
 
 type Matchup = {
-  round: number;
-  matchupId: number;
-  team1: TeamInfo;
-  team2: TeamInfo;
-};
+  round: number
+  matchupId: number
+  team1: TeamInfo
+  team2: TeamInfo
+}
 
 const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
-  const weekLength = await getTotalWeeks(leagueId);
+  const weekLength = await getTotalWeeks(leagueId)
   const matchupDetails = await matchBracketToMatchup({
     week: weekLength,
     leagueId: leagueId,
-  });
-  const champion = await getChampionInfo(leagueId);
-  const regSeason = await getLeagueWeeks(leagueId);
-  const regSeasonWeekNum = regSeason.length - 1;
+  })
+  const champion = await getChampionInfo(leagueId)
+  const regSeason = await getLeagueWeeks(leagueId)
+  const regSeasonWeekNum = regSeason.length - 1
 
   if (!leagueId) {
     return Array.from({ length: 6 }).map((_, i) => (
       <div className="mx-auto w-full max-w-3xl" key={i}>
         <MatchupCardSkeleton />
       </div>
-    ));
+    ))
   }
 
   // Group matchups by round number
   const matchupsByRound = matchupDetails.reduce<Record<number, Matchup[]>>(
     (acc, matchup) => {
       if (!acc[matchup.round]) {
-        acc[matchup.round] = [];
+        acc[matchup.round] = []
       }
-      acc[matchup.round].push(matchup);
-      return acc;
+      acc[matchup.round].push(matchup)
+      return acc
     },
     {}
-  );
+  )
 
   return (
     <div className="pt-4">
@@ -84,7 +84,7 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
         </p>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default WinnersBracket;
+export default WinnersBracket
