@@ -47,7 +47,7 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
 
   const baseUrl =
     process.env.NODE_ENV === 'production'
-      ? 'https://sleeper-api.vercel.app'
+      ? 'https://sleeper-dashboard.vercel.app'
       : 'http://localhost:3000'
   // Create the base URL
   const compareUrl = new URL('/playerCompare', baseUrl)
