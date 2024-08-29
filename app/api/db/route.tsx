@@ -124,7 +124,6 @@ export async function POST(request: NextRequest) {
         player2: player2Stats
     };
 
-    console.log("Final Stats:", combinedStats);
     const result = await streamObject({
         model: openai("gpt-4o-mini"),
         seed: 100,
