@@ -68,9 +68,6 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
   Object.keys(params).forEach((key) => {
     compareUrl.searchParams.append(key, params[key])
   })
-
-  console.log('Compare URL:', compareUrl.toString())
-
   return (
     <div className="flex items-center justify-end">
       <Dialog open={open} onOpenChange={setOpen}>
