@@ -124,7 +124,6 @@ export default function PlayerCompare() {
   const player2EID = searchParams.get('p2EID')
   const player2Pos = searchParams.get('p2Pos')
   const player2Team = searchParams.get('p2Team')
-  console.log(player1Id, player2Id)
 
   const { object, submit } = useObject({
     api: `/api/db`,
