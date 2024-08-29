@@ -1,3 +1,4 @@
+'use server'
 import { getIndividualMatchup } from '@/lib/sleeper/helpers'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
