@@ -25,7 +25,6 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
     } else {
       setSelectedPlayer2(player)
     }
-    console.log(selectedPlayer1, selectedPlayer2)
   }
 
   // Define the parameters
