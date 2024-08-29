@@ -17,22 +17,24 @@ import PlayerCompareModal from '../playerCompareModal'
 
 function PlayerProfile({ player }: { player: any }) {
   return (
-    <div className="w-full flex items-center space-x-4">
-      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
-        <Image
-          src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-          height={50}
-          width={50}
-          alt={player.full_name}
-        />
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="w-full flex items-center space-x-4">
+        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
+          <Image
+            src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
+            height={50}
+            width={50}
+            alt={player.full_name}
+          />
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold">{player.full_name}</h3>
+          <p className="text-gray-500">
+            {player.position} - {player.team}
+          </p>
+        </div>
       </div>
-      <div>
-        <h3 className="text-xl font-semibold">{player.full_name}</h3>
-        <p className="text-gray-500">
-          {player.position} - {player.team}
-        </p>
-      </div>
-    </div>
+    </Suspense>
   )
 }
 
