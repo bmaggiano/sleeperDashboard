@@ -3,6 +3,8 @@ import { getIndividualMatchup } from '@/lib/sleeper/helpers'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url)
