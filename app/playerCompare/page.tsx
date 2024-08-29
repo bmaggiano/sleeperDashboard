@@ -14,7 +14,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
 import PlayerCompareModal from '../playerCompareModal'
-import { useRouter } from 'next/router'
 
 export const dynamic = 'force-dynamic'
 

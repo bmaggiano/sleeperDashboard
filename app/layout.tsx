@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster'
 import Header from '@/components/ui/header'
 import { Separator } from '@/components/ui/separator'
 import { MyRuntimeProvider } from '@/app/MyRuntimeProvider'
+import { Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -45,7 +46,7 @@ export default function RootLayout({
           <div className="p-2 sm:p-4 max-w-3xl mx-auto">
             <Header />
             {/* <Separator /> */}
-            {children}
+            <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
             <Toaster />
           </div>
         </body>
