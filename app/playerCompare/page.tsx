@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
 import PlayerCompareModal from '../playerCompareModal'
-const { useRouter } = require('next/router')
+import { useRouter } from 'next/router'
 
 export const dynamic = 'force-dynamic'
 
@@ -114,18 +114,10 @@ function RenderKeyStats({ data, player }: { data: any; player: any }) {
   }
 }
 
-export default function PlayerCompare({
-  params,
-}: {
-  params: { p1Id: string; p2Id: string }
-}) {
+export default function PlayerCompare() {
   const [selectedPlayer1, setSelectedPlayer1] = useState<any>(null)
   const [selectedPlayer2, setSelectedPlayer2] = useState<any>(null)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const { query } = router
-  const player1IdTest = query.p1Id
-  console.log(player1IdTest)
   const searchParams = useSearchParams()
   const player1Id = searchParams.get('p1Id')
   const player2Id = searchParams.get('p2Id')
