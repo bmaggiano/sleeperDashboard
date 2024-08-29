@@ -3,7 +3,7 @@
 import { getMatchupsWithMatchupID } from '@/app/utils'
 import MatchupServer from './matchupServer'
 import type { Metadata, ResolvingMetadata } from 'next'
-import PlayerCompareModal from './playerCompareModal'
+import PlayerCompareModal from '../../../playerCompareModal'
 
 type Props = {
   params: { week: string; leagueId: string; matchup: string }

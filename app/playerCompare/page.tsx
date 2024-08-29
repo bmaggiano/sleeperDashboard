@@ -1,25 +1,23 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
-import FuzzySearch from '../fuzzySearch'
-import { Button } from '@/components/ui/button'
 import { ffDataSchema } from '../api/db/schema'
 import { MdNotes } from 'react-icons/md'
 import { IoDiceOutline } from 'react-icons/io5'
-import { User, ArrowRightLeft } from 'lucide-react'
+import { User } from 'lucide-react'
 import Image from 'next/image'
-import { Loader2, Sparkles } from 'lucide-react'
-import { CircleCheckBig, TrendingUp } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
+import { TrendingUp } from 'lucide-react'
 import { YearByYear } from './yearByYear'
 import CompareTable from './compareTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
-import { useRouter, useSearchParams } from 'next/navigation'
-import PlayerCompareModal from '../[leagueId]/[week]/[matchup]/playerCompareModal'
+import { useSearchParams } from 'next/navigation'
+import PlayerCompareModal from '../playerCompareModal'
 
 function PlayerProfile({ player }: { player: any }) {
   return (
-    <div className="w-full flex items-center space-x-4 mb-4">
+    <div className="w-full flex items-center space-x-4">
       <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
         <Image
           src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
@@ -133,31 +131,6 @@ export default function PlayerCompare() {
     schema: ffDataSchema,
   })
 
-  const handlePlayerSelect = (player: any, playerIndex: number) => {
-    if (playerIndex === 1) {
-      setSelectedPlayer1(player)
-    } else {
-      setSelectedPlayer2(player)
-    }
-    console.log(selectedPlayer1, selectedPlayer2)
-  }
-
-  const handleSubmit = async (
-    event: React.FormEvent<HTMLFormElement> | null = null
-  ) => {
-    event?.preventDefault()
-    setLoading(true)
-    try {
-      await submit({
-        playerId1: selectedPlayer1?.player_id,
-        playerId2: selectedPlayer2?.player_id,
-      })
-    } catch (error) {
-      console.error('An error occurred during submission:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
   useEffect(() => {
     const handleAutoSubmit = async () => {
       if (player1Id && player2Id) {
@@ -206,9 +179,6 @@ export default function PlayerCompare() {
             ) : (
               <PlayerProfileSkeleton playerIndex={1} />
             )}
-            <FuzzySearch
-              onPlayerSelect={(player) => handlePlayerSelect(player, 1)}
-            />
           </div>
         </div>
         <div className="flex flex-col w-full sm:w-1/2">
@@ -218,9 +188,6 @@ export default function PlayerCompare() {
             ) : (
               <PlayerProfileSkeleton playerIndex={2} />
             )}
-            <FuzzySearch
-              onPlayerSelect={(player) => handlePlayerSelect(player, 2)}
-            />
           </div>
         </div>
       </div>
