@@ -7,8 +7,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const playerId = searchParams.get('pid') || null
 
-  console.log(playerId)
-
   if (playerId) {
     const player = await getPlayerDetails(playerId, true)
     return NextResponse.json(player)
