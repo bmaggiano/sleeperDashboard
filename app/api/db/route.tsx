@@ -7,6 +7,7 @@ import { openai } from '@ai-sdk/openai'
 import { ffDataSchema } from './schema'
 import { createSqlQuery } from './queryHelpers'
 import { calculateFantasyPoints } from './fantasyPointsHelper'
+import fetchAndFilterStories from '@/app/playerCompare/recentNews'
 
 const years = [
   'nflverse_play_by_play_2023',
@@ -42,9 +43,14 @@ export async function POST(request: NextRequest) {
       { status: 404 }
     )
   }
-
   const player1Gsis = player1.gsis_id?.trim() || ''
   const player2Gsis = player2.gsis_id?.trim() || ''
+
+  // Fetch stories for both players
+  const [player1Stories, player2Stories] = await Promise.all([
+    fetchAndFilterStories(Number(player1.espn_id), player1.team || ''),
+    fetchAndFilterStories(Number(player2.espn_id), player2.team || ''),
+  ])
 
   async function getPlayerStats(
     playerGsis: string,
@@ -142,12 +148,10 @@ export async function POST(request: NextRequest) {
     seed: 100,
     schema: ffDataSchema,
     system: `You are a fantasy football expert. You are an expert at analyzing player stats and making decisions based on that analysis. Users using this tool will be relying on you to provide accurate assessments of player stats and make informed decisions.`,
-    prompt: `Compare the following two players based on their stats and availability:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(combinedStats.player1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(combinedStats.player2, null, 2)}\n\nConsider the number of games played and the availability of each player. Also take into consideration previous seasons that should be included in this data. Provide a detailed comparison and categorize the players into the following: explanation (list the yards, touchdowns, games played, and provide a brief explanation), safe_pick, risky_pick, and recommended_pick. Please also compile their season stats that were provided and return playerOneRecYards, playerTwoRecYards, playerOneRushYards, playerTwoRushYards, playerOneTouchdowns, playerTwoTouchdowns, playerOneYardsAfterCatch, playerTwoYardsAfterCatch, playerOneAirYards, playerTwoAirYards, playerOneYardsPerReception, playerTwoYardsPerReception, playerOneReceptions, playerTwoReceptions, longestPlayOne, longestPlayTwo. If the player is a QB, return playerOnePassAttempt, playerTwoPassAttempt, playerOnePassCompletion, playerTwoPassCompletion, playerOneInterceptions, playerTwoInterceptions, playerOnePassYards, playerTwoPassYards, playerOnePassTouchdowns, playerTwoPassTouchdowns. With the recommended pick, can you also include a percentage of certainty (0-100)? If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
+    prompt: `Compare the following two players based on their stats, availability and any recent news/stories:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(combinedStats.player1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(combinedStats.player2, null, 2)}\n\nStories:\n\nPlayer 1 Stories:\n${player1Stories.join('\n')}\n\nPlayer 2 Stories:\n${player2Stories.join('\n')}\n\nConsider the number of games played and the availability of each player as well as providing a detail for that player from a recent story if one is provided. You MUST provide some sort of info from the recent story provided for either player. Also take into consideration previous seasons that should be included in this data. Provide a detailed comparison and categorize the players into the following: explanation (list the yards, touchdowns, games played, and provide a brief explanation), safe_pick, risky_pick, and recommended_pick. Please also compile their season stats that were provided and return playerOneRecYards, playerTwoRecYards, playerOneRushYards, playerTwoRushYards, playerOneTouchdowns, playerTwoTouchdowns, playerOneYardsAfterCatch, playerTwoYardsAfterCatch, playerOneAirYards, playerTwoAirYards, playerOneYardsPerReception, playerTwoYardsPerReception, playerOneReceptions, playerTwoReceptions, longestPlayOne, longestPlayTwo. If the player is a QB, return playerOnePassAttempt, playerTwoPassAttempt, playerOnePassCompletion, playerTwoPassCompletion, playerOneInterceptions, playerTwoInterceptions, playerOnePassYards, playerTwoPassYards, playerOnePassTouchdowns, playerTwoPassTouchdowns. With the recommended pick, can you also include a percentage of certainty (0-100)? If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'.`,
     onFinish: async ({ object }) => {
       await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600) // Cache for 1 hour
     },
   })
   return result.toTextStreamResponse()
-  // console.log("Final Stats:", combinedStats);
-  // return NextResponse.json({ "hey": "this worked" });
 }
