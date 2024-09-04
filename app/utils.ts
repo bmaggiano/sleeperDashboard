@@ -4,7 +4,7 @@ import { cache } from 'react'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
 import { getESPNPlayerInfo } from '@/lib/espn'
 
-const LEAGUE_DEFAULT_YEAR = 2023
+const LEAGUE_DEFAULT_YEAR = 2024
 
 export const getTotalWeeks = cache(async (leagueId: string) => {
   try {
