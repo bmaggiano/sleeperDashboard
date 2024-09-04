@@ -1,0 +1,16 @@
+{
+  "hasSrc": false,
+  "packages": [
+    "prisma",
+    "shadcn-ui"
+  ],
+  "preferredPackageManager": "bun",
+  "t3": false,
+  "alias": "@",
+  "analytics": true,
+  "rootPath": "",
+  "orm": "prisma",
+  "componentLib": "shadcn-ui",
+  "driver": "pg",
+  "auth": null
+}
