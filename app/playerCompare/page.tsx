@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
 import PlayerCompareModal from '../playerCompareModal'
+import { Progress } from '@/components/ui/progress'
 
 export const dynamic = 'force-dynamic'
 
@@ -237,22 +238,36 @@ export default function PlayerCompare() {
                     Recommended pick <Sparkles className="h-5 w-5" />
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex sm:flex-row flex-col items-center justify-center p-6">
-                  <Certainty data={data} />
+                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around p-6">
+                  <div className="hidden sm:block">
+                    <Certainty data={data} />
+                  </div>
                   <div>
-                    <p className="text-lg font-semibold mb-2">
-                      {data?.recommended_pick}
-                      <span className="ml-2 font-normal text-gray-500">
-                        {data?.recommended_pick === data?.playerOneName
-                          ? `${data?.playerOnePosition}`
-                          : `${data?.playerTwoPosition}`}{' '}
-                        -&nbsp;
-                        {data?.recommended_pick === data?.playerOneName
-                          ? `${data?.playerOneTeam}`
-                          : `${data?.playerTwoTeam}`}
-                      </span>
-                    </p>
+                    <div className="flex justify-between">
+                      <p className="text-lg flex flex-col font-semibold mb-2">
+                        {data?.recommended_pick}
+                        <span className="font-normal text-gray-500">
+                          {data?.recommended_pick === data?.playerOneName
+                            ? `${data?.playerOnePosition}`
+                            : `${data?.playerTwoPosition}`}{' '}
+                          -&nbsp;
+                          {data?.recommended_pick === data?.playerOneName
+                            ? `${data?.playerOneTeam}`
+                            : `${data?.playerTwoTeam}`}
+                        </span>
+                      </p>
+                      <p className="sm:hidden flex flex-col">
+                        <span className="font-semibold text-lg">
+                          {data?.certainty}%
+                        </span>
+                        Certainty
+                      </p>
+                    </div>
                     <div>
+                      <Progress
+                        value={data?.certainty}
+                        className="h-4 my-2 sm:hidden"
+                      />
                       <p className="pt-2 pb-1 font-semibold">
                         Key Stats (2023):
                       </p>
