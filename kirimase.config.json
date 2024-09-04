@@ -2,7 +2,8 @@
   "hasSrc": false,
   "packages": [
     "prisma",
-    "shadcn-ui"
+    "shadcn-ui",
+    "next-auth"
   ],
   "preferredPackageManager": "bun",
   "t3": false,
@@ -12,5 +13,5 @@
   "orm": "prisma",
   "componentLib": "shadcn-ui",
   "driver": "pg",
-  "auth": null
+  "auth": "next-auth"
 }
