@@ -15,6 +15,9 @@ import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
 import PlayerCompareModal from '../playerCompareModal'
 import { Progress } from '@/components/ui/progress'
+import PlayerVsTeam from './playerVsTeam'
+import { Input } from '@/components/ui/input'
+import CompareTableVsTeam from './playerVsTeam'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,12 +25,12 @@ function PlayerProfile({ player }: { player: any }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full flex items-center space-x-4">
-        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
+        <div className="flex items-center justify-center text-2xl">
           {player.espn_id ? (
             <Image
               src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-              height={50}
-              width={50}
+              height={70}
+              width={70}
               alt={player.full_name}
             />
           ) : (
@@ -200,6 +203,14 @@ export default function PlayerCompare() {
             </div>
           </div>
         </div>
+        {object?.analysis?.map((data, index) => (
+          <CompareTableVsTeam
+            key={index}
+            data={data}
+            playerOneId={player1Id || ''}
+            playerTwoId={player2Id || ''}
+          />
+        ))}{' '}
         {object?.analysis?.map((data, index) => (
           <CompareTable key={index} data={data} />
         ))}
