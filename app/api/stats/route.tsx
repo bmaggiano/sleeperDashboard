@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import db from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { NextRequest } from 'next/server'
 import redisClient from '@/lib/redis/redisClient'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
