@@ -6,8 +6,8 @@
     },
     "crons": [
     {
-      "path": "/api/cron/1m",
-      "schedule": "* * * * *"
+      "path": "/api/cron/midnight",
+      "schedule": "0 0 * * *"
     }
   ]
   }
