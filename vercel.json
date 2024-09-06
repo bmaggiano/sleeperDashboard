@@ -3,5 +3,11 @@
       "app/api/**/*": {
         "maxDuration": 25
       }
+    },
+    "crons": [
+    {
+      "path": "/api/cron/1m",
+      "schedule": "* * * * *"
     }
+  ]
   }

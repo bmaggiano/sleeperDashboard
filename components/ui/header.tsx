@@ -41,6 +41,8 @@ import {
   SheetTrigger,
 } from './sheet'
 import { Textarea } from './textarea'
+import LoginButton from '../login'
+import AuthStatus from '../authStatus'
 
 const navigationItems = [
   {
@@ -235,6 +237,7 @@ export default function Header() {
         <div className="md:hidden">
           <MobileNavigation />
         </div>
+        <AuthStatus />
       </div>
     </header>
   )

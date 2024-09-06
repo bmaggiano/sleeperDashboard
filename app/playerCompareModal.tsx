@@ -31,11 +31,6 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
     }
   }
 
-  useEffect(() => {
-    console.log('player1Details', player1Details)
-    console.log('player2Details', player2Details)
-  }, [player1Details, player2Details])
-
   const baseUrl =
     process.env.NODE_ENV === 'production'
       ? 'https://sleeper-dashboard.vercel.app'

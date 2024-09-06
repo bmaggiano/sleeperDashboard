@@ -163,8 +163,8 @@ function StatsCard({
           <BetweenHorizonalStart className="w-5 h-5" />{' '}
         </CardTitle>
         <CardDescription className="flex text-base justify-between text-gray-500">
-          <p>{playerOneName}</p>
-          <p>{playerTwoName}</p>
+          {playerOneName}
+          {playerTwoName}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">

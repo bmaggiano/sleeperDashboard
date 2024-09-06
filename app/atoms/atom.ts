@@ -7,3 +7,5 @@ export const weekStringAtom = atom<string>('Week 1')
 export const weekNumberAtom = atom<number>(1)
 export const leagueAtom = atom('')
 export const leagueNameAtom = atom('')
+export const remainingApiCallsAtom = atom<number | null>(null)
+

@@ -186,11 +186,11 @@ function StatsCard({
           {title}
           <BetweenHorizonalStart className="w-5 h-5" />
         </CardTitle>
-        <CardDescription className="flex text-base justify-between text-gray-500">
-          {/* Player One */}
+        {/* Player One */}
+        <div className="flex text-base justify-between text-gray-500">
           <div>
-            <p>{playerOneName}</p>
-            {selectedTeamPlayer1 && <p>vs {selectedTeamPlayer1}</p>}
+            {playerOneName}
+            {selectedTeamPlayer1 && <div>vs {selectedTeamPlayer1}</div>}
             <Input
               showArrowButton={false}
               placeholder="Search for NFL team..."
@@ -222,11 +222,12 @@ function StatsCard({
               </div>
             )}
           </div>
+          <div></div>
 
           {/* Player Two */}
           <div>
-            <p>{playerTwoName}</p>
-            {selectedTeamPlayer2 && <p>vs {selectedTeamPlayer2}</p>}
+            <div>{playerTwoName}</div>
+            {selectedTeamPlayer2 && <div>vs {selectedTeamPlayer2}</div>}
             <Input
               showArrowButton={false}
               placeholder="Search for NFL team..."
@@ -258,7 +259,7 @@ function StatsCard({
               </div>
             )}
           </div>
-        </CardDescription>
+        </div>
       </CardHeader>
       {playerStats.player1Stats || playerStats.player2Stats ? (
         <CardContent className="p-0">
