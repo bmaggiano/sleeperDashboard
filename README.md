@@ -12,7 +12,7 @@ This app will serve as a baseline to build new features related to the Sleeper f
 
 ## Technologies
 
-- Shadcn componennt library
+- ShadCN
 - Jotai global state management
 - Next.js
 - Tailwind
