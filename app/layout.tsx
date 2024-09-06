@@ -6,7 +6,6 @@ import Header from '@/components/ui/header'
 import { MyRuntimeProvider } from '@/app/MyRuntimeProvider'
 import { Suspense } from 'react'
 import Providers from '@/components/providers'
-import { ApiLimitBanner } from '@/components/dailyLimitBanner/apiLimitBanner' // Import the ApiLimitBanner
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -49,7 +48,6 @@ export default function RootLayout({
               <Header />
               <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
               <Toaster />
-              <ApiLimitBanner />
             </Providers>
           </div>
         </body>
