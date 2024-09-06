@@ -1,4 +1,4 @@
-# Sleeper Dashboard Mock
+# Stuart AI
 
 ![alt text](image.png)
 
