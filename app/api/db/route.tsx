@@ -18,18 +18,24 @@ const years = [
   'nflverse_play_by_play_2021',
 ]
 
+interface User {
+  dailyLimit: number
+}
+
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const user = await db.user.findUnique({
+  // Explicitly type the user object
+  const user = (await db.user.findUnique({
     where: { email: session.user.email as string },
     select: { dailyLimit: true } as any,
-  })
+  })) as User | null
 
-  if (!user || user.dailyLimit <= 0) {
+  // Check for valid user and dailyLimit
+  if (!user || typeof user.dailyLimit !== 'number' || user.dailyLimit <= 0) {
     return NextResponse.json({ error: 'Daily limit reached' }, { status: 403 })
   }
 
