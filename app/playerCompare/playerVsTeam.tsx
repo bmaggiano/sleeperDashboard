@@ -58,32 +58,35 @@ export default function CompareTableVsTeam({
   const stats = []
 
   if (
-    data?.playerOnePosition === 'WR' ||
-    data?.playerTwoPosition === 'WR' ||
-    data?.playerOnePosition === 'TE' ||
-    data?.playerTwoPosition === 'TE' ||
-    data?.playerOnePosition === 'RB' ||
-    data?.playerTwoPosition === 'RB'
+    data?.[0]?.player1?.details?.position === 'WR' ||
+    data?.[0]?.player2?.details?.position === 'WR' ||
+    data?.[0]?.player1?.details?.position === 'TE' ||
+    data?.[0]?.player2?.details?.position === 'TE' ||
+    data?.[0]?.player1?.details?.position === 'RB' ||
+    data?.[0]?.player2?.details?.position === 'RB'
   ) {
     stats.push(
-      { label: 'Receptions', key: 'receptions' },
-      { label: 'Receiving Yards', key: 'recYards' },
-      { label: 'Rushing Yards', key: 'rushYards' },
-      { label: 'Air Yards', key: 'airYards' },
-      { label: 'Yards After Catch', key: 'yardsAfterCatch' },
-      { label: 'Yards Per Reception', key: 'yardsPerReception' },
-      { label: 'Touchdowns', key: 'touchdowns' },
+      { label: 'Receptions', key: 'totalReceptions' },
+      { label: 'Receiving Yards', key: 'totalRecYards' },
+      { label: 'Rushing Yards', key: 'totalRushYards' },
+      { label: 'Air Yards', key: 'totalAirYards' },
+      { label: 'Yards After Catch', key: 'totalYac' },
+      { label: 'Yards Per Reception', key: 'totalYardsPerReception' },
+      { label: 'Touchdowns', key: 'totalTds' },
       { label: 'Weeks', key: 'totalWeeks' }
     )
   }
-  if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
+  if (
+    data?.[0]?.player1?.details?.position === 'QB' ||
+    data?.[0]?.player1?.details?.position === 'QB'
+  ) {
     stats.push(
-      { label: 'Pass Yards', key: 'passYards' },
-      { label: 'Pass Completions', key: 'passCompletion' },
-      { label: 'Rushing Yards', key: 'rushYards' },
-      { label: 'Interceptions', key: 'interceptions' },
-      { label: 'Rush Touchdowns', key: 'touchdowns' },
-      { label: 'Pass Touchdowns', key: 'passTouchdowns' },
+      { label: 'Pass Yards', key: 'totalPassYards' },
+      { label: 'Pass Completions', key: 'totalPassCompletions' },
+      { label: 'Rushing Yards', key: 'totalRushYards' },
+      { label: 'Interceptions', key: 'totalInterceptions' },
+      { label: 'Rush Touchdowns', key: 'totalRushTds' },
+      { label: 'Pass Touchdowns', key: 'totalPassTds' },
       { label: 'Weeks', key: 'totalWeeks' }
     )
   }
@@ -136,18 +139,18 @@ function StatsCard({
       const result = await response.json()
 
       const stats = {
-        receptions: result.totalReceptions,
-        recYards: result.totalRecYards,
-        rushYards: result.totalRushYards,
-        airYards: result.totalAirYards,
-        yardsAfterCatch: result.totalYac,
-        yardsPerReception: result.totalYardsPerReception,
-        touchdowns: result.totalTds,
-        passYards: result.totalPassYards,
-        passCompletion: result.totalPassCompletions,
-        interceptions: result.totalInterceptions,
-        passTouchdowns: result.totalPassTds,
-        rushTouchdowns: result.totalRushTds,
+        totalReceptions: result.totalReceptions,
+        totalRecYards: result.totalRecYards,
+        totalRushYards: result.totalRushYards,
+        totalAirYards: result.totalAirYards,
+        totalYac: result.totalYac,
+        totalYardsPerReception: result.totalYardsPerReception,
+        totalTds: result.totalTds,
+        totalPassYards: result.totalPassYards,
+        totalPassCompletions: result.totalPassCompletions,
+        totalInterceptions: result.totalInterceptions,
+        totalRushTds: result.totalRushTds,
+        totalPassTds: result.totalPassTds,
         totalWeeks: result.totalWeeks,
       }
 

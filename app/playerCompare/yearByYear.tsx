@@ -40,8 +40,8 @@ interface PlayerStats {
 interface FinalStats {
   playerOneName: string
   playerTwoName: string
-  playerOneStats?: PlayerStats
-  playerTwoStats?: PlayerStats
+  player1?: PlayerStats
+  player2?: PlayerStats
   playerOneTeam: string
   playerTwoTeam: string
 }
@@ -62,39 +62,33 @@ function renderTrend(value1: number, value2: number) {
 
 // Transform function to convert FinalStats to chartData format
 const transformData = (stats: FinalStats[]): ChartDataPoint[] => {
-  const playerOneName = stats?.[0]?.playerOneName ?? 'Player 1'
-  const playerTwoName = stats?.[0]?.playerTwoName ?? 'Player 2'
+  const playerOneName = stats?.[0]?.player1?.details?.fullName ?? 'Player 1'
+  const playerTwoName = stats?.[0]?.player2?.details?.fullName ?? 'Player 2'
   return [
     {
       month: '2021',
       [playerOneName]:
-        stats?.[0]?.playerOneStats?.nflverse_play_by_play_2021?.fantasyPoints ??
-        0,
+        stats?.[0]?.player1?.nflverse_play_by_play_2021?.fantasyPoints ?? 0,
       [playerTwoName]:
-        stats?.[0]?.playerTwoStats?.nflverse_play_by_play_2021?.fantasyPoints ??
-        0,
+        stats?.[0]?.player2?.nflverse_play_by_play_2021?.fantasyPoints ?? 0,
       playerOneName: undefined,
       playerTwoName: undefined,
     },
     {
       month: '2022',
       [playerOneName]:
-        stats?.[0]?.playerOneStats?.nflverse_play_by_play_2022?.fantasyPoints ??
-        0,
+        stats?.[0]?.player1?.nflverse_play_by_play_2022?.fantasyPoints ?? 0,
       [playerTwoName]:
-        stats?.[0]?.playerTwoStats?.nflverse_play_by_play_2022?.fantasyPoints ??
-        0,
+        stats?.[0]?.player2?.nflverse_play_by_play_2022?.fantasyPoints ?? 0,
       playerOneName: undefined,
       playerTwoName: undefined,
     },
     {
       month: '2023',
       [playerOneName]:
-        stats?.[0]?.playerOneStats?.nflverse_play_by_play_2023?.fantasyPoints ??
-        0,
+        stats?.[0]?.player1?.nflverse_play_by_play_2023?.fantasyPoints ?? 0,
       [playerTwoName]:
-        stats?.[0]?.playerTwoStats?.nflverse_play_by_play_2023?.fantasyPoints ??
-        0,
+        stats?.[0]?.player2?.nflverse_play_by_play_2023?.fantasyPoints ?? 0,
       playerOneName: undefined,
       playerTwoName: undefined,
     },
@@ -103,10 +97,10 @@ const transformData = (stats: FinalStats[]): ChartDataPoint[] => {
 
 export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
   const chartData = transformData(stats as any)
-  const playerOneName = stats?.[0]?.playerOneName ?? 'Player 1'
-  const playerTwoName = stats?.[0]?.playerTwoName ?? 'Player 2'
-  const playerOneTeam = stats?.[0]?.playerOneTeam ?? 'DEFAULT'
-  const playerTwoTeam = stats?.[0]?.playerTwoTeam ?? 'DEFAULT'
+  const playerOneName = stats?.[0]?.player1?.details?.fullName ?? 'Player 1'
+  const playerTwoName = stats?.[0]?.player2?.details?.fullName ?? 'Player 2'
+  const playerOneTeam = stats?.[0]?.player1?.details?.team ?? 'DEFAULT'
+  const playerTwoTeam = stats?.[0]?.player2?.details?.team ?? 'DEFAULT'
 
   const NFL_TEAM_COLORS: Record<string, string> = {
     ARI: '#97233F',
@@ -209,9 +203,9 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
                 {playerOneName}
                 <span>
                   {renderTrend(
-                    stats?.[0]?.playerOneStats?.nflverse_play_by_play_2022
+                    stats?.[0]?.player1?.nflverse_play_by_play_2022
                       ?.fantasyPoints ?? 0,
-                    stats?.[0]?.playerOneStats?.nflverse_play_by_play_2023
+                    stats?.[0]?.player2?.nflverse_play_by_play_2023
                       ?.fantasyPoints ?? 0
                   )}
                 </span>
@@ -224,9 +218,9 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
                 {playerTwoName}
                 <span>
                   {renderTrend(
-                    stats?.[0]?.playerTwoStats?.nflverse_play_by_play_2022
+                    stats?.[0]?.player1?.nflverse_play_by_play_2022
                       ?.fantasyPoints ?? 0,
-                    stats?.[0]?.playerTwoStats?.nflverse_play_by_play_2023
+                    stats?.[0]?.player2?.nflverse_play_by_play_2023
                       ?.fantasyPoints ?? 0
                   )}
                 </span>

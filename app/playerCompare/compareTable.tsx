@@ -12,118 +12,108 @@ export default function CompareTable({ data }: { data: any }) {
   const stats = []
 
   if (
-    data?.playerOnePosition === 'WR' ||
-    data?.playerTwoPosition === 'WR' ||
-    data?.playerOnePosition === 'TE' ||
-    data?.playerTwoPosition === 'TE' ||
-    data?.playerOnePosition === 'RB' ||
-    data?.playerTwoPosition === 'RB'
+    data?.[0]?.player1?.details?.position === 'WR' ||
+    data?.[0]?.player2?.details?.position === 'WR' ||
+    data?.[0]?.player1?.details?.position === 'TE' ||
+    data?.[0]?.player2?.details?.position === 'TE' ||
+    data?.[0]?.player1?.details?.position === 'RB' ||
+    data?.[0]?.player2?.details?.position === 'RB'
   ) {
     stats.push(
       {
         label: 'Receptions',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.receptions ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalReceptions ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.receptions ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalReceptions ?? 0,
       },
       {
         label: 'Receiving Yards',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.recYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRecYards ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.recYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRecYards ?? 0,
       },
       {
         label: 'Rushing Yards',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
       },
       {
         label: 'Air Yards',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.airYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalAirYards ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.airYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalAirYards ?? 0,
       },
       {
         label: 'Yards After Catch',
-        player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.yardsAfterCatch ??
-          0,
-        player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsAfterCatch ??
-          0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalYac ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalYac ?? 0,
       },
       {
         label: 'Yards Per Reception',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.yardsPerReception ??
-          0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalYardsPerRec ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.yardsPerReception ??
-          0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalYardsPerRec ?? 0,
       },
       {
         label: 'Touchdowns',
-        player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns ?? 0,
-        player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalTds ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalTds ?? 0,
       }
       // Add other relevant stats here...
     )
   }
-  if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
+  if (
+    data?.[0]?.player1?.details?.position === 'QB' ||
+    data?.[0]?.player2?.details?.position === 'QB'
+  ) {
     stats.push(
       {
         label: 'Pass Yards',
-        player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.passYards ?? 0,
-        player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.passYards ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.passYards ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.passYards ?? 0,
       },
       {
         label: 'Pass Completions',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.passCompletion ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.passCompletion ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.passCompletion ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.passCompletion ?? 0,
       },
       {
         label: 'Rushing Yards',
-        player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.rushYards ?? 0,
-        player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.rushYards ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.rushYards ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.rushYards ?? 0,
       },
       {
         label: 'Interceptions',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.interceptions ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.interceptions ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.interceptions ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.interceptions ?? 0,
       },
       {
         label: 'Rush Touchdowns',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.touchdowns ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.touchdowns ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.touchdowns ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.touchdowns ?? 0,
       },
       {
         label: 'Pass Touchdowns',
         player1:
-          data?.playerOneStats?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
         player2:
-          data?.playerTwoStats?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
       }
       // Add other relevant stats here...
     )
   }
-
   return (
     <div className="w-full max-w-3xl mx-auto space-y-4">
       <StatsCard

@@ -62,11 +62,19 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
   )
 }
 
-function RenderKeyStats({ data, player }: { data: any; player: any }) {
+function RenderKeyStats({
+  data,
+  stats,
+  player,
+}: {
+  data: any
+  stats: any
+  player: any
+}) {
   const recommendedStats =
     data?.recommended_pick === data?.playerOneName
-      ? data?.playerOneStats?.nflverse_play_by_play_2023
-      : data?.playerTwoStats?.nflverse_play_by_play_2023
+      ? stats?.[0]?.[0]?.player1?.nflverse_play_by_play_2023
+      : stats?.[0]?.[0]?.player2?.nflverse_play_by_play_2023
 
   if (
     data?.playerOnePosition === 'WR' ||
@@ -80,19 +88,19 @@ function RenderKeyStats({ data, player }: { data: any; player: any }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Receptions: {recommendedStats?.receptions}
+          Receptions: {recommendedStats?.totalReceptions}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Receiving Yards: {recommendedStats?.recYards}
+          Receiving Yards: {recommendedStats?.totalRecYards}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Rushing Yards: {recommendedStats?.rushYards}
+          Rushing Yards: {recommendedStats?.totalRushYards}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Touchdowns: {recommendedStats?.touchdowns}
+          Touchdowns: {recommendedStats?.totalTds}
         </p>
       </div>
     )
@@ -102,19 +110,19 @@ function RenderKeyStats({ data, player }: { data: any; player: any }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Pass Completions: {recommendedStats?.passCompletion}
+          Pass Completions: {recommendedStats?.totalPassCompletions}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Pass Yards: {recommendedStats?.passYards}
+          Pass Yards: {recommendedStats?.totalPassYards}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Pass Touchdowns: {recommendedStats?.passTouchdowns}
+          Pass Touchdowns: {recommendedStats?.totalPassTds}
         </p>
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
-          Rush Touchdowns: {recommendedStats?.touchdowns}
+          Rush Touchdowns: {recommendedStats?.totalTds}
         </p>
       </div>
     )
@@ -124,6 +132,7 @@ function RenderKeyStats({ data, player }: { data: any; player: any }) {
 export default function PlayerCompare() {
   const [selectedPlayer1, setSelectedPlayer1] = useState<any>(null)
   const [selectedPlayer2, setSelectedPlayer2] = useState<any>(null)
+  const [playerStats, setPlayerStats] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
   const player1Id = searchParams.get('p1Id')
@@ -161,6 +170,15 @@ export default function PlayerCompare() {
         })
 
         try {
+          const playerStatsTest = await fetch('/api/stats', {
+            method: 'POST',
+            body: JSON.stringify({
+              playerId1: player1Id,
+              playerId2: player2Id,
+            }),
+          })
+          const playerStats = await playerStatsTest.json()
+          setPlayerStats([playerStats])
           await submit({
             playerId1: player1Id,
             playerId2: player2Id,
@@ -203,7 +221,7 @@ export default function PlayerCompare() {
             </div>
           </div>
         </div>
-        {object?.analysis?.map((data, index) => (
+        {playerStats?.map((data, index) => (
           <CompareTableVsTeam
             key={index}
             data={data}
@@ -211,12 +229,12 @@ export default function PlayerCompare() {
             playerTwoId={player2Id || ''}
           />
         ))}{' '}
-        {object?.analysis?.map((data, index) => (
+        {playerStats?.map((data, index) => (
           <CompareTable key={index} data={data} />
         ))}
-        {object?.analysis && (
-          <YearByYear key={0} stats={object?.analysis as any} />
-        )}
+        {playerStats?.map((data, index) => (
+          <YearByYear key={index} stats={data as any} />
+        ))}
         <div>
           {object?.analysis?.map((data, index) => (
             <Card key={index} className="flex flex-col">
@@ -284,10 +302,11 @@ export default function PlayerCompare() {
                       </p>
                       <RenderKeyStats
                         data={data}
+                        stats={playerStats}
                         player={
                           data?.recommended_pick === data?.playerOneName
-                            ? data?.playerOneStats
-                            : data?.playerTwoStats
+                            ? playerStats?.[0]?.player1?.details.fullName
+                            : playerStats?.[0]?.player2?.details.fullName
                         }
                       />
                     </div>

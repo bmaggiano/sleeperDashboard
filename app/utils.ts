@@ -3,6 +3,86 @@
 import { cache } from 'react'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
 import { getESPNPlayerInfo } from '@/lib/espn'
+import db from '@/lib/db'
+import { createSqlQuery } from '../app/api/db/queryHelpers'
+import { calculateFantasyPoints } from '../app/api/db/fantasyPointsHelper'
+
+const years = [
+  'nflverse_play_by_play_2023',
+  'nflverse_play_by_play_2022',
+  'nflverse_play_by_play_2021',
+]
+
+export async function getPlayerStats(
+  playerGsis: string,
+  playerDetails: { full_name: string; position: string; team: string }
+) {
+  const playerStats: { [key: string]: { [key: string]: any } } = {
+    details: {
+      gsis_id: playerGsis,
+      fullName: playerDetails.full_name,
+      position: playerDetails.position,
+      team: playerDetails.team,
+    },
+  }
+
+  await Promise.all(
+    years.map(async (year) => {
+      const query = createSqlQuery(playerGsis, year)
+      const [result] = (await db.$queryRaw(query.playerStats)) as any
+
+      const stats = result
+        ? {
+            longestPlay: Number(result.longest_play) || 0,
+            totalRecYards: Number(result.total_rec_yards) || 0,
+            totalRushYards: Number(result.total_rush_yards) || 0,
+            totalAirYards: Number(result.total_air_yards) || 0,
+            totalYac: Number(result.total_yac) || 0,
+            totalTds: Number(result.total_tds) || 0,
+            totalReceptions: Number(result.total_receptions) || 0,
+            weeks: Number(result.weeks) || 0,
+            totalPassAttempts: Number(result.total_pass_attempts) || 0,
+            totalPassCompletions: Number(result.total_pass_completions) || 0,
+            totalPassYards: Number(result.total_pass_yards) || 0,
+            totalPassTds: Number(result.total_pass_tds) || 0,
+            totalInterceptions: Number(result.total_interceptions) || 0,
+            totalYardsPerRec: parseFloat((Number(result.total_rec_yards) / Number(result.total_receptions)).toFixed(2)) || 0,          }
+        : {
+            longestPlay: 0,
+            totalRecYards: 0,
+            totalRushYards: 0,
+            totalAirYards: 0,
+            totalYac: 0,
+            totalTds: 0,
+            totalReceptions: 0,
+            weeks: 0,
+            totalPassAttempts: 0,
+            totalPassCompletions: 0,
+            totalPassYards: 0,
+            totalPassTds: 0,
+            totalInterceptions: 0,
+            totalYardsPerRec: 0,
+          }
+
+      const fantasyPoints = calculateFantasyPoints({
+        totalRecYards: stats.totalRecYards,
+        totalRushYards: stats.totalRushYards,
+        totalTds: stats.totalTds,
+        totalReceptions: stats.totalReceptions,
+        totalPassYards: stats.totalPassYards,
+        totalPassTds: stats.totalPassTds,
+        totalInterceptions: stats.totalInterceptions,
+      })
+
+      playerStats[year] = {
+        ...stats,
+        fantasyPoints,
+      }
+    })
+  )
+
+  return playerStats
+}
 
 const LEAGUE_DEFAULT_YEAR = 2024
 
