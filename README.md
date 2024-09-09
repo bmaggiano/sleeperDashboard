@@ -20,3 +20,4 @@ This app will serve as a baseline to build new features related to the Sleeper f
 - OpenAI
 - Vercel
 - MagicUI
+- node-cron
