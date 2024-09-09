@@ -205,7 +205,7 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
                   {renderTrend(
                     stats?.[0]?.player1?.nflverse_play_by_play_2022
                       ?.fantasyPoints ?? 0,
-                    stats?.[0]?.player2?.nflverse_play_by_play_2023
+                    stats?.[0]?.player1?.nflverse_play_by_play_2023
                       ?.fantasyPoints ?? 0
                   )}
                 </span>
@@ -218,7 +218,7 @@ export function YearByYear({ stats }: { stats: FinalStats[] | [] }) {
                 {playerTwoName}
                 <span>
                   {renderTrend(
-                    stats?.[0]?.player1?.nflverse_play_by_play_2022
+                    stats?.[0]?.player2?.nflverse_play_by_play_2022
                       ?.fantasyPoints ?? 0,
                     stats?.[0]?.player2?.nflverse_play_by_play_2023
                       ?.fantasyPoints ?? 0
