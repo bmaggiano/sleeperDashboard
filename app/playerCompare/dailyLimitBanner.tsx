@@ -53,7 +53,7 @@ export default function DailyLimitBanner({
             Daily Limit Reached
           </CardTitle>
           <CardDescription>
-            You've used all your player compare tokens for today.
+            You&apos;ve used all your player compare tokens for today.
           </CardDescription>
         </CardHeader>
         <CardContent>
