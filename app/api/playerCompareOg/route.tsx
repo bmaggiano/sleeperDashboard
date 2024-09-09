@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
           tw="flex relative flex-col p-12 w-full h-full items-center"
           style={{
             color: 'fff',
-            background: 'linear-gradient(90deg, #000 0%, #111 100%)',
+            background: 'white',
           }}
         >
           <div tw="flex flex-col flex-1 py-10">
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
             </div>
             <div tw="flex items-center">
               <p
-                tw="leading-[1.1] text-white text-[80px] font-bold tracking-tighter mb-6"
+                tw="leading-[1.1] text-black text-[80px] font-bold tracking-tighter mb-6"
                 style={{
                   fontFamily: 'Inter',
                   fontWeight: 'bolder',
@@ -48,53 +48,47 @@ export async function GET(req: NextRequest) {
                 }}
               >
                 Stuart
-                <span tw="ml-6 bg-white text-black pl-4 pr-6 rounded-md">
+                <span tw="ml-6 bg-black text-white pl-4 pr-6 rounded-md">
                   AI
                 </span>
               </p>
-              <p tw="flex leading-[1.1] text-gray-400 text-[80px] font-bold">
+              <p tw="ml-4 flex leading-[1.1] text-gray-400 text-[80px] font-bold">
                 /Player Compare
               </p>
             </div>
             <div tw="flex mt-8 justify-between">
-              <div tw="flex p-6 rounded-md bg-white">
+              <div tw="flex p-6 rounded-md border border-[#E5E7EB] ">
                 <img
-                  tw="mr-4"
+                  tw="mr-4 rounded-full"
                   height={120}
-                  width={140}
+                  width={160}
                   src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p1EID}.png`}
                 />
-                <div tw="flex flex-col justify-start">
+                <div tw="flex text-black flex-col justify-start">
                   <p tw="text-[50px] p-0 m-0">{paramsObj.p1Name}</p>
-                  <p tw="text-gray-600 text-[30px] p-0 m-0">
+                  <p tw="text-gray-500 text-[30px] p-0 m-0">
                     {paramsObj.p1Position} - {paramsObj.p1Team}
                   </p>
                 </div>
               </div>
-              <div tw="flex p-6 rounded-md bg-white">
+              <div tw="flex p-6 rounded-md border border-[#E5E7EB]">
                 <img
-                  tw="mr-4"
+                  tw="mr-4 rounded-full"
                   height={120}
-                  width={140}
+                  width={160}
                   src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p2EID}.png`}
                 />
                 <div tw="flex flex-col justify-start">
-                  <p tw="text-[50px] p-0 m-0">{paramsObj.p2Name}</p>
-                  <p tw="text-gray-600 text-[30px] p-0 m-0">
+                  <p tw="text-[50px] text-black p-0 m-0">{paramsObj.p2Name}</p>
+                  <p tw="text-gray-500 text-[30px] p-0 m-0">
                     {paramsObj.p2Position} - {paramsObj.p2Team}
                   </p>
                 </div>
               </div>
             </div>
-            <div tw="text-[20px] mt-8 flex justify-around text-white">
-              <p tw="text-gray-300">Stats</p>
-              <p tw="text-gray-300">Analytics</p>
-              <p tw="text-gray-300">Historical Data</p>
-              <p tw="text-gray-300">News Stories</p>
-            </div>
           </div>
 
-          <p tw="mb-0 ml-2 text-gray-400">Powered by OpenAI</p>
+          <p tw="mb-0 ml-2 text-gray-500">Powered by OpenAI</p>
         </div>
       ),
       {
