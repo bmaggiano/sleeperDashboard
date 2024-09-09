@@ -96,9 +96,9 @@ export default function CompareTableVsTeam({
       <StatsCard
         title="Stats/Game Vs Team"
         stats={stats}
-        playerOneName={data?.playerOneName ?? ''}
+        playerOneName={data?.[0]?.player1.details.fullName ?? ''}
         playerOneId={playerOneId ?? ''}
-        playerTwoName={data?.playerTwoName ?? ''}
+        playerTwoName={data?.[0]?.player2.details.fullName ?? ''}
         playerTwoId={playerTwoId ?? ''}
       />
     </div>

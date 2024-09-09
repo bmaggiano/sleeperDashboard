@@ -78,12 +78,5 @@ export default function DailyLimitBanner({
       </Card>
     )
 
-  return (
-    <Alert>
-      {dailyLimit > 0
-        ? `You have ${dailyLimit} player compares remaining today.`
-        : `You have reached your daily player compare limit. `}
-      <div>Player compare tokens will reset in: {timeLeft}</div>
-    </Alert>
-  )
+  return <Alert>You have {dailyLimit} player compares remaining today.</Alert>
 }
