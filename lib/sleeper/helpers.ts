@@ -14,7 +14,7 @@ import { cache } from 'react'
 
 const SLEEPER_API_BASE_URL = 'https://api.sleeper.app/v1'
 const DEFAULT_LEAGUE_ID = '974399495632891904'
-const YEAR = 2023
+const YEAR = 2024
 
 const fetchMatchups = cache(async (leagueId: string, week: number) => {
   const response = await fetch(

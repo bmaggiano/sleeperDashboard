@@ -61,7 +61,7 @@ const PlayerAvatar = ({
   size?: number
 }) => {
   if (!player) return null
-  if (player.position === 'DEF') {
+  if (player.position === 'DEF' || !player?.image_url) {
     const bgColor =
       NFL_TEAM_COLORS[player.team as keyof typeof NFL_TEAM_COLORS] || '#000000'
     return (

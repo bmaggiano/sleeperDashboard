@@ -432,13 +432,13 @@ export const sleeperToESPNMapping = cache(async (playerId: string) => {
 
     if (!playerDetails) {
       console.warn(`No player details found for Sleeper ID: ${playerId}`)
-      return null
+      return playerDetails
     }
 
     // Check if we have an ESPN ID
     if (!playerDetails.espn_info?.id) {
       console.warn(`No ESPN ID found for Sleeper ID: ${playerId}`)
-      return null
+      return playerDetails
     }
 
     // Get ESPN player info
