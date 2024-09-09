@@ -223,6 +223,90 @@ export default function PlayerCompare() {
           <h1 className="text-lg my-2 font-bold">Player Compare</h1>
           <PlayerCompareModal />
         </div>
+        {/* <div>
+          {object?.analysis?.map((data, index) => (
+            <Card key={index} className="flex flex-col">
+              <CardHeader className="border-b p-6">
+                <CardTitle className="flex items-center justify-between text-lg">
+                  Analysis <MdNotes className="h-5 w-5" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <p>{data?.explanation}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div> */}
+        {object?.analysis?.map((data, index) => (
+          <div key={index}>
+            {data?.undecided ? (
+              <Card>
+                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                    Toss-up <IoDiceOutline className="h-5 w-5" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center p-6">
+                  {data?.undecided}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                    Recommended pick <Sparkles className="h-5 w-5" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around p-6">
+                  <div className="hidden">
+                    <Certainty data={data} />
+                  </div>
+                  <div>
+                    <div className="flex justify-between">
+                      <p className="text-lg flex flex-col font-semibold mb-2">
+                        {data?.recommended_pick}
+                        <span className="font-normal text-gray-500">
+                          {data?.recommended_pick === data?.playerOneName
+                            ? `${data?.playerOnePosition}`
+                            : `${data?.playerTwoPosition}`}{' '}
+                          -&nbsp;
+                          {data?.recommended_pick === data?.playerOneName
+                            ? `${data?.playerOneTeam}`
+                            : `${data?.playerTwoTeam}`}
+                        </span>
+                      </p>
+                      <p className="sm:block flex flex-col">
+                        <span className="font-semibold text-lg">
+                          {data?.certainty}%
+                        </span>{' '}
+                        Certainty
+                      </p>
+                    </div>
+                    <div>
+                      <Progress
+                        value={data?.certainty}
+                        className="h-4 my-2 sm:block"
+                      />
+                      <p>{data?.explanation}</p>
+                      <p className="pt-2 pb-1 font-semibold">
+                        Key Stats (2023):
+                      </p>
+                      <RenderKeyStats
+                        data={data}
+                        stats={playerStats}
+                        player={
+                          data?.recommended_pick === data?.playerOneName
+                            ? playerStats?.[0]?.player1?.details.fullName
+                            : playerStats?.[0]?.player2?.details.fullName
+                        }
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        ))}
         <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
           <div className="flex flex-col w-full sm:w-1/2">
             <div className="ring-1 ring-gray-200 p-4 rounded-md">
@@ -256,89 +340,6 @@ export default function PlayerCompare() {
         ))}
         {playerStats?.map((data, index) => (
           <YearByYear key={index} stats={data as any} />
-        ))}
-        <div>
-          {object?.analysis?.map((data, index) => (
-            <Card key={index} className="flex flex-col">
-              <CardHeader className="border-b p-6">
-                <CardTitle className="flex items-center justify-between text-lg">
-                  Analysis <MdNotes className="h-5 w-5" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <p>{data?.explanation}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        {object?.analysis?.map((data, index) => (
-          <div key={index}>
-            {data?.undecided ? (
-              <Card>
-                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-                    Toss-up <IoDiceOutline className="h-5 w-5" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center p-6">
-                  {data?.undecided}
-                </CardContent>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-                    Recommended pick <Sparkles className="h-5 w-5" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around p-6">
-                  <div className="hidden sm:block">
-                    <Certainty data={data} />
-                  </div>
-                  <div>
-                    <div className="flex justify-between">
-                      <p className="text-lg flex flex-col font-semibold mb-2">
-                        {data?.recommended_pick}
-                        <span className="font-normal text-gray-500">
-                          {data?.recommended_pick === data?.playerOneName
-                            ? `${data?.playerOnePosition}`
-                            : `${data?.playerTwoPosition}`}{' '}
-                          -&nbsp;
-                          {data?.recommended_pick === data?.playerOneName
-                            ? `${data?.playerOneTeam}`
-                            : `${data?.playerTwoTeam}`}
-                        </span>
-                      </p>
-                      <p className="sm:hidden flex flex-col">
-                        <span className="font-semibold text-lg">
-                          {data?.certainty}%
-                        </span>
-                        Certainty
-                      </p>
-                    </div>
-                    <div>
-                      <Progress
-                        value={data?.certainty}
-                        className="h-4 my-2 sm:hidden"
-                      />
-                      <p className="pt-2 pb-1 font-semibold">
-                        Key Stats (2023):
-                      </p>
-                      <RenderKeyStats
-                        data={data}
-                        stats={playerStats}
-                        player={
-                          data?.recommended_pick === data?.playerOneName
-                            ? playerStats?.[0]?.player1?.details.fullName
-                            : playerStats?.[0]?.player2?.details.fullName
-                        }
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
         ))}
       </div>
       <DailyLimitBanner dailyLimit={dailyLimit ?? 0} />
