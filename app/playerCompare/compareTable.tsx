@@ -75,41 +75,47 @@ export default function CompareTable({ data }: { data: any }) {
     stats.push(
       {
         label: 'Pass Yards',
-        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.passYards ?? 0,
-        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.passYards ?? 0,
+        player1:
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalPassYards ?? 0,
+        player2:
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalPassYards ?? 0,
       },
       {
         label: 'Pass Completions',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.passCompletion ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023
+            ?.totalPassCompletions ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.passCompletion ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023
+            ?.totalPassCompletions ?? 0,
       },
       {
         label: 'Rushing Yards',
-        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.rushYards ?? 0,
-        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.rushYards ?? 0,
+        player1:
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
+        player2:
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
       },
       {
         label: 'Interceptions',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.interceptions ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalInterceptions ??
+          0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.interceptions ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalInterceptions ??
+          0,
       },
       {
         label: 'Rush Touchdowns',
-        player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.touchdowns ?? 0,
-        player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.touchdowns ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalTds ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalTds ?? 0,
       },
       {
         label: 'Pass Touchdowns',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalPassTds ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.passTouchdowns ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalPassTds ?? 0,
       }
       // Add other relevant stats here...
     )
