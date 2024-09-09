@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Clock } from 'lucide-react'
 import { AlertCircle } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 
 export default function DailyLimitBanner({
   dailyLimit,
@@ -57,16 +58,22 @@ export default function DailyLimitBanner({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-center space-x-2 text-2xl font-bold">
+            <div className="flex items-center justify-center space-x-2 text-lg font-bold">
               <Clock className="text-muted-foreground" />
               <span>{timeLeft}</span>
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" variant="outline">
-            Upgrade for Unlimited Compares
-          </Button>
+          <div className="w-full text-gray-400 flex items-center justify-center select-none cursor-not-allowed">
+            Upgrade for Unlimited Compares{' '}
+            <Badge
+              size="xs"
+              className="bg-gray-400 hover:bg-opacity text-white ml-2"
+            >
+              Soon
+            </Badge>
+          </div>
         </CardFooter>
       </Card>
     )
