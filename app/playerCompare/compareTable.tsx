@@ -158,6 +158,7 @@ function StatsCard({
           {title}
           <BetweenHorizonalStart className="w-5 h-5" />{' '}
         </CardTitle>
+        <CardDescription>2023 Stats</CardDescription>
         <CardDescription className="flex text-base justify-between text-gray-500">
           {playerOneName}
           {playerTwoName}

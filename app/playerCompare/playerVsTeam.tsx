@@ -225,7 +225,6 @@ function StatsCard({
               </div>
             )}
           </div>
-          <div></div>
 
           {/* Player Two */}
           <div>
