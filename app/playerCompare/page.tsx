@@ -18,6 +18,7 @@ import { Progress } from '@/components/ui/progress'
 import PlayerVsTeam from './playerVsTeam'
 import { Input } from '@/components/ui/input'
 import CompareTableVsTeam from './playerVsTeam'
+import DailyLimitBanner from './dailyLimitBanner'
 
 export const dynamic = 'force-dynamic'
 
@@ -134,6 +135,7 @@ export default function PlayerCompare() {
   const [selectedPlayer2, setSelectedPlayer2] = useState<any>(null)
   const [playerStats, setPlayerStats] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [dailyLimit, setDailyLimit] = useState<number | null>(null) // State for daily limit
   const searchParams = useSearchParams()
   const player1Id = searchParams.get('p1Id')
   const player2Id = searchParams.get('p2Id')
@@ -146,6 +148,12 @@ export default function PlayerCompare() {
   const player2Pos = searchParams.get('p2Pos')
   const player2Team = searchParams.get('p2Team')
 
+  const fetchDailyLimit = async () => {
+    const res = await fetch('/api/dailyLimit')
+    const data = await res.json()
+    setDailyLimit(data.dailyLimit)
+  }
+
   const { object, submit } = useObject({
     api: `/api/db`,
     schema: ffDataSchema,
@@ -153,6 +161,10 @@ export default function PlayerCompare() {
 
   useEffect(() => {
     const handleAutoSubmit = async () => {
+      await fetchDailyLimit()
+      if (dailyLimit !== null) {
+        setDailyLimit(dailyLimit - 1)
+      }
       if (player1Id && player2Id) {
         setSelectedPlayer1({
           player_id: player1Id,
@@ -179,10 +191,13 @@ export default function PlayerCompare() {
           })
           const playerStats = await playerStatsTest.json()
           setPlayerStats([playerStats])
-          await submit({
-            playerId1: player1Id,
-            playerId2: player2Id,
-          })
+
+          if (playerStats) {
+            await submit({
+              playerId1: player1Id,
+              playerId2: player2Id,
+            })
+          }
         } catch (error) {
           console.error('An error occurred during submission:', error)
         } finally {
@@ -193,6 +208,13 @@ export default function PlayerCompare() {
 
     handleAutoSubmit()
   }, [player1Id, player2Id])
+
+  if (dailyLimit! === 0)
+    return (
+      <div className="p-4">
+        <DailyLimitBanner dailyLimit={dailyLimit ?? 0} />
+      </div>
+    )
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -252,13 +274,15 @@ export default function PlayerCompare() {
         {object?.analysis?.map((data, index) => (
           <div key={index}>
             {data?.undecided ? (
-              <Card className="flex flex-col items-center">
-                <CardHeader>
-                  <CardTitle>
-                    <IoDiceOutline /> Toss-up
+              <Card>
+                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                    Toss-up <IoDiceOutline className="h-5 w-5" />
                   </CardTitle>
                 </CardHeader>
-                <CardContent>{data?.undecided}</CardContent>
+                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center p-6">
+                  {data?.undecided}
+                </CardContent>
               </Card>
             ) : (
               <Card>
@@ -317,6 +341,7 @@ export default function PlayerCompare() {
           </div>
         ))}
       </div>
+      <DailyLimitBanner dailyLimit={dailyLimit ?? 0} />
     </Suspense>
   )
 }
