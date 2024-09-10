@@ -1,5 +1,10 @@
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '../api/auth/[...nextauth]/options' // Adjust the path to where your auth options are
 import PlayerCompareClientPage from './playerCompareClientPage'
 import type { Metadata, ResolvingMetadata } from 'next'
+import type { GetServerSidePropsContext } from 'next'
+import { redirect } from 'next/navigation'
+import Unauthenticated from '../unauthenticated'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -9,7 +14,6 @@ export async function generateMetadata(
   { searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  // Destructure the necessary parameters from searchParams
   const p1Name = Array.isArray(searchParams.p1Name)
     ? searchParams.p1Name[0]
     : (searchParams.p1Name ?? '')
@@ -37,7 +41,6 @@ export async function generateMetadata(
 
   const baseUrl = 'https://sleeper-dashboard.vercel.app/api/playerCompareOg'
 
-  // Create a URL object from the base URL
   let url = new URL(baseUrl)
 
   const paramsObj = {
@@ -55,7 +58,6 @@ export async function generateMetadata(
     url.searchParams.append(key, value)
   }
 
-  // Construct image URL
   const imageUrl = url.toString()
 
   return {
@@ -74,6 +76,12 @@ export async function generateMetadata(
   }
 }
 
-export default function PlayerCompareServer() {
+export default async function PlayerCompareServer() {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    return <Unauthenticated />
+  }
+
   return <PlayerCompareClientPage />
 }
