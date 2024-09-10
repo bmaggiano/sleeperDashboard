@@ -20,10 +20,10 @@ export async function generateMetadata(
   const p2Name = Array.isArray(searchParams.p2Name)
     ? searchParams.p2Name[0]
     : (searchParams.p2Name ?? '')
-  const p1Position = Array.isArray(searchParams.p1Pos)
+  const p1Pos = Array.isArray(searchParams.p1Pos)
     ? searchParams.p1Pos[0]
     : (searchParams.p1Pos ?? '')
-  const p2Position = Array.isArray(searchParams.p2Pos)
+  const p2Pos = Array.isArray(searchParams.p2Pos)
     ? searchParams.p2Pos[0]
     : (searchParams.p2Pos ?? '')
   const p1Team = Array.isArray(searchParams.p1Team)
@@ -32,12 +32,12 @@ export async function generateMetadata(
   const p2Team = Array.isArray(searchParams.p2Team)
     ? searchParams.p2Team[0]
     : (searchParams.p2Team ?? '')
-  const p1EId = Array.isArray(searchParams.p1EId)
-    ? searchParams.p1EId[0]
-    : (searchParams.p1EId ?? '')
-  const p2EId = Array.isArray(searchParams.p2EId)
-    ? searchParams.p2EId[0]
-    : (searchParams.p2EId ?? '')
+  const p1EId = Array.isArray(searchParams.p1EID)
+    ? searchParams.p1EID[0]
+    : (searchParams.p1EID ?? '')
+  const p2EId = Array.isArray(searchParams.p2EID)
+    ? searchParams.p2EID[0]
+    : (searchParams.p2EID ?? '')
 
   const baseUrl = 'https://sleeper-dashboard.vercel.app/api/playerCompareOg'
 
@@ -46,8 +46,8 @@ export async function generateMetadata(
   const paramsObj = {
     p1Name: p1Name,
     p2Name: p2Name,
-    p1Pos: p1Position,
-    p2Pos: p2Position,
+    p1Pos: p1Pos,
+    p2Pos: p2Pos,
     p1Team: p1Team,
     p2Team: p2Team,
     p1EId: p1EId,
