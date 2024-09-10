@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
             background: 'white',
           }}
         >
-          <div tw="flex flex-col flex-1 py-10">
+          <div tw="flex flex-col py-10">
             <div
               tw="flex text-xl uppercase font-bold tracking-tight"
               style={{ fontFamily: 'Inter', fontWeight: 'normal' }}
@@ -52,35 +52,58 @@ export async function GET(req: NextRequest) {
                   AI
                 </span>
               </p>
-              <p tw="ml-4 flex leading-[1.1] text-gray-400 text-[80px] font-bold">
+              <p tw="ml-4 flex leading-[1.1] text-gray-400 text-[80px] font-bold tracking-tighter">
                 /Player Compare
               </p>
             </div>
-            <div tw="flex mt-8 justify-between">
-              <div tw="flex p-6 rounded-md border border-[#E5E7EB] ">
+            <div tw="flex items-center mt-8 justify-between">
+              <div tw="flex p-6 rounded-md border border-[#E5E7EB]">
                 <img
-                  tw="mr-4 rounded-full"
+                  tw="rounded-full"
                   height={120}
                   width={160}
                   src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p1EID}.png`}
                 />
                 <div tw="flex text-black flex-col justify-start">
-                  <p tw="text-[50px] p-0 m-0">{paramsObj.p1Name}</p>
-                  <p tw="text-gray-500 text-[30px] p-0 m-0">
+                  <p
+                    tw="tracking-tighter leading-[1.1]"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      fontSize: '40px',
+                      maxWidth: '300px', // Adjust width to control truncation
+                    }}
+                  >
+                    {paramsObj.p1Name}
+                  </p>
+                  <p tw="text-gray-500 text-[30px] p-0 m-0 tracking-tight">
                     {paramsObj.p1Position} - {paramsObj.p1Team}
                   </p>
                 </div>
               </div>
-              <div tw="flex p-6 rounded-md border border-[#E5E7EB]">
+
+              <div tw="flex p-6 rounded-md border max-w-1/2 border-[#E5E7EB]">
                 <img
-                  tw="mr-4 rounded-full"
+                  tw="rounded-full"
                   height={120}
                   width={160}
                   src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p2EID}.png`}
                 />
-                <div tw="flex flex-col justify-start">
-                  <p tw="text-[50px] text-black p-0 m-0">{paramsObj.p2Name}</p>
-                  <p tw="text-gray-500 text-[30px] p-0 m-0">
+                <div tw="flex text-black flex-col justify-start">
+                  <p
+                    tw="tracking-tighter leading-[1.1]"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      fontSize: '40px',
+                      maxWidth: '300px', // Adjust width to control truncation
+                    }}
+                  >
+                    {paramsObj.p2Name}
+                  </p>
+                  <p tw="text-gray-500 text-[30px] p-0 m-0 tracking-tight">
                     {paramsObj.p2Position} - {paramsObj.p2Team}
                   </p>
                 </div>
