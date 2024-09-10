@@ -20,12 +20,12 @@ export async function generateMetadata(
   const p2Name = Array.isArray(searchParams.p2Name)
     ? searchParams.p2Name[0]
     : (searchParams.p2Name ?? '')
-  const p1Position = Array.isArray(searchParams.p1Position)
-    ? searchParams.p1Position[0]
-    : (searchParams.p1Position ?? '')
-  const p2Position = Array.isArray(searchParams.p2Position)
-    ? searchParams.p2Position[0]
-    : (searchParams.p2Position ?? '')
+  const p1Position = Array.isArray(searchParams.p1Pos)
+    ? searchParams.p1Pos[0]
+    : (searchParams.p1Pos ?? '')
+  const p2Position = Array.isArray(searchParams.p2Pos)
+    ? searchParams.p2Pos[0]
+    : (searchParams.p2Pos ?? '')
   const p1Team = Array.isArray(searchParams.p1Team)
     ? searchParams.p1Team[0]
     : (searchParams.p1Team ?? '')
@@ -46,8 +46,8 @@ export async function generateMetadata(
   const paramsObj = {
     p1Name: p1Name,
     p2Name: p2Name,
-    p1Position: p1Position,
-    p2Position: p2Position,
+    p1Pos: p1Position,
+    p2Pos: p2Position,
     p1Team: p1Team,
     p2Team: p2Team,
     p1EId: p1EId,

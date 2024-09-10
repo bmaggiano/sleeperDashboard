@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
                   tw="rounded-full"
                   height={120}
                   width={160}
-                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p1EID}.png`}
+                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p1EId}.png`}
                 />
                 <div tw="flex text-black flex-col justify-start">
                   <p
@@ -78,7 +78,7 @@ export async function GET(req: NextRequest) {
                     {paramsObj.p1Name}
                   </p>
                   <p tw="text-gray-500 text-[30px] p-0 m-0 tracking-tight">
-                    {paramsObj.p1Position} - {paramsObj.p1Team}
+                    {paramsObj.p1Pos} - {paramsObj.p1Team}
                   </p>
                 </div>
               </div>
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
                   tw="rounded-full"
                   height={120}
                   width={160}
-                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p2EID}.png`}
+                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${paramsObj.p2EId}.png`}
                 />
                 <div tw="flex text-black flex-col justify-start">
                   <p
@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
                     {paramsObj.p2Name}
                   </p>
                   <p tw="text-gray-500 text-[30px] p-0 m-0 tracking-tight">
-                    {paramsObj.p2Position} - {paramsObj.p2Team}
+                    {paramsObj.p2Pos} - {paramsObj.p2Team}
                   </p>
                 </div>
               </div>

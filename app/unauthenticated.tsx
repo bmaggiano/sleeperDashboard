@@ -1,16 +1,7 @@
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from './api/auth/[...nextauth]/options'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { LockIcon } from 'lucide-react'
-import LoginButton from '@/components/login'
 
 export default async function Unauthenticated() {
   const session = await getServerSession(authOptions)
