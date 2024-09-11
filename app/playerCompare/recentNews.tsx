@@ -86,10 +86,13 @@ async function fetchStoryContent(url: string) {
     const jsonResponse = await response.json()
     // Extract the story from the headlines
     const story = jsonResponse.headlines?.[0]?.story || ''
+    const storyTitle = jsonResponse.headlines?.[0]?.title || ''
+    const storyLink = jsonResponse.headlines?.[0]?.links?.web?.href || ''
+    const published = jsonResponse.headlines?.[0]?.published || ''
 
-    return story
+    return { story, storyTitle, storyLink, published }
   } catch (error) {
     console.error('Error fetching or parsing the story:', error)
-    return ''
+    return { story: '', storyTitle: '', storyLink: '', published: '' }
   }
 }

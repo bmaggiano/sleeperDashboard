@@ -16,8 +16,70 @@ import PlayerCompareModal from '../playerCompareModal'
 import { Progress } from '@/components/ui/progress'
 import CompareTableVsTeam from './playerVsTeam'
 import DailyLimitBanner from './dailyLimitBanner'
+import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+import { Globe } from 'lucide-react'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 export const dynamic = 'force-dynamic'
+
+function PlayerNews({ playerNews }: { playerNews: any[] }) {
+  return (
+    <div className="max-w-full">
+      {playerNews.length > 0 && (
+        <>
+          <Badge variant="outline" className="my-4">
+            Sources
+          </Badge>
+          <ScrollArea className="overflow-hidden whitespace-nowrap rounded-md">
+            <div className="flex w-max space-x-4 py-2 px-1">
+              {/* Iterate through player 1 stories */}
+              {Array.isArray(playerNews) &&
+                playerNews[0]?.player1Stories?.map(
+                  (data: any, index: number) => (
+                    <NewsItem key={`player1-${index}`} data={data} />
+                  )
+                )}
+              {/* Iterate through player 2 stories */}
+              {Array.isArray(playerNews) &&
+                playerNews[0]?.player2Stories?.map(
+                  (data: any, index: number) => (
+                    <NewsItem key={`player2-${index}`} data={data} />
+                  )
+                )}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        </>
+      )}
+    </div>
+  )
+}
+
+function NewsItem({ data }: { data: any }) {
+  return (
+    <Link
+      className="inline-block w-[250px] shrink-0 p-2 ring-1 ring-gray-200 rounded-md"
+      href={data?.storyLink || '#'}
+    >
+      <span className="text-black flex items-center truncate">
+        <Globe className="text-gray-500 h-5 w-5 mr-2 shrink-0" />{' '}
+        {data?.published && (
+          <span>
+            {new Date(data.published).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </span>
+        )}
+      </span>
+      <span className="text-gray-500 text-sm block truncate">
+        {data?.storyTitle || 'link'}
+      </span>
+    </Link>
+  )
+}
 
 function PlayerProfile({ player }: { player: any }) {
   return (
@@ -132,6 +194,7 @@ export default function PlayerCompare() {
   const [selectedPlayer2, setSelectedPlayer2] = useState<any>(null)
   const [playerStats, setPlayerStats] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [playerNews, setPlayerNews] = useState<any[]>([])
   const [dailyLimit, setDailyLimit] = useState<number | null>(null) // State for daily limit
   const searchParams = useSearchParams()
   const player1Id = searchParams.get('p1Id')
@@ -189,6 +252,17 @@ export default function PlayerCompare() {
           const playerStats = await playerStatsTest.json()
           setPlayerStats([playerStats])
 
+          const playerNewsFetch = await fetch('/api/news', {
+            method: 'POST',
+            body: JSON.stringify({
+              playerId1: player1Id,
+              playerId2: player2Id,
+            }),
+          })
+          const playerNews = await playerNewsFetch.json()
+          setPlayerNews([playerNews])
+          console.log(playerNews)
+
           if (playerStats) {
             await submit({
               playerId1: player1Id,
@@ -220,20 +294,6 @@ export default function PlayerCompare() {
           <h1 className="text-lg my-2 font-bold">Player Compare</h1>
           <PlayerCompareModal />
         </div>
-        {/* <div>
-          {object?.analysis?.map((data, index) => (
-            <Card key={index} className="flex flex-col">
-              <CardHeader className="border-b p-6">
-                <CardTitle className="flex items-center justify-between text-lg">
-                  Analysis <MdNotes className="h-5 w-5" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <p>{data?.explanation}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div> */}
         {object?.analysis?.map((data, index) => (
           <div key={index}>
             {data?.undecided ? (
@@ -254,51 +314,54 @@ export default function PlayerCompare() {
                     Recommended pick <Sparkles className="h-5 w-5" />
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around p-6">
-                  <div className="hidden">
-                    <Certainty data={data} />
-                  </div>
-                  <div>
-                    <div className="flex justify-between">
-                      <p className="text-lg flex flex-col font-semibold mb-2">
-                        {data?.recommended_pick}
-                        <span className="font-normal text-gray-500">
-                          {data?.recommended_pick === data?.playerOneName
-                            ? `${data?.playerOnePosition}`
-                            : `${data?.playerTwoPosition}`}{' '}
-                          -&nbsp;
-                          {data?.recommended_pick === data?.playerOneName
-                            ? `${data?.playerOneTeam}`
-                            : `${data?.playerTwoTeam}`}
-                        </span>
-                      </p>
-                      <p className="sm:block flex flex-col">
-                        <span className="font-semibold text-lg">
-                          {data?.certainty}%
-                        </span>{' '}
-                        Certainty
-                      </p>
+                <CardContent className="p-6">
+                  <div className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around">
+                    <div className="hidden">
+                      <Certainty data={data} />
                     </div>
                     <div>
-                      <Progress
-                        value={data?.certainty}
-                        className="h-4 my-2 sm:block"
-                      />
-                      <p>{data?.explanation}</p>
-                      <p className="pt-2 pb-1 font-semibold">
-                        Key Stats (2023):
-                      </p>
-                      <RenderKeyStats
-                        data={data}
-                        stats={playerStats}
-                        player={
-                          data?.recommended_pick === data?.playerOneName
-                            ? playerStats?.[0]?.player1?.details.fullName
-                            : playerStats?.[0]?.player2?.details.fullName
-                        }
-                      />
+                      <div className="flex justify-between">
+                        <p className="text-lg flex flex-col font-semibold mb-2">
+                          {data?.recommended_pick}
+                          <span className="font-normal text-gray-500">
+                            {data?.recommended_pick === data?.playerOneName
+                              ? `${data?.playerOnePosition}`
+                              : `${data?.playerTwoPosition}`}{' '}
+                            -&nbsp;
+                            {data?.recommended_pick === data?.playerOneName
+                              ? `${data?.playerOneTeam}`
+                              : `${data?.playerTwoTeam}`}
+                          </span>
+                        </p>
+                        <p className="sm:block flex flex-col">
+                          <span className="font-semibold text-lg">
+                            {data?.certainty}%
+                          </span>{' '}
+                          Certainty
+                        </p>
+                      </div>
+                      <div>
+                        <Progress
+                          value={data?.certainty}
+                          className="h-4 my-2 sm:block"
+                        />
+                        <p>{data?.explanation}</p>
+                        <p className="pt-2 pb-1 font-semibold">
+                          Key Stats (2023):
+                        </p>
+                        <RenderKeyStats
+                          data={data}
+                          stats={playerStats}
+                          player={
+                            data?.recommended_pick === data?.playerOneName
+                              ? playerStats?.[0]?.player1?.details.fullName
+                              : playerStats?.[0]?.player2?.details.fullName
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
+                  <PlayerNews playerNews={playerNews} />
                 </CardContent>
               </Card>
             )}
