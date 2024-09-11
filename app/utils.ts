@@ -8,6 +8,7 @@ import { createSqlQuery } from '../app/api/db/queryHelpers'
 import { calculateFantasyPoints } from '../app/api/db/fantasyPointsHelper'
 
 const years = [
+  'nflverse_play_by_play_2024',
   'nflverse_play_by_play_2023',
   'nflverse_play_by_play_2022',
   'nflverse_play_by_play_2021',

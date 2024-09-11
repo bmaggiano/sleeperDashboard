@@ -28,8 +28,8 @@ function PlayerNews({ playerNews }: { playerNews: any[] }) {
     <div className="max-w-full">
       {playerNews.length > 0 && (
         <>
-          <Badge variant="outline" className="my-4">
-            Sources
+          <Badge variant="outline" className="mt-4 mb-2">
+            Recent News
           </Badge>
           <ScrollArea className="overflow-hidden whitespace-nowrap rounded-md">
             <div className="flex w-max space-x-4 py-2 px-1">
@@ -133,8 +133,8 @@ function RenderKeyStats({
 }) {
   const recommendedStats =
     data?.recommended_pick === data?.playerOneName
-      ? stats?.[0]?.[0]?.player1?.nflverse_play_by_play_2023
-      : stats?.[0]?.[0]?.player2?.nflverse_play_by_play_2023
+      ? stats?.[0]?.[0]?.player1?.nflverse_play_by_play_2024
+      : stats?.[0]?.[0]?.player2?.nflverse_play_by_play_2024
 
   if (
     data?.playerOnePosition === 'WR' ||
@@ -145,7 +145,7 @@ function RenderKeyStats({
     data?.playerTwoPosition === 'RB'
   ) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 px-2">
         <p className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Receptions: {recommendedStats?.totalReceptions}
@@ -346,9 +346,9 @@ export default function PlayerCompare() {
                           className="h-4 my-2 sm:block"
                         />
                         <p>{data?.explanation}</p>
-                        <p className="pt-2 pb-1 font-semibold">
-                          Key Stats (2023):
-                        </p>
+                        <Badge className="mt-4" variant={'outline'}>
+                          Key Stats (2024):
+                        </Badge>
                         <RenderKeyStats
                           data={data}
                           stats={playerStats}

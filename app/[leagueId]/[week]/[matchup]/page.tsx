@@ -80,7 +80,7 @@ export default function MatchupPage({
   const { week, leagueId, matchup } = params
 
   return (
-    <div className="sm:px-6">
+    <div className="sm:py-6">
       <PlayerCompareModal />
       <MatchupServer week={week} leagueId={leagueId} matchup={matchup} />
     </div>

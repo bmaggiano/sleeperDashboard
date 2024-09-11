@@ -23,47 +23,47 @@ export default function CompareTable({ data }: { data: any }) {
       {
         label: 'Receptions',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalReceptions ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalReceptions ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalReceptions ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalReceptions ?? 0,
       },
       {
         label: 'Receiving Yards',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRecYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalRecYards ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRecYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalRecYards ?? 0,
       },
       {
         label: 'Rushing Yards',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalRushYards ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalRushYards ?? 0,
       },
       {
         label: 'Air Yards',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalAirYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalAirYards ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalAirYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalAirYards ?? 0,
       },
       {
         label: 'Yards After Catch',
-        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalYac ?? 0,
-        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalYac ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2024?.totalYac ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2024?.totalYac ?? 0,
       },
       {
         label: 'Yards Per Reception',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalYardsPerRec ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalYardsPerRec ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalYardsPerRec ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalYardsPerRec ?? 0,
       },
       {
         label: 'Touchdowns',
-        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalTds ?? 0,
-        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalTds ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2024?.totalTds ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2024?.totalTds ?? 0,
       }
       // Add other relevant stats here...
     )
@@ -76,46 +76,46 @@ export default function CompareTable({ data }: { data: any }) {
       {
         label: 'Pass Yards',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalPassYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalPassYards ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalPassYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalPassYards ?? 0,
       },
       {
         label: 'Pass Completions',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023
+          data?.[0]?.player1?.nflverse_play_by_play_2024
             ?.totalPassCompletions ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023
+          data?.[0]?.player2?.nflverse_play_by_play_2024
             ?.totalPassCompletions ?? 0,
       },
       {
         label: 'Rushing Yards',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalRushYards ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalRushYards ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalRushYards ?? 0,
       },
       {
         label: 'Interceptions',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalInterceptions ??
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalInterceptions ??
           0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalInterceptions ??
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalInterceptions ??
           0,
       },
       {
         label: 'Rush Touchdowns',
-        player1: data?.[0]?.player1?.nflverse_play_by_play_2023?.totalTds ?? 0,
-        player2: data?.[0]?.player2?.nflverse_play_by_play_2023?.totalTds ?? 0,
+        player1: data?.[0]?.player1?.nflverse_play_by_play_2024?.totalTds ?? 0,
+        player2: data?.[0]?.player2?.nflverse_play_by_play_2024?.totalTds ?? 0,
       },
       {
         label: 'Pass Touchdowns',
         player1:
-          data?.[0]?.player1?.nflverse_play_by_play_2023?.totalPassTds ?? 0,
+          data?.[0]?.player1?.nflverse_play_by_play_2024?.totalPassTds ?? 0,
         player2:
-          data?.[0]?.player2?.nflverse_play_by_play_2023?.totalPassTds ?? 0,
+          data?.[0]?.player2?.nflverse_play_by_play_2024?.totalPassTds ?? 0,
       }
       // Add other relevant stats here...
     )
@@ -158,7 +158,7 @@ function StatsCard({
           {title}
           <BetweenHorizonalStart className="w-5 h-5" />{' '}
         </CardTitle>
-        <CardDescription>2023 Stats</CardDescription>
+        <CardDescription>2024 Stats</CardDescription>
         <CardDescription className="flex text-base justify-between text-gray-500">
           {playerOneName}
           {playerTwoName}
