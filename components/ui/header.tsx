@@ -187,6 +187,9 @@ const MobileNavigation = () => (
       side="right"
       className="w-[85vw] sm:w-[350px] max-w-[350px] pt-10 overflow-y-auto"
     >
+      <div className="gap-6">
+        <AuthStatus />
+      </div>
       <SheetDescription>
         <VisuallyHidden.Root>
           A list of Stuart AI features that are currently in development.
@@ -237,7 +240,6 @@ export default function Header() {
         <div className="md:hidden">
           <MobileNavigation />
         </div>
-        <AuthStatus />
       </div>
     </header>
   )

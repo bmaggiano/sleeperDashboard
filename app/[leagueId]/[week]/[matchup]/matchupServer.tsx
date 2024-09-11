@@ -5,7 +5,7 @@
 
 import { getMatchupsWithMatchupID, sleeperToESPNMapping } from '@/app/utils'
 import MatchupDetails from '@/app/matchupDetails'
-import { cache } from 'react'
+import { cache, Suspense } from 'react'
 
 const cachedSleeperToESPNMapping = cache(sleeperToESPNMapping)
 
@@ -60,7 +60,15 @@ export default async function MatchupServer({
 
   return (
     <div>
-      <MatchupDetails teamOne={processedData[0]} teamTwo={processedData[1]} />
+      <Suspense
+        fallback={
+          <div className="w-full flex items-center justify-center">
+            Loading...
+          </div>
+        }
+      >
+        <MatchupDetails teamOne={processedData[0]} teamTwo={processedData[1]} />
+      </Suspense>
     </div>
   )
 }

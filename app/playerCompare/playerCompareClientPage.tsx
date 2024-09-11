@@ -83,7 +83,13 @@ function NewsItem({ data }: { data: any }) {
 
 function PlayerProfile({ player }: { player: any }) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="w-full flex justify-center items-center">
+          Loading...
+        </div>
+      }
+    >
       <div className="w-full flex items-center space-x-4">
         <div className="flex items-center justify-center text-2xl">
           {player.espn_id ? (
@@ -261,7 +267,6 @@ export default function PlayerCompare() {
           })
           const playerNews = await playerNewsFetch.json()
           setPlayerNews([playerNews])
-          console.log(playerNews)
 
           if (playerStats) {
             await submit({
