@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
   // Hardcoded years
   const years: string[] = [
     // Specify type for years
+    'nflverse_play_by_play_2024',
     'nflverse_play_by_play_2023',
     'nflverse_play_by_play_2022',
     'nflverse_play_by_play_2021',

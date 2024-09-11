@@ -213,7 +213,7 @@ function StatsCard({
                       setSearchTermPlayer1('')
                       fetchPlayerStats(
                         playerOneId,
-                        'nflverse_play_by_play_2023',
+                        'nflverse_play_by_play_2024',
                         team,
                         1
                       )
@@ -249,7 +249,7 @@ function StatsCard({
                       setSearchTermPlayer2('')
                       fetchPlayerStats(
                         playerTwoId,
-                        'nflverse_play_by_play_2023',
+                        'nflverse_play_by_play_2024',
                         team,
                         2
                       )
