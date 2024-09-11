@@ -240,6 +240,9 @@ export default function Header() {
         <div className="md:hidden">
           <MobileNavigation />
         </div>
+        <div className="hidden sm:block">
+          <AuthStatus />
+        </div>
       </div>
     </header>
   )
