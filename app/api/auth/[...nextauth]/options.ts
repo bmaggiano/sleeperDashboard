@@ -20,19 +20,30 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          await prisma.user.upsert({
+          // Check if the user exists
+          const existingUser = await prisma.user.findUnique({
             where: { email: user.email },
-            update: {
-              email: profile?.email,
-              accountType: 'free',
-              dailyLimit: 10,
-            } as any,
-            create: {
-              email: user.email,
-              accountType: 'free',
-              dailyLimit: 10,
-            } as any,
           })
+
+          if (existingUser) {
+            // Only update the account type and other details if the user exists
+            await prisma.user.update({
+              where: { email: user.email },
+              data: {
+                email: profile?.email,
+                accountType: existingUser.accountType || 'free', // Preserve existing account type
+              },
+            })
+          } else {
+            // Create a new user with default values
+            await prisma.user.create({
+              data: {
+                email: user.email,
+                accountType: 'free',
+                dailyLimit: 10, // Set daily limit for new users only
+              },
+            })
+          }
 
           return true
         } catch (error) {

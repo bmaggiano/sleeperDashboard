@@ -291,7 +291,7 @@ export default function PlayerCompare() {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex flex-col gap-4 mt-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg my-2 font-bold">Player Compare</h1>
+          <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
           <PlayerCompareModal />
         </div>
         {object?.analysis?.map((data, index) => (
