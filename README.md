@@ -1,6 +1,7 @@
 # Stuart AI
 
-![alt text](image.png)
+![Homescreen](./public/homescreen.png)
+![PlayerCompare](./public/playerCompare09122024.gif)
 
 ## Deployed with Vercel
 
