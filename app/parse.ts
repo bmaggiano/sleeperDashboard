@@ -49,7 +49,7 @@ function updateGsisIds() {
     }
   }
   // Write the updated playerIds back to the file
-  writeFileSync('playerIds_updated.json', JSON.stringify(playerIds, null, 2))
+  writeFileSync('playerIds_updated1.json', JSON.stringify(playerIds, null, 2))
 
   console.log(`Updated ${updatedCount} entries with GSIS IDs`)
 }

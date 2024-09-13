@@ -62,8 +62,13 @@ function NewsItem({ data }: { data: any }) {
       className="inline-block w-[250px] shrink-0 p-2 ring-1 ring-gray-200 rounded-md"
       href={data?.storyLink || '#'}
     >
-      <span className="text-black flex items-center truncate">
-        <Globe className="text-gray-500 h-5 w-5 mr-2 shrink-0" />{' '}
+      <span className="text-black flex items-center">
+        <Globe className="text-gray-500 h-5 w-5 mr-2 shrink-0" />
+        <span className="truncate max-w-full">
+          {data?.storyTitle || 'link'}
+        </span>
+      </span>
+      <span className="text-gray-500 text-sm block truncate">
         {data?.published && (
           <span>
             {new Date(data.published).toLocaleDateString('en-US', {
@@ -73,9 +78,6 @@ function NewsItem({ data }: { data: any }) {
             })}
           </span>
         )}
-      </span>
-      <span className="text-gray-500 text-sm block truncate">
-        {data?.storyTitle || 'link'}
       </span>
     </Link>
   )
@@ -326,18 +328,27 @@ export default function PlayerCompare() {
                     </div>
                     <div>
                       <div className="flex justify-between">
-                        <p className="text-lg flex flex-col font-semibold mb-2">
-                          {data?.recommended_pick}
-                          <span className="font-normal text-gray-500">
-                            {data?.recommended_pick === data?.playerOneName
-                              ? `${data?.playerOnePosition}`
-                              : `${data?.playerTwoPosition}`}{' '}
-                            -&nbsp;
-                            {data?.recommended_pick === data?.playerOneName
-                              ? `${data?.playerOneTeam}`
-                              : `${data?.playerTwoTeam}`}
-                          </span>
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <Image
+                            src={`https://a.espncdn.com/i/headshots/nfl/players/full/${data?.recommended_pick_espn_id}.png`}
+                            height={70}
+                            width={70}
+                            alt="recommended player"
+                            className="rounded-full"
+                          />
+                          <p className="text-lg flex flex-col font-semibold mb-2">
+                            {data?.recommended_pick}
+                            <span className="font-normal text-gray-500">
+                              {data?.recommended_pick === data?.playerOneName
+                                ? `${data?.playerOnePosition}`
+                                : `${data?.playerTwoPosition}`}{' '}
+                              -&nbsp;
+                              {data?.recommended_pick === data?.playerOneName
+                                ? `${data?.playerOneTeam}`
+                                : `${data?.playerTwoTeam}`}
+                            </span>
+                          </p>
+                        </div>
                         <p className="sm:block flex flex-col">
                           <span className="font-semibold text-lg">
                             {data?.certainty}%
@@ -400,16 +411,8 @@ export default function PlayerCompare() {
             playerTwoId={player2Id || ''}
           />
         ))}{' '}
-        {playerStats?.map((data, index) => (
-          <CompareTable key={index} data={data} />
-        ))}
-        {playerStats?.map((data, index) => (
-          <YearByYear key={index} stats={data as any} />
-        ))}
       </div>
-      <div className="my-4">
-        <DailyLimitBanner dailyLimit={dailyLimit ?? 0} />
-      </div>
+      <div className="my-4"></div>
     </Suspense>
   )
 }

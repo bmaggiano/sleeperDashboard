@@ -2,9 +2,12 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../api/auth/[...nextauth]/options' // Adjust the path to where your auth options are
 import PlayerCompareClientPage from './playerCompareClientPage'
 import type { Metadata, ResolvingMetadata } from 'next'
-import type { GetServerSidePropsContext } from 'next'
-import { redirect } from 'next/navigation'
 import Unauthenticated from '../unauthenticated'
+import CompareTable from './compareTable'
+import { YearByYear } from './yearByYear'
+import DailyLimitBanner from './dailyLimitBanner'
+import { cookies } from 'next/headers'
+import CompareTableVsTeam from './playerVsTeam'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -76,12 +79,51 @@ export async function generateMetadata(
   }
 }
 
-export default async function PlayerCompareServer() {
+export default async function PlayerCompareServer({ searchParams }: Props) {
   const session = await getServerSession(authOptions)
+  const cookieStore = cookies()
+  let sessionTokenCookie = cookieStore.get('next-auth.session-token')
+  let sessionToken = sessionTokenCookie?.value
+  const playerId1 = searchParams.p1Id
+  const playerId2 = searchParams.p2Id
+
+  const fetchUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : 'https://sleeper-dashboard.vercel.app'
+
+  const playerStats = await fetch(
+    `${fetchUrl}/api/stats?playerId1=${playerId1}&playerId2=${playerId2}`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        playerId1: playerId1,
+        playerId2: playerId2,
+      }),
+    }
+  )
+  const playerStatsJson = await playerStats.json()
+
+  const dailyLimit = await fetch(`${fetchUrl}/api/dailyLimit`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
+    },
+    cache: 'no-store',
+  })
+  const dailyLimitJson = await dailyLimit.json()
 
   if (!session) {
     return <Unauthenticated />
   }
 
-  return <PlayerCompareClientPage />
+  return (
+    <>
+      <PlayerCompareClientPage />
+      <CompareTable data={playerStatsJson} />
+      <YearByYear stats={playerStatsJson} />
+      <DailyLimitBanner dailyLimit={dailyLimitJson.dailyLimit} />
+    </>
+  )
 }

@@ -11,6 +11,7 @@ export async function getPlayerIdMappingsFromRedis(
   }
   try {
     const data = await redisClient.hgetall(`player_id_mappings:${key}`)
+
     if (Object.keys(data).length > 0) {
       const parsedData = PlayersIdMappingsSchema.parse({ [key]: data })[key]
 

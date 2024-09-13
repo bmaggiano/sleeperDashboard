@@ -123,7 +123,6 @@ export async function GET(request: NextRequest) {
       totalWeeks: combinedResult.weeks,
     }
 
-    console.log(stats)
     // Return the stats in the response
     return NextResponse.json(stats)
   } catch (error) {
