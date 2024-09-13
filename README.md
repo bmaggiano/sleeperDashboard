@@ -1,6 +1,6 @@
 # Stuart AI
 
-![Homescreen](./public/homescreen.png)
+![Homescreen](./public/homescreen1.png)
 
 ## A fully featured AI dashboard for fantasy football
 
