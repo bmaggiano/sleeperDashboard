@@ -101,23 +101,6 @@ export const getTotalWeeks = cache(async (leagueId: string) => {
   }
 })
 
-export const getMostRecentWeek = cache(async (leagueId: string) => {
-  try {
-    const response = await fetch(
-      `https://api.sleeper.app/v1/league/${leagueId}`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
-    )
-    if (!response.ok) throw new Error('Failed to fetch most recent week')
-    const leagueData = await response.json()
-    return {
-      index: leagueData.settings.last_scored_leg,
-      week: `Week ${leagueData.settings.last_scored_leg}`,
-    }
-  } catch (error: any) {
-    return { index: 0, week: 'Week 1' }
-  }
-})
-
 export const getCurrentWeek = cache(async (leagueId: string) => {
   try {
     const response = await fetch(
@@ -209,6 +192,20 @@ export const getLeagueByUserId = cache(async (username: string) => {
     return leagues
   } catch (error: any) {
     return []
+  }
+})
+
+export const getLeagueDetails = cache(async (leagueId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
+    )
+    if (!response.ok) throw new Error('Failed to fetch league info')
+    const leagueInfo = await response.json()
+    return leagueInfo
+  } catch (error: any) {
+    return { error: error.message }
   }
 })
 
