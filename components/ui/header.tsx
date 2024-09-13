@@ -230,7 +230,8 @@ export default function Header() {
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
             <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-              Stuart
+              Stuart{' '}
+              <span className="bg-black text-white px-2 rounded-md">AI</span>
             </h1>
           </Link>
           <div className="hidden md:block">
