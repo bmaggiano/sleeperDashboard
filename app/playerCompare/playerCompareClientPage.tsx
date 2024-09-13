@@ -33,6 +33,10 @@ function PlayerNews({ playerNews }: { playerNews: any[] }) {
             <div className="flex w-max space-x-4 py-2 px-1">
               {/* Iterate through player 1 stories */}
               {Array.isArray(playerNews) &&
+                playerNews.map((data: any, index: number) => (
+                  <NewsItem key={`newsitem-${index}`} data={data} />
+                ))}
+              {Array.isArray(playerNews) &&
                 playerNews[0]?.player1Stories?.map(
                   (data: any, index: number) => (
                     <NewsItem key={`player1-${index}`} data={data} />
@@ -256,7 +260,20 @@ export default function PlayerCompare() {
             }),
           })
           const playerNews = await playerNewsFetch.json()
-          setPlayerNews([playerNews])
+          const allStories = [
+            ...playerNews.player1Stories,
+            ...playerNews.player2Stories,
+          ]
+
+          // Use a Set to remove duplicate articles based on storyTitle
+          const uniqueStories = Array.from(
+            new Set(allStories.map((story) => story.storyTitle))
+          ).map((title) =>
+            allStories.find((story) => story.storyTitle === title)
+          )
+
+          // Set the unique stories to state
+          setPlayerNews(uniqueStories)
 
           await submit({
             playerId1: player1Id,

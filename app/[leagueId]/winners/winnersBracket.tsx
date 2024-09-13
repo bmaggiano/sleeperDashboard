@@ -101,8 +101,8 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
           <CardContent className="text-center space-y-4">
             <Trophy className="w-16 h-16 mx-auto text-yellow-400" />
             <p className="text-muted-foreground">
-              The matchups for this round haven't been generated yet. Check back
-              soon or explore other sections of the league.
+              The matchups for this round haven&spos;t been generated yet. Check
+              back soon or explore other sections of the league.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
               <div className="flex flex-col items-center p-4 bg-muted rounded-lg">

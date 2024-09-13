@@ -52,11 +52,7 @@ export default async function fetchAndFilterStories(
     const filteredArticles =
       jsonResponse.articles?.filter(
         (article: any) =>
-          (article.type === 'Story' || article.type === 'HeadlineNews') &&
-          article.categories?.some(
-            (category: any) =>
-              category.type === 'athlete' && category.athleteId === athleteId
-          )
+          article.type === 'Story' || article.type === 'HeadlineNews'
       ) || []
 
     // Map over the filtered articles to return their links property
