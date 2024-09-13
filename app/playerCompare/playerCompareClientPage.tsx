@@ -7,8 +7,6 @@ import { User } from 'lucide-react'
 import Image from 'next/image'
 import { Sparkles } from 'lucide-react'
 import { TrendingUp } from 'lucide-react'
-import { YearByYear } from './yearByYear'
-import CompareTable from './compareTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
@@ -20,6 +18,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Globe } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import AISkeleton from './aiSkeleton'
 
 export const dynamic = 'force-dynamic'
 
@@ -216,12 +215,6 @@ export default function PlayerCompare() {
   const player2Pos = searchParams.get('p2Pos')
   const player2Team = searchParams.get('p2Team')
 
-  const fetchDailyLimit = async () => {
-    const res = await fetch('/api/dailyLimit')
-    const data = await res.json()
-    setDailyLimit(data.dailyLimit)
-  }
-
   const { object, submit } = useObject({
     api: `/api/db`,
     schema: ffDataSchema,
@@ -229,10 +222,7 @@ export default function PlayerCompare() {
 
   useEffect(() => {
     const handleAutoSubmit = async () => {
-      await fetchDailyLimit()
-      if (dailyLimit !== null) {
-        setDailyLimit(dailyLimit - 1)
-      }
+      setLoading(true)
       if (player1Id && player2Id) {
         setSelectedPlayer1({
           player_id: player1Id,
@@ -270,16 +260,13 @@ export default function PlayerCompare() {
           const playerNews = await playerNewsFetch.json()
           setPlayerNews([playerNews])
 
-          if (playerStats) {
-            await submit({
-              playerId1: player1Id,
-              playerId2: player2Id,
-            })
-          }
+          await submit({
+            playerId1: player1Id,
+            playerId2: player2Id,
+          })
+          setLoading(false)
         } catch (error) {
           console.error('An error occurred during submission:', error)
-        } finally {
-          setLoading(false)
         }
       }
     }
@@ -301,88 +288,96 @@ export default function PlayerCompare() {
           <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
           <PlayerCompareModal />
         </div>
-        {object?.analysis?.map((data, index) => (
-          <div key={index}>
-            {data?.undecided ? (
-              <Card>
-                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-                    Toss-up <IoDiceOutline className="h-5 w-5" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center p-6">
-                  {data?.undecided}
-                </CardContent>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-                  <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-                    Recommended pick <Sparkles className="h-5 w-5" />
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around">
-                    <div className="hidden">
-                      <Certainty data={data} />
-                    </div>
-                    <div>
-                      <div className="flex justify-between">
-                        <div className="flex items-center gap-2">
-                          <Image
-                            src={`https://a.espncdn.com/i/headshots/nfl/players/full/${data?.recommended_pick_espn_id}.png`}
-                            height={70}
-                            width={70}
-                            alt="recommended player"
-                            className="rounded-full"
-                          />
-                          <p className="text-lg flex flex-col font-semibold mb-2">
-                            {data?.recommended_pick}
-                            <span className="font-normal text-gray-500">
-                              {data?.recommended_pick === data?.playerOneName
-                                ? `${data?.playerOnePosition}`
-                                : `${data?.playerTwoPosition}`}{' '}
-                              -&nbsp;
-                              {data?.recommended_pick === data?.playerOneName
-                                ? `${data?.playerOneTeam}`
-                                : `${data?.playerTwoTeam}`}
-                            </span>
-                          </p>
+        {loading ? (
+          <AISkeleton />
+        ) : (
+          <>
+            {object?.analysis?.map((data, index) => (
+              <div key={index}>
+                {data?.undecided ? (
+                  <Card>
+                    <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                      <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                        Toss-up <IoDiceOutline className="h-5 w-5" />
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex sm:flex-row flex-col-reverse sm:items-center p-6">
+                      {data?.undecided}
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
+                      <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                        Recommended pick <Sparkles className="h-5 w-5" />
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="flex sm:flex-row flex-col-reverse sm:items-center sm:justify-around">
+                        <div className="hidden">
+                          <Certainty data={data} />
                         </div>
-                        <p className="sm:block flex flex-col">
-                          <span className="font-semibold text-lg">
-                            {data?.certainty}%
-                          </span>{' '}
-                          Certainty
-                        </p>
+                        <div>
+                          <div className="flex justify-between">
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={`https://a.espncdn.com/i/headshots/nfl/players/full/${data?.recommended_pick_espn_id}.png`}
+                                height={70}
+                                width={70}
+                                alt="recommended player"
+                                className="rounded-full"
+                              />
+                              <p className="text-lg flex flex-col font-semibold mb-2">
+                                {data?.recommended_pick}
+                                <span className="font-normal text-gray-500">
+                                  {data?.recommended_pick ===
+                                  data?.playerOneName
+                                    ? `${data?.playerOnePosition}`
+                                    : `${data?.playerTwoPosition}`}{' '}
+                                  -&nbsp;
+                                  {data?.recommended_pick ===
+                                  data?.playerOneName
+                                    ? `${data?.playerOneTeam}`
+                                    : `${data?.playerTwoTeam}`}
+                                </span>
+                              </p>
+                            </div>
+                            <p className="sm:block flex flex-col">
+                              <span className="font-semibold text-lg">
+                                {data?.certainty}%
+                              </span>{' '}
+                              Certainty
+                            </p>
+                          </div>
+                          <div>
+                            <Progress
+                              value={data?.certainty}
+                              className="h-4 my-2 sm:block"
+                            />
+                            <p>{data?.explanation}</p>
+                            <Badge className="mt-4" variant={'outline'}>
+                              Key Stats (2024):
+                            </Badge>
+                            <RenderKeyStats
+                              data={data}
+                              stats={playerStats}
+                              player={
+                                data?.recommended_pick === data?.playerOneName
+                                  ? playerStats?.[0]?.player1?.details.fullName
+                                  : playerStats?.[0]?.player2?.details.fullName
+                              }
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <Progress
-                          value={data?.certainty}
-                          className="h-4 my-2 sm:block"
-                        />
-                        <p>{data?.explanation}</p>
-                        <Badge className="mt-4" variant={'outline'}>
-                          Key Stats (2024):
-                        </Badge>
-                        <RenderKeyStats
-                          data={data}
-                          stats={playerStats}
-                          player={
-                            data?.recommended_pick === data?.playerOneName
-                              ? playerStats?.[0]?.player1?.details.fullName
-                              : playerStats?.[0]?.player2?.details.fullName
-                          }
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <PlayerNews playerNews={playerNews} />
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        ))}
+                      <PlayerNews playerNews={playerNews} />
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            ))}
+          </>
+        )}
         <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
           <div className="flex flex-col w-full sm:w-1/2">
             <div className="ring-1 ring-gray-200 p-4 rounded-md">
@@ -403,16 +398,14 @@ export default function PlayerCompare() {
             </div>
           </div>
         </div>
-        {playerStats?.map((data, index) => (
+        <div className="mb-4">
           <CompareTableVsTeam
-            key={index}
-            data={data}
+            data={playerStats?.[0] || {}}
             playerOneId={player1Id || ''}
             playerTwoId={player2Id || ''}
           />
-        ))}{' '}
+        </div>
       </div>
-      <div className="my-4"></div>
     </Suspense>
   )
 }
