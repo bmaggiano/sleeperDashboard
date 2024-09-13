@@ -118,6 +118,23 @@ export const getMostRecentWeek = cache(async (leagueId: string) => {
   }
 })
 
+export const getCurrentWeek = cache(async (leagueId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.sleeper.app/v1/league/${leagueId}`,
+      { next: { revalidate: 3600 } } // Cache for 1 hour
+    )
+    if (!response.ok) throw new Error('Failed to fetch league weeks')
+    const leagueData = await response.json()
+    const recentWeek = leagueData?.settings?.leg
+    if (recentWeek > leagueData?.settings?.playoff_week_start)
+      return "Winners Bracket"
+    return recentWeek
+  } catch (error: any) {
+    return { index: 0, week: 'Week 1' }
+  }
+})
+
 export const getLeagueWeeks = cache(async (leagueId: string) => {
   try {
     const response = await fetch(

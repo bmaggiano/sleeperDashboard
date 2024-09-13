@@ -13,7 +13,6 @@ import { useSearchParams } from 'next/navigation'
 import PlayerCompareModal from '../playerCompareModal'
 import { Progress } from '@/components/ui/progress'
 import CompareTableVsTeam from './playerVsTeam'
-import DailyLimitBanner from './dailyLimitBanner'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Globe } from 'lucide-react'
@@ -117,7 +116,7 @@ function PlayerProfile({ player }: { player: any }) {
 
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
   return (
-    <div className="w-full flex items-center space-x-4 mb-4">
+    <div className="w-full flex items-center space-x-4">
       <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
         <User size={32} />
       </div>
@@ -202,7 +201,6 @@ export default function PlayerCompare() {
   const [playerStats, setPlayerStats] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [playerNews, setPlayerNews] = useState<any[]>([])
-  const [dailyLimit, setDailyLimit] = useState<number | null>(null) // State for daily limit
   const searchParams = useSearchParams()
   const player1Id = searchParams.get('p1Id')
   const player2Id = searchParams.get('p2Id')
@@ -274,13 +272,6 @@ export default function PlayerCompare() {
     handleAutoSubmit()
   }, [player1Id, player2Id])
 
-  if (dailyLimit! === 0)
-    return (
-      <div className="p-4">
-        <DailyLimitBanner dailyLimit={dailyLimit ?? 0} />
-      </div>
-    )
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex flex-col gap-4 mt-4">
@@ -288,7 +279,7 @@ export default function PlayerCompare() {
           <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
           <PlayerCompareModal />
         </div>
-        {loading ? (
+        {loading && selectedPlayer1 && selectedPlayer2 ? (
           <AISkeleton />
         ) : (
           <>
@@ -398,13 +389,15 @@ export default function PlayerCompare() {
             </div>
           </div>
         </div>
-        <div className="mb-4">
-          <CompareTableVsTeam
-            data={playerStats?.[0] || {}}
-            playerOneId={player1Id || ''}
-            playerTwoId={player2Id || ''}
-          />
-        </div>
+        {playerStats.length > 0 && (
+          <div className="mb-4">
+            <CompareTableVsTeam
+              data={playerStats?.[0] || {}}
+              playerOneId={player1Id || ''}
+              playerTwoId={player2Id || ''}
+            />
+          </div>
+        )}
       </div>
     </Suspense>
   )

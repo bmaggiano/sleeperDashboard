@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { useAtom } from 'jotai'
 import { leagueAtom, leagueNameAtom } from '@/app/atoms/atom'
 import { Button } from './button'
-import { getLeagueName } from '@/app/utils'
+import { getCurrentWeek, getLeagueName } from '@/app/utils'
 import { useRouter } from 'next/navigation'
 
 function RenderButtons({
@@ -53,8 +53,9 @@ export default function RecentSearches() {
     async (leagueId: string) => {
       setLeagueId(leagueId)
       const leagueName = await getLeagueName(leagueId)
+      const mostRecentWeek = await getCurrentWeek(leagueId)
       setLeagueName(leagueName)
-      router.push(`/${leagueId}`)
+      router.push(`/${leagueId}/${mostRecentWeek}`)
     },
     [setLeagueId, setLeagueName]
   )

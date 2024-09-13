@@ -118,6 +118,10 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
     return <Unauthenticated />
   }
 
+  if (!playerId1 || !playerId2) {
+    return <PlayerCompareClientPage />
+  }
+
   return (
     <>
       <PlayerCompareClientPage />

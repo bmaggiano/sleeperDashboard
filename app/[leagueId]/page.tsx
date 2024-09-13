@@ -1,6 +1,6 @@
 // pages/[leagueId]/page.tsx
 import Link from 'next/link'
-import { getLeagueName, getLeagueWeeks } from '../utils'
+import { getCurrentWeek, getLeagueName, getLeagueWeeks } from '../utils'
 import PlayersServer from './playersServer'
 import ScoresComponent from './scoresServer'
 import { Combobox } from '@/components/ui/combobox'
@@ -45,11 +45,12 @@ export default async function Page({
 
   const weeks = await getLeagueWeeks(leagueId)
 
-  // the last week is the most recent week
-  const mostRecentWeek = weeks[weeks.length - 1]
+  const mostRecentWeek = await getCurrentWeek(leagueId)
+
+  console.log(mostRecentWeek)
 
   // Check if the most recent week is "Winners Bracket"
-  if (mostRecentWeek.week === 'Winners Bracket') {
+  if (mostRecentWeek === 'Winners Bracket') {
     return redirect(`/${leagueId}/winners`)
   }
 
@@ -57,18 +58,21 @@ export default async function Page({
     <main className="mt-4">
       <div className="pt-4 pb-2 flex justify-between items-center">
         <h1 className="font-medium">
-          <Link href={`/${leagueId}`} className="hover:underline">
+          <Link
+            href={`/${leagueId}/${mostRecentWeek}`}
+            className="hover:underline"
+          >
             Matchups - {getLeagueName(leagueId)}
           </Link>
         </h1>
         <Combobox
           leagueId={leagueId}
-          defaultValue={mostRecentWeek.week}
+          defaultValue={mostRecentWeek}
           data={weeks}
         />
       </div>
       {/* <PlayersServer leagueId={leagueId} /> */}
-      <ScoresComponent leagueId={leagueId} week={mostRecentWeek.index} />
+      <ScoresComponent leagueId={leagueId} week={mostRecentWeek} />
     </main>
   )
 }

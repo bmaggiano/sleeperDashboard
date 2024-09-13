@@ -4,8 +4,7 @@ import * as React from 'react'
 import { Badge } from './badge'
 import { cn } from '@/lib/utils'
 import { NavigationMenuLink } from '@/components/ui/navigation-menu'
-
-const DISABLE_NAVIGATION = true
+import Link from 'next/link'
 
 export interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
   icon?: React.ReactNode
@@ -20,11 +19,12 @@ export const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
     { className, title, children, icon, comingSoon = false, href, ...props },
     ref
   ) => {
+    const DISABLE_NAVIGATION = comingSoon
     return (
       <li>
         <NavigationMenuLink asChild>
-          <a
-            ref={ref}
+          <Link
+            href={href}
             className={cn(
               'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors',
               DISABLE_NAVIGATION
@@ -57,7 +57,7 @@ export const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
               {children}
             </p>
-          </a>
+          </Link>
         </NavigationMenuLink>
       </li>
     )

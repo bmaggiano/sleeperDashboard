@@ -137,7 +137,7 @@ export default function LeagueSearchForm() {
                       {league.name} ({league.season})
                     </span>
                   </div>
-                  <Link href={`/${league.league_id}`}>
+                  <Link href={`/${league.league_id}/${league.settings.leg}`}>
                     <Button
                       size="xs"
                       onClick={() => handleLeagueSelection(league)}

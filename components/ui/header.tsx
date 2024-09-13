@@ -64,10 +64,10 @@ const navigationItems = [
       },
       {
         title: 'AI Compare Players',
-        href: '/ai/compare',
+        href: '/playerCompare',
         children: 'Compare players across your league',
         icon: <Users weight="duotone" size={16} />,
-        comingSoon: true,
+        comingSoon: false,
       },
       {
         title: 'AI Start/Sit',
