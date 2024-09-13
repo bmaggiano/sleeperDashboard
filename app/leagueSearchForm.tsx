@@ -59,8 +59,15 @@ export default function LeagueSearchForm() {
   }
 
   const updateRecentSearches = (id: string) => {
+    // Retrieve the existing searches from localStorage or initialize an empty array if not found
     const searches = JSON.parse(localStorage.getItem('recentSearches') || '[]')
-    localStorage.setItem('recentSearches', JSON.stringify([...searches, id]))
+
+    // Check if the id is already in the list
+    if (!searches.includes(id)) {
+      // Add the id to the list and update localStorage
+      searches.push(id)
+      localStorage.setItem('recentSearches', JSON.stringify(searches))
+    }
   }
 
   const showErrorToast = (message: string) =>

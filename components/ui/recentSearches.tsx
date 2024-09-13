@@ -16,7 +16,8 @@ function RenderButtons({
   leagueNames: string[]
   handleClick: (leagueId: string) => void
 }) {
-  return recentSearches.map((leagueId, index) => (
+  const filteredRecentSearches = Array.from(new Set(recentSearches))
+  return filteredRecentSearches.map((leagueId, index) => (
     <Button
       variant={'outline'}
       className="mr-2 text-sm"
