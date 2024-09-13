@@ -1,13 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Sparkles } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
 export default function AISkeleton() {
   return (
     <Card>
       <CardHeader className="overflow-hidden rounded-t-md bg-green-50">
-        <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
-          Recommended pick <Sparkles className="h-5 w-5" />{' '}
+        <CardTitle className="flex items-center justify-between text-gray-400 text-lg gap-x-2">
+          Gathering data...{' '}
+          <Loader2 className="animate-spin h-5 w-5 text-gray-400" />{' '}
           {/* Placeholder for title */}
         </CardTitle>
       </CardHeader>

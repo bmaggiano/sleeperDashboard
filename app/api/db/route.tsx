@@ -7,16 +7,6 @@ import { getPlayerDetails } from '@/lib/sleeper/helpers'
 import { streamObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { ffDataSchema } from './schema'
-import { createSqlQuery } from './queryHelpers'
-import { calculateFantasyPoints } from './fantasyPointsHelper'
-import fetchAndFilterStories from '@/app/playerCompare/recentNews'
-import { getPlayerStats } from '../../utils'
-
-const years = [
-  'nflverse_play_by_play_2023',
-  'nflverse_play_by_play_2022',
-  'nflverse_play_by_play_2021',
-]
 
 interface User {
   dailyLimit: number
@@ -46,6 +36,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: 'Both Player IDs are required' },
       { status: 400 }
+    )
+  }
+
+  if (!redisClient) {
+    return NextResponse.json(
+      { error: 'Redis client not found' },
+      { status: 500 }
     )
   }
 
@@ -80,7 +77,6 @@ export async function POST(request: NextRequest) {
       { status: 404 }
     )
   }
-
   // Define combinedStats or use parsedCachedStat if available
   const combinedStats = parsedCachedStat || { player1: {}, player2: {} }
 
@@ -88,8 +84,40 @@ export async function POST(request: NextRequest) {
     model: openai('gpt-4o-mini'),
     seed: 100,
     schema: ffDataSchema,
-    system: `You are a fantasy football expert. You are an expert at analyzing player stats and making decisions based on that analysis. Users using this tool will be relying on you to provide accurate assessments of player stats and make informed decisions.`,
-    prompt: `Compare the following two players based on their stats, availability and any recent news/stories:\n\nPlayer 1 (${player1.full_name}): ${JSON.stringify(combinedStats?.[0]?.player1, null, 2)}\n\nPlayer 2 (${player2.full_name}): ${JSON.stringify(combinedStats?.[0]?.player2, null, 2)}\n\nStories:\n\nPlayer 1 Stories:\n${player1NewsStories}\n\nPlayer 2 Stories:\n${player2NewsStories}\n\n. If a recent article suggests that a player is not healthy for their upcoming game, give more consideration to the healthy player, otherwise just use any breaking news if it's there and their recent stats. Consider the number of games played and the availability of each player as well as providing a detail for that player from a recent story if one is provided. You MUST provide some sort of info from the recent story provided for either player. Also take into consideration previous seasons that should be included in this data. Provide a quick comparison and categorize the players into the following: explanation (keep it brief, 2 to 3 sentences max), safe_pick, risky_pick, and recommended_pick. With the recommended pick, can you also include a percentage of certainty (0-100)? If the decision is a toss-up, return 'undecided' instead of 'recommended_pick'. Also finally return the espn_id of the recommended player where if the recommended pick is ${player1.full_name} return ${player1?.espn_id} or if the recommended pick is ${player2.full_name} return${player2.espn_id} as recommended_pick_espn_id`,
+    system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
+    prompt: `
+    Compare the following players based on their stats, availability, recent games, and recent news:
+
+    Player 1 (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team}):
+    ${JSON.stringify(combinedStats?.[0]?.player1, null, 2)}
+
+    Player 2 (${player2.full_name}, Position: ${player2.position}, Team: ${player2.team}):
+    ${JSON.stringify(combinedStats?.[0]?.player2, null, 2)}
+
+    Player 1's team news:
+    ${player1NewsStories}
+
+    Player 2's team news:
+    ${player2NewsStories}
+    
+    Please return the comparison in the following structured format:
+    
+    {
+      "playerOneName": "${player1.full_name}",
+      "playerTwoName": "${player2.full_name}",
+      "playerOnePosition": "${player1.position}",
+      "playerTwoPosition": "${player2.position}",
+      "playerOneTeam": "${player1.team}",
+      "playerTwoTeam": "${player2.team}",
+      "explanation": "Provide a brief explanation (2-3 sentences).",
+      "safe_pick": "Identify the player who is a safe pick.",
+      "risky_pick": "Identify the player who is a risky pick.",
+      "recommended_pick": "Return the name of the recommended pick, if any.",
+      "recommended_pick_espn_id": "If the recommended pick is ${player1.full_name}, return ${player1.espn_id}, or if it's ${player2.full_name}, return ${player2.espn_id}.",
+      "certainty": "Provide a certainty percentage (0-100%) for the recommended pick.",
+      "undecided": "Return 'undecided' if no clear recommendation can be made."
+    }
+  `,
     onFinish: async ({ object }) => {
       await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600) // Cache for 1 hour
       await db.user.update({
