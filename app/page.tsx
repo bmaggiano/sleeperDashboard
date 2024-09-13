@@ -30,8 +30,10 @@ export default function Home() {
               <span className="text-gray-600">Meets AI</span>
             </h1>
             <p className="text-xl mb-8 text-gray-600">
-              <span className="text-black">{animatedText}</span> your league
-              with cutting-edge AI insights
+              <span className="text-gray-800 font-semibold">
+                {animatedText}
+              </span>{' '}
+              your league with cutting-edge AI insights
             </p>
             <LeagueSearchForm />
             <div className="flex justify-end"></div>
