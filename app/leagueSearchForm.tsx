@@ -104,7 +104,7 @@ export default function LeagueSearchForm() {
   return (
     <div className="sm:w-1/2 w-full mx-auto pt-4 pb-2 text-center text-sm">
       <Input
-        placeholder="League ID or Username"
+        placeholder="Enter League ID or Username"
         onChange={handleInputChange}
         value={localLeagueId}
         className="w-full"
