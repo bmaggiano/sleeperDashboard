@@ -30,6 +30,7 @@ import {
   Robot,
   Sparkle,
   Users,
+  Coins,
 } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { Button } from './button'
@@ -41,7 +42,6 @@ import {
   SheetTrigger,
 } from './sheet'
 import { Textarea } from './textarea'
-import LoginButton from '../login'
 import AuthStatus from '../authStatus'
 
 const navigationItems = [
@@ -88,6 +88,13 @@ const navigationItems = [
         href: '/ai/historical-stats',
         children: 'Compare and analyze historical stats with regressions',
         icon: <ChartLineUp weight="duotone" size={16} />,
+        comingSoon: true,
+      },
+      {
+        title: 'Parlai',
+        href: '/parlayHelper',
+        children: 'Sports betting just got a little bit easier',
+        icon: <Coins weight="duotone" size={16} />,
         comingSoon: true,
       },
     ],
