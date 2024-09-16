@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import { ffDataSchema } from '../api/db/schema'
 import { IoDiceOutline } from 'react-icons/io5'
-import { User } from 'lucide-react'
+import { FileText, User } from 'lucide-react'
 import Image from 'next/image'
 import { Sparkles } from 'lucide-react'
 import { TrendingUp } from 'lucide-react'
@@ -99,8 +99,8 @@ function PlayerProfile({ player }: { player: any }) {
           {player.espn_id ? (
             <Image
               src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-              height={70}
-              width={70}
+              height={90}
+              width={90}
               alt={player.full_name}
             />
           ) : (
@@ -112,6 +112,14 @@ function PlayerProfile({ player }: { player: any }) {
           <p className="text-gray-500">
             {player.position} - {player.team}
           </p>
+          <Link
+            className="flex items-center"
+            href={`/boxScores?playerId1=${player.player_id}`}
+            prefetch={true}
+          >
+            <FileText className="w-4 h-4 mr-2 text-gray-500 hover:text-gray-700" />
+            Box Scores
+          </Link>
         </div>
       </div>
     </Suspense>

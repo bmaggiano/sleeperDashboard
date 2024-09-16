@@ -1600,3 +1600,62 @@ model nflverse_play_by_play_2024 {
 
   @@ignore
 }
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model nflverse_player_stats_2024 {
+  player_id                   String?
+  player_name                 String?
+  player_display_name         String?
+  position                    String?
+  position_group              String?
+  headshot_url                String?
+  recent_team                 String?
+  season                      String?
+  week                        String?
+  season_type                 String?
+  opponent_team               String?
+  completions                 String?
+  attempts                    String?
+  passing_yards               String?
+  passing_tds                 String?
+  interceptions               String?
+  sacks                       String?
+  sack_yards                  String?
+  sack_fumbles                String?
+  sack_fumbles_lost           String?
+  passing_air_yards           String?
+  passing_yards_after_catch   String?
+  passing_first_downs         String?
+  passing_epa                 String?
+  passing_2pt_conversions     String?
+  pacr                        String?
+  dakota                      String?
+  carries                     String?
+  rushing_yards               String?
+  rushing_tds                 String?
+  rushing_fumbles             String?
+  rushing_fumbles_lost        String?
+  rushing_first_downs         String?
+  rushing_epa                 String?
+  rushing_2pt_conversions     String?
+  receptions                  String?
+  targets                     String?
+  receiving_yards             String?
+  receiving_tds               String?
+  receiving_fumbles           String?
+  receiving_fumbles_lost      String?
+  receiving_air_yards         String?
+  receiving_yards_after_catch String?
+  receiving_first_downs       String?
+  receiving_epa               String?
+  receiving_2pt_conversions   String?
+  racr                        String?
+  target_share                String?
+  air_yards_share             String?
+  wopr                        String?
+  special_teams_tds           String?
+  fantasy_points              String?
+  fantasy_points_ppr          String?
+
+  @@ignore
+}

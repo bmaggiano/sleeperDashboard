@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, KeyboardEvent } from 'react'
 import Fuse from 'fuse.js'
 import Image from 'next/image'
 import playerData from './playerIds_updated.json' // Assuming your JSON file is named `playerIds_updated.json`
@@ -28,6 +28,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<Player[]>([])
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null)
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null)
 
   const options = {
     keys: ['full_name', 'team', 'position'],
@@ -59,8 +60,10 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                 player.position === 'WR')
           )
       )
+      setFocusedIndex(null) // Reset focused index on new query
     } else {
       setResults([])
+      setFocusedIndex(null) // Reset focused index when no results
     }
   }
 
@@ -68,8 +71,47 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
     setQuery(player.full_name)
     setSelectedPlayer(player)
     setResults([])
+    setFocusedIndex(null)
     onPlayerSelect(player)
   }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setFocusedIndex((prevIndex) =>
+        prevIndex === null
+          ? 0
+          : Math.min(results.length - 1, (prevIndex + 1) % results.length)
+      )
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setFocusedIndex((prevIndex) =>
+        prevIndex === null
+          ? results.length - 1
+          : Math.max(0, (prevIndex - 1 + results.length) % results.length)
+      )
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (focusedIndex !== null) {
+        handleSelect(results[focusedIndex])
+      }
+    }
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (!document.querySelector('.player-search')?.contains(target)) {
+        setResults([])
+        setFocusedIndex(null)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="player-search">
@@ -78,6 +120,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
         type="text"
         value={query}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         placeholder="Search for a player..."
         className="p-2 border rounded"
       />
@@ -87,7 +130,8 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
             <li
               key={index}
               onClick={() => handleSelect(player)}
-              className={`p-2 hover:bg-gray-100 cursor-pointer ${selectedPlayer?.gsis_id === player.gsis_id ? 'bg-green-200' : ''}`}
+              className={`p-2 hover:bg-gray-100 cursor-pointer ${focusedIndex === index ? 'bg-gray-200' : ''} ${selectedPlayer?.gsis_id === player.gsis_id ? 'bg-green-200' : ''}`}
+              onMouseEnter={() => setFocusedIndex(index)}
             >
               <div className="flex items-center">
                 {player.espn_id !== null ? (

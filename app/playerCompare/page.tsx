@@ -114,6 +114,12 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
   })
   const dailyLimitJson = await dailyLimit.json()
 
+  const playerStatsFromNew = await fetch(
+    `${fetchUrl}/api/playerStats?playerId=${playerId1}&playerId2=${playerId2}`
+  )
+
+  const playerStatsFromNewJson = await playerStatsFromNew.json()
+
   if (!session) {
     return <Unauthenticated />
   }
