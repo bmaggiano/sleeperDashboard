@@ -60,7 +60,10 @@ export async function POST(request: NextRequest) {
   const player1NewsStories = await redisClient?.get(`player-news:${playerId1}`)
   const player2NewsStories = await redisClient?.get(`player-news:${playerId2}`)
 
-  const cacheKey = `player-comparison:${playerId1}:${playerId2}`
+  const [id1, id2] = [playerId1, playerId2].sort()
+
+  const cacheKey = `player-comparison:${id1}:${id2}`
+
   const cachedResponse = await redisClient?.get(cacheKey)
   if (cachedResponse) {
     return NextResponse.json(JSON.parse(cachedResponse))
