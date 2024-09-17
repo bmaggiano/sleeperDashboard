@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     schema: ffDataSchema,
     system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
     prompt: `
-    Compare the following players based on their stats, availability, recent games, and recent news:
+    Compare the following players based on their stats, availability, recent games, and recent news. Recency bias is definitely okay as trends definitely exist in football:
 
     Player 1 (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team}):
     ${JSON.stringify(combinedStats?.[0]?.player1, null, 2)}
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
       "playerTwoPosition": "${player2.position}",
       "playerOneTeam": "${player1.team}",
       "playerTwoTeam": "${player2.team}",
-      "explanation": "Provide a brief explanation (2-3 sentences).",
+      "explanation": "Provide a brief explanation (2-3 sentences) and include any relevant stats/news articles to support your recommendation.",
       "safe_pick": "Identify the player who is a safe pick.",
       "risky_pick": "Identify the player who is a risky pick.",
       "recommended_pick": "Return the name of the recommended pick, if any.",
