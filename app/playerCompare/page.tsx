@@ -84,8 +84,18 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
   const cookieStore = cookies()
   let sessionTokenCookie = cookieStore.get('next-auth.session-token')
   let sessionToken = sessionTokenCookie?.value
-  const playerId1 = searchParams.p1Id
-  const playerId2 = searchParams.p2Id
+
+  const cleanedSearchParams: { [key: string]: string | string[] | undefined } =
+    {}
+  Object.keys(searchParams).forEach((key) => {
+    const cleanedKey = key.replace(/^amp;/, '') // Remove "amp;" prefix from keys
+    cleanedSearchParams[cleanedKey] = searchParams[key]
+  })
+
+  const playerId1 = cleanedSearchParams.p1Id
+  const playerId2 = cleanedSearchParams.p2Id
+
+  console.log(cleanedSearchParams)
 
   const fetchUrl =
     process.env.NODE_ENV === 'development'
@@ -113,12 +123,6 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
     cache: 'no-store',
   })
   const dailyLimitJson = await dailyLimit.json()
-
-  const playerStatsFromNew = await fetch(
-    `${fetchUrl}/api/playerStats?playerId=${playerId1}&playerId2=${playerId2}`
-  )
-
-  const playerStatsFromNewJson = await playerStatsFromNew.json()
 
   if (!session) {
     return <Unauthenticated />

@@ -214,16 +214,21 @@ export default function PlayerCompare() {
   const [loading, setLoading] = useState(false)
   const [playerNews, setPlayerNews] = useState<any[]>([])
   const searchParams = useSearchParams()
-  const player1Id = searchParams.get('p1Id')
-  const player2Id = searchParams.get('p2Id')
-  const player1Name = searchParams.get('p1Name')
-  const player1EID = searchParams.get('p1EID')
-  const player1Pos = searchParams.get('p1Pos')
-  const player1Team = searchParams.get('p1Team')
-  const player2Name = searchParams.get('p2Name')
-  const player2EID = searchParams.get('p2EID')
-  const player2Pos = searchParams.get('p2Pos')
-  const player2Team = searchParams.get('p2Team')
+
+  const getCleanedParam = (key: string) => {
+    return searchParams.get(key) || searchParams.get(`amp;${key}`)
+  }
+
+  const player1Id = getCleanedParam('p1Id')
+  const player2Id = getCleanedParam('p2Id')
+  const player1Name = getCleanedParam('p1Name')
+  const player1EID = getCleanedParam('p1EID')
+  const player1Pos = getCleanedParam('p1Pos')
+  const player1Team = getCleanedParam('p1Team')
+  const player2Name = getCleanedParam('p2Name')
+  const player2EID = getCleanedParam('p2EID')
+  const player2Pos = getCleanedParam('p2Pos')
+  const player2Team = getCleanedParam('p2Team')
 
   const { object, submit } = useObject({
     api: `/api/db`,
