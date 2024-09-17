@@ -95,8 +95,6 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
   const playerId1 = cleanedSearchParams.p1Id
   const playerId2 = cleanedSearchParams.p2Id
 
-  console.log(cleanedSearchParams)
-
   const fetchUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
