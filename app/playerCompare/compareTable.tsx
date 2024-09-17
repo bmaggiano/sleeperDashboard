@@ -125,8 +125,8 @@ export default function CompareTable({ data }: { data: any }) {
       <StatsCard
         title="Head to Head Comparison"
         stats={stats}
-        playerOneName={data?.playerOneName}
-        playerTwoName={data?.playerTwoName}
+        playerOneName={data?.[0]?.player1?.details?.fullName}
+        playerTwoName={data?.[0]?.player2?.details?.fullName}
       />
     </div>
   )
@@ -160,7 +160,7 @@ function StatsCard({
         </CardTitle>
         <CardDescription>2024 Stats</CardDescription>
         <CardDescription className="flex text-base justify-between text-gray-500">
-          {playerOneName}
+          <div>{playerOneName}</div>
           {playerTwoName}
         </CardDescription>
       </CardHeader>
