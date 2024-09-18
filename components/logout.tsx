@@ -6,7 +6,11 @@ const LogoutButton = () => {
     signOut() // Trigger logout
   }
 
-  return <Button onClick={handleLogout}>Sign out</Button>
+  return (
+    <Button variant={'outline'} onClick={handleLogout}>
+      Sign out
+    </Button>
+  )
 }
 
 export default LogoutButton
