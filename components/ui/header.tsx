@@ -186,7 +186,7 @@ const MobileNavigation = () => (
   <Sheet>
     <SheetTrigger asChild>
       <Button variant="outline" size="icon">
-        <List weight="duotone" size={16} />
+        <List color="black" size={16} />
         <span className="sr-only">Toggle menu</span>
       </Button>
     </SheetTrigger>

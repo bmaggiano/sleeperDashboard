@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react'
 export default function Home() {
   const [animatedText, setAnimatedText] = useState('Dominate')
   const animatedWords = ['Dominate', 'Analyze', 'Predict', 'Win']
-
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimatedText((prev) => {
@@ -43,7 +42,9 @@ export default function Home() {
         </section>
       </main>
       <div className="p-2 sm:p-4 max-w-3xl mx-auto">
-        <AssistantModal />
+        <div className="absolute z-50">
+          <AssistantModal />
+        </div>
         <RecentSearches />
         <LeaguesMarquee />
       </div>
