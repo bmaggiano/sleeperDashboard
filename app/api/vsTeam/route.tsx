@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSqlQueryVsTeam } from './queryHelper'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
 import db from '@/lib/db'
+import redisClient from '@/lib/redis/redisClient'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)

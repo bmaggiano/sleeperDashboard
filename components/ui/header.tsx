@@ -92,10 +92,10 @@ const navigationItems = [
       },
       {
         title: 'Parlai',
-        href: '/parlayHelper',
+        href: '/parlai',
         children: 'Sports betting just got a little bit easier',
         icon: <Coins weight="duotone" size={16} />,
-        comingSoon: true,
+        comingSoon: false,
       },
     ],
   },

@@ -11,8 +11,10 @@ import { Badge } from '@/components/ui/badge'
 
 export default async function DailyLimitBanner({
   dailyLimit,
+  topic,
 }: {
   dailyLimit: number
+  topic: string
 }) {
   if (dailyLimit === 0)
     return (
@@ -23,7 +25,7 @@ export default async function DailyLimitBanner({
             Daily Limit Reached
           </CardTitle>
           <CardDescription>
-            You&apos;ve used all your player compare tokens for today.
+            You&apos;ve used all your {topic} tokens for today.
           </CardDescription>
         </CardHeader>
         <CardFooter>
@@ -40,5 +42,9 @@ export default async function DailyLimitBanner({
       </Card>
     )
 
-  return <Alert>You have {dailyLimit} player compares remaining today.</Alert>
+  return (
+    <Alert>
+      You have {dailyLimit} {topic}s remaining today.
+    </Alert>
+  )
 }

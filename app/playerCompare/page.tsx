@@ -140,7 +140,10 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
         <YearByYear stats={playerStatsJson} />
       </div>
       <div className="mb-4">
-        <DailyLimitBanner dailyLimit={dailyLimitJson.dailyLimit} />
+        <DailyLimitBanner
+          dailyLimit={dailyLimitJson.dailyLimit}
+          topic="player compare"
+        />
       </div>
     </>
   )
