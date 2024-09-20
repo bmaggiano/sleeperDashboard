@@ -51,6 +51,10 @@ export default async function ParlayHelper({ searchParams }: Props) {
     return <Unauthenticated />
   }
 
+  if (dailyLimitJson.dailyLimit === 0) {
+    return <DailyLimitBanner dailyLimit={0} topic="parlay check" />
+  }
+
   return (
     <>
       <ParlayHelperClient searchParams={searchParams} data={data} />
