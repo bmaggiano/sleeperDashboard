@@ -93,13 +93,15 @@ export async function POST(request: NextRequest) {
     schema: ffDataSchema,
     system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
     prompt: `
-    Compare the following players based on their stats, availability, recent games, and recent news. Recency bias is definitely okay as trends definitely exist in football:
+    Compare the following players based on their stats, availability, recent games, and recent news. Recency bias is definitely okay as trends definitely exist in football. This is going to be used to help fantasy football experts set their weekly lineups:
 
-    Player 1 (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team}):
-    ${JSON.stringify(combinedStats?.[0]?.player1, null, 2)}
+    Player 1: (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team})
+    
+    Player 1 stats: ${JSON.stringify(combinedStats?.[0]?.player1, null, 2)}
 
-    Player 2 (${player2.full_name}, Position: ${player2.position}, Team: ${player2.team}):
-    ${JSON.stringify(combinedStats?.[0]?.player2, null, 2)}
+    Player 2: (${player2.full_name}, Position: ${player2.position}, Team: ${player2.team})
+
+    Player 2 stats: ${JSON.stringify(combinedStats?.[0]?.player2, null, 2)}
 
     Player 1's team news:
     ${player1NewsStories}
@@ -116,9 +118,7 @@ export async function POST(request: NextRequest) {
       "playerTwoPosition": "${player2.position}",
       "playerOneTeam": "${player1.team}",
       "playerTwoTeam": "${player2.team}",
-      "explanation": "Provide a brief explanation (2-3 sentences) and include any relevant stats/news articles to support your recommendation.",
-      "safe_pick": "Identify the player who is a safe pick.",
-      "risky_pick": "Identify the player who is a risky pick.",
+      "explanation": "Provide a brief explanation (2-3 sentences) and include any relevant stats/news articles to support your recommendation from Player 1's team news, or Player 2's team news.",
       "recommended_pick": "Return the name of the recommended pick, if any.",
       "recommended_pick_espn_id": "If the recommended pick is ${player1.full_name}, return ${player1.espn_id}, or if it's ${player2.full_name}, return ${player2.espn_id}.",
       "certainty": "Provide a certainty percentage (0-100%) for the recommended pick.",
