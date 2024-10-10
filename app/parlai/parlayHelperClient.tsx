@@ -1,6 +1,7 @@
 'use client'
 import { Coins } from '@phosphor-icons/react'
 import { useRouter } from 'next/navigation'
+import { useQueryState, parseAsJson, parseAsString } from 'nuqs'
 import FuzzySearch from '../fuzzySearch'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
@@ -20,7 +21,9 @@ import { experimental_useObject as useObject } from 'ai/react'
 import { propsResSchema } from '../api/analyzeParlay/schema'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+import z from 'zod'
 import DailyLimitBanner from '../playerCompare/dailyLimitBanner'
+import GameLogs from '../boxScores/page'
 
 type AnalysisObject = {
   analysis?: {
@@ -37,6 +40,11 @@ const propMap: Record<string, string> = {
   player_anytime_td: 'Anytime Touchdown',
   // Add other mappings as needed
 }
+
+const fetchUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://sleeper-dashboard.vercel.app'
 
 const teamMap = {
   'Arizona Cardinals': 'ARI',
@@ -74,18 +82,29 @@ const teamMap = {
 }
 
 export default function ParlayHelperClient({
-  data,
   searchParams,
 }: {
-  data: any
   searchParams: any
 }) {
+  const [data, setData] = useState<any>(null)
   const [addingPlayer, setAddingPlayer] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [paramsObj, setParamsObj] = useState<any>({})
   const [player, setPlayerDetails] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [filteredTeams, setFilteredTeams] = useState<string[]>([])
+  const [test, setTest] = useQueryState('name')
+  const [playerId, setPlayerId] = useQueryState('playerId', parseAsString)
+  const [playerName, setPlayerName] = useQueryState('playerName', parseAsString)
+  const [playerTeam, setPlayerTeam] = useQueryState('playerTeam', parseAsString)
+  const [betProp, setBetProp] = useQueryState('prop', parseAsString)
+  const [odds, setOdds] = useState<any>(null)
+  const [opponentTeam, setOpponentTeam] = useQueryState(
+    'opponentTeam',
+    parseAsString
+  )
+
+  const [step, setStep] = useState(1)
   const router = useRouter()
 
   const { object, submit } = useObject({
@@ -118,20 +137,26 @@ export default function ParlayHelperClient({
 
   const handleAnalyzeBet = async () => {
     setLoading(true)
+    setStep(4)
     await submit({
-      ...paramsObj,
+      playerId: playerId,
+      playerName: playerName,
+      playerTeam: playerTeam,
+      prop: betProp,
+      opponentTeam: opponentTeam,
     })
     setLoading(false)
   }
 
   const handleNewAnalysis = () => {
-    setParamsObj({
-      playerId: null,
-      playerName: null,
-      playerTeam: null,
-      prop: null,
-      opponentTeam: null,
-    })
+    setPlayerDetails(null)
+    setSearchTerm('')
+    setPlayerId(null)
+    setPlayerName(null)
+    setPlayerTeam(null)
+    setOpponentTeam(null)
+    setBetProp(null)
+    setStep(1)
   }
 
   const handlePlayerSelect = async (player: any) => {
@@ -145,13 +170,9 @@ export default function ParlayHelperClient({
     )
 
     setPlayerDetails(data)
-
-    setParamsObj({
-      ...paramsObj,
-      playerId: data.player_id, // Set playerId to the player ID
-      playerName: data.full_name,
-      playerTeam: fullTeamName, // Set playerTeam to the full team name
-    })
+    setPlayerName(data.full_name)
+    setPlayerTeam(fullTeamName || '')
+    setPlayerId(data.player_id)
     setAddingPlayer(false)
   }
 
@@ -175,12 +196,34 @@ export default function ParlayHelperClient({
   }
 
   const handleTeamSelect = (team: string) => {
-    handleAddParam('opponentTeam', team)
+    setOpponentTeam(team)
     setSearchTerm(team) // Set selected team name in the input field
     setFilteredTeams([]) // Clear suggestions after selection
   }
 
   const displayProp = propMap[paramsObj?.prop] || null
+
+  const fetchOdds = async () => {
+    setLoading(true)
+
+    console.log('here')
+
+    // Construct the URL for the API request using the query params
+    const oddsUrl = `/api/getOdds?playerId=${playerId}&playerName=${encodeURIComponent(playerName || '')}&playerTeam=${encodeURIComponent(playerTeam || '')}&prop=${betProp || ''}&opponentTeam=${encodeURIComponent(opponentTeam || '')}`
+
+    console.log('here1')
+    try {
+      const response = await fetch(`${fetchUrl}${oddsUrl}`)
+      const data = await response.json()
+      console.log('data', data)
+      setOdds(data)
+      setData(data) // Store the fetched odds in state
+    } catch (error) {
+      console.error('Error fetching odds:', error)
+    } finally {
+      setLoading(false) // Stop loading indicator
+    }
+  }
 
   return (
     <>
@@ -188,12 +231,17 @@ export default function ParlayHelperClient({
         <Coins className="inline-block mr-2" />
         AI-Powered Sports Betting Analysis
       </h2>
-      <div className="flex flex-col gap-4">
+      <Progress value={(step / 4) * 100} className="w-full h-2 mb-6" />
+
+      {/* ------- */}
+      {/* STEP 1 */}
+      {/* ------- */}
+      {step === 1 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <User size={28} />
-              <span>Player Selection</span>
+              <span>Step 1: Player Selection</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -204,45 +252,42 @@ export default function ParlayHelperClient({
               <FuzzySearch onPlayerSelect={handlePlayerSelect} />
             </div>
             {addingPlayer && <p>Adding player...</p>}
-            {paramsObj.playerId && (
-              <div>
-                <label className="text-sm font-medium mb-1 block">
-                  Select the player prop
-                </label>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={() => handleAddParam('prop', 'player_rush_yds')}
-                    variant={'outline'}
-                    className={cn(
-                      paramsObj.prop === 'player_rush_yds' && 'bg-green-50'
-                    )}
-                  >
-                    Rushing Yards
-                  </Button>
-                  <Button
-                    onClick={() =>
-                      handleAddParam('prop', 'player_reception_yds')
-                    }
-                    variant={'outline'}
-                    className={cn(
-                      paramsObj.prop === 'player_reception_yds' && 'bg-green-50'
-                    )}
-                  >
-                    Receiving Yards
-                  </Button>
-                  <Button
-                    onClick={() => handleAddParam('prop', 'player_anytime_td')}
-                    variant={'outline'}
-                    className={cn(
-                      paramsObj.prop === 'player_anytime_td' && 'bg-green-50'
-                    )}
-                  >
-                    Anytime Td
-                  </Button>
-                </div>
+            {playerName && playerId && playerTeam && (
+              <div className="flex justify-end">
+                <Button onClick={() => setStep(2)}>Next</Button>
               </div>
             )}
-            {paramsObj.playerId && (
+          </CardContent>
+        </Card>
+      )}
+      {/* ------- */}
+      {/* STEP 2 */}
+      {/* ------- */}
+      {step === 2 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Target size={28} />
+              <span>Step 2: Bet Details</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">
+                Select the player prop
+              </label>
+              <div className="flex gap-2">
+                {Object.entries(propMap).map(([key, value]) => (
+                  <Button
+                    key={key}
+                    onClick={() => setBetProp(key)}
+                    variant="outline"
+                    className={cn(betProp === key && 'bg-green-50')}
+                  >
+                    {value}
+                  </Button>
+                ))}
+              </div>
               <div>
                 <label className="text-sm font-medium mb-1 block">
                   Select the opposing team
@@ -268,37 +313,44 @@ export default function ParlayHelperClient({
                   </ul>
                 )}
               </div>
-            )}
-            {paramsObj.playerId && paramsObj.prop && paramsObj.opponentTeam && (
-              <div className="flex justify-end">
-                <Button>
-                  <Link
-                    href={{
-                      pathname: '/parlai',
-                      query: {
-                        p1Id: paramsObj.playerId,
-                        p1Name: paramsObj.playerName,
-                        p1Team: paramsObj.playerTeam,
-                        p1Prop: paramsObj.prop,
-                        opTeam: paramsObj.opponentTeam,
-                      },
-                    }}
-                  >
-                    Get Odds
-                  </Link>
-                </Button>
-              </div>
-            )}
+            </div>
+            <div className="flex justify-between">
+              <Button variant={'outline'} onClick={() => setStep(1)}>
+                Back
+              </Button>
+              <Button
+                disabled={
+                  !playerName ||
+                  !playerId ||
+                  !playerTeam ||
+                  !betProp ||
+                  !opponentTeam
+                }
+                onClick={() => {
+                  fetchOdds()
+                  setStep(3)
+                }}
+              >
+                Next
+              </Button>
+            </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* ------- */}
+      {/* STEP 3 */}
+      {/* ------- */}
+      {step === 3 && (
         <Card>
           <CardHeader className="border-b-2">
             <CardTitle className="flex items-center space-x-2">
               <Target className="w-5 h-5" />
-              <span>Betting Analysis</span>
+              <span>Step 3: Live Odds</span>
             </CardTitle>
             <CardDescription>
-              AI-generated insights for your bet
+              Current odds for {playerName} - {propMap[betProp ?? '']} vs{' '}
+              {opponentTeam}
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
@@ -306,8 +358,8 @@ export default function ParlayHelperClient({
               <>
                 <div className="mb-6">
                   <h3 className="flex items-center text-xl font-semibold">
-                    {paramsObj?.playerName}
-                    <Badge className="ml-2" variant={'outline'}>
+                    {playerName}
+                    <Badge className="ml-2" variant="outline">
                       FanDuel Odds
                     </Badge>
                   </h3>
@@ -315,7 +367,10 @@ export default function ParlayHelperClient({
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   {data?.game?.map((bet: any, index: number) => (
-                    <Card key={index} className="border-2 border-gray-200">
+                    <Card
+                      key={index}
+                      className="border-none ring-1 ring-gray-200"
+                    >
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-lg font-semibold">
@@ -337,52 +392,75 @@ export default function ParlayHelperClient({
                     </Card>
                   ))}
                 </div>
-                {object && (
-                  <div className="my-4">
-                    <p className="text-lg">
-                      Stuart{' '}
-                      <span className="bg-black text-white px-2 rounded-md">
-                        AI
-                      </span>{' '}
-                      recommends taking the{' '}
-                      {object?.analysis?.[0]?.overUnder === 'Over' ? (
-                        <span className="font-semibold text-green-600">
-                          OVER
-                        </span>
-                      ) : (
-                        <span className="font-semibold text-red-600">
-                          UNDER
-                        </span>
-                      )}{' '}
-                    </p>
-                    <p>Certainty: {object?.analysis?.[0]?.certainty}%</p>
-                    <Progress
-                      value={object?.analysis?.[0]?.certainty || 0}
-                      className="h-4 my-2 sm:block"
-                    />{' '}
-                    <p>Explanation: {object?.analysis?.[0]?.explanation}</p>
-                  </div>
-                )}
-                {!object ? (
-                  <div className="my-4 flex justify-end">
-                    <Button onClick={handleAnalyzeBet} disabled={loading}>
-                      {loading ? 'Analyzing...' : 'Analyze Bet'}
-                    </Button>{' '}
-                  </div>
-                ) : (
-                  <div className="my-4 flex justify-end">
-                    <Button onClick={handleNewAnalysis} disabled={loading}>
-                      <Link href={'/parlai'}>New Analysis</Link>
-                    </Button>{' '}
-                  </div>
-                )}
               </>
             ) : (
               <p>Please enter player information to generate analysis.</p>
             )}
+            <div className="flex justify-between mt-4">
+              <Button variant={'outline'} onClick={() => setStep(2)}>
+                Back
+              </Button>
+
+              <Button onClick={handleAnalyzeBet} disabled={loading}>
+                {loading ? 'Analyzing...' : 'Analyze Bet'}
+              </Button>
+            </div>
           </CardContent>
         </Card>
-      </div>
+      )}
+
+      {/* --------- */}
+      {/* Step 4 */}
+      {/* --------- */}
+
+      {step === 4 && (
+        <Card>
+          <CardHeader className="border-b-2">
+            <CardTitle className="flex items-center space-x-2">
+              <Target className="w-5 h-5" />
+              <span>Step 4: Betting Analysis</span>
+            </CardTitle>
+            <CardDescription>
+              AI-generated insights for your bet
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {object ? (
+              <div className="my-4">
+                <p className="text-lg">
+                  Stuart{' '}
+                  <span className="bg-black text-white px-2 rounded-md">
+                    AI
+                  </span>{' '}
+                  recommends taking the{' '}
+                  {object?.analysis?.[0]?.overUnder === 'Over' ? (
+                    <span className="font-semibold text-green-600">OVER</span>
+                  ) : (
+                    <span className="font-semibold text-red-600">UNDER</span>
+                  )}{' '}
+                </p>
+                <p>Certainty: {object?.analysis?.[0]?.certainty}%</p>
+                <Progress
+                  value={object?.analysis?.[0]?.certainty || 0}
+                  className="h-4 my-2 sm:block"
+                />
+                <p>Explanation: {object?.analysis?.[0]?.explanation}</p>
+              </div>
+            ) : (
+              <p className="flex justify-center p-4">
+                Analyzing {playerName} - {propMap[betProp ?? '']} vs{' '}
+                {opponentTeam}...
+              </p>
+            )}
+            <div className="flex justify-between">
+              <Button variant={'outline'} onClick={() => setStep(3)}>
+                Back
+              </Button>
+              <Button onClick={handleNewAnalysis}>New Analysis</Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </>
   )
 }

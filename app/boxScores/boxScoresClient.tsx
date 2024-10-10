@@ -105,7 +105,13 @@ function renderTableData(data: any, statline: string) {
   )
 }
 
-export default function GameLogsClient({ data }: { data: any }) {
+export default function GameLogsClient({
+  data,
+  withBack,
+}: {
+  data: any
+  withBack?: boolean
+}) {
   const [statline, setStatline] = useState<any>(null)
   const router = useRouter()
 
@@ -140,18 +146,20 @@ export default function GameLogsClient({ data }: { data: any }) {
 
   return (
     <>
-      <Breadcrumb className="my-4">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink
-              className="cursor-pointer"
-              onClick={() => router.back()}
-            >
-              Back
-            </BreadcrumbLink>{' '}
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      {withBack && (
+        <Breadcrumb className="my-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                className="cursor-pointer"
+                onClick={() => router.back()}
+              >
+                Back
+              </BreadcrumbLink>{' '}
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      )}
       <Card>
         <CardHeader className="flex justify-between border-b p-6">
           <CardTitle className="flex justify-between text-lg">

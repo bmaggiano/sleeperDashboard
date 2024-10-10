@@ -6,6 +6,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../api/auth/[...nextauth]/options'
 import { cookies } from 'next/headers'
 import Unauthenticated from '../unauthenticated'
+import GameLogs from '../boxScores/page'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -21,21 +22,8 @@ export default async function ParlayHelper({ searchParams }: Props) {
   const cookieStore = cookies()
   let sessionTokenCookie = cookieStore.get('next-auth.session-token')
   let sessionToken = sessionTokenCookie?.value
-  const details = await fetch(`${fetchUrl}/api/getOdds`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
-    },
-    body: JSON.stringify({
-      p1Id: searchParams.p1Id,
-      p1Name: searchParams.p1Name,
-      p1Team: searchParams.p1Team,
-      p1Prop: searchParams.p1Prop,
-      opTeam: searchParams.opTeam,
-    }),
-  })
-  const data = await details.json()
+
+  console.log(searchParams)
 
   const dailyLimit = await fetch(`${fetchUrl}/api/dailyLimit`, {
     method: 'GET',
@@ -57,7 +45,10 @@ export default async function ParlayHelper({ searchParams }: Props) {
 
   return (
     <>
-      <ParlayHelperClient searchParams={searchParams} data={data} />
+      <ParlayHelperClient searchParams={searchParams} />
+      {searchParams?.playerId && (
+        <GameLogs searchParams={searchParams} withBack={false} />
+      )}
       <div className="my-4">
         <DailyLimitBanner
           dailyLimit={dailyLimitJson.dailyLimit}

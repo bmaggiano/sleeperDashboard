@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const currentData = await db.$queryRaw`
+  const currentData: { [key: string]: any }[] = await db.$queryRaw`
     SELECT * FROM "nflverse_player_stats_2024" WHERE player_display_name = ${playerName}
   `
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     UNION
     SELECT * FROM "nflverse_player_stats_2021" WHERE player_display_name = ${playerName} AND opponent_team = ${teamAbbr}
   `
-  if (results.length === 0) {
+  if (results.length === 0 && currentData.length === 0) {
     return NextResponse.json({
       success: false,
       message: 'No data found.',
@@ -174,6 +174,8 @@ export async function POST(request: NextRequest) {
     const cacheKeyProp = `player-prop:${playerId}-${prop}`
     const playerProp = await redisClient?.get(cacheKeyProp)
 
+    console.log(player1Stories)
+
     if (playerProp && player1Stories) {
       const result = await streamObject({
         model: openai('gpt-4o-mini'),
@@ -181,7 +183,7 @@ export async function POST(request: NextRequest) {
         schema: propsResSchema,
         system: `You are an expert at finding value within player prop bets.`,
         prompt: `
-    Given the current odds for ${playerName} vs ${opponentTeam}, I want you to analyze the prop bets against recent data, historical data, and recent news to make an informed decision on if it is a good bet. 
+    Given the current odds for ${playerName} vs ${opponentTeam}, I want you to analyze the prop bets against recent data, historical data, and recent team news to make an informed decision on if it is a good bet. 
     
     This is the data to consider:
     Player 1: ${playerName}
@@ -190,7 +192,7 @@ export async function POST(request: NextRequest) {
     Prop: ${prop}
     Current odds from fanduel: ${playerProp}
     recent data for this year: ${JSON.stringify(currentData)}
-    historical data vs this team: ${JSON.stringify(statsAvg)}
+    historical data vs this team if available: ${JSON.stringify(statsAvg)}
     
     Please return the following:
     
@@ -198,7 +200,7 @@ export async function POST(request: NextRequest) {
     prop: ${prop}
      overUnder: "Over" or "Under",
      certainty: 0-100,
-     explanation: "Provide a brief explanation (2-3 sentences) and include any relevant stats/news articles to support your recommendation.",
+     explanation: "Provide a brief explanation (2-3 sentences) and include any stats and/or snippets from ${player1Stories} team news to support your recommendation and convince me why your line of thinking is correct.",
     }
   `,
         onFinish: async ({ object }) => {

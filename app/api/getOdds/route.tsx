@@ -13,24 +13,27 @@ interface User {
   dailyLimit: number
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const session = await getServerSession(authOptions)
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const user = (await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: { email: session.user.email as string },
-    select: { dailyLimit: true } as any,
-  })) as User | null
+    select: { dailyLimit: true },
+  })
 
   if (!user || typeof user.dailyLimit !== 'number' || user.dailyLimit <= 0) {
     return NextResponse.json({ error: 'Daily limit reached' }, { status: 403 })
   }
 
-  const context = await request.json()
-  console.log('context', context)
-  const { p1Id, p1Name, p1Team, opTeam, p1Prop } = context
+  const { searchParams } = request.nextUrl // Use searchParams directly
+  const p1Id = searchParams.get('playerId')
+  const p1Name = searchParams.get('playerName')
+  const p1Team = searchParams.get('playerTeam')
+  const p1Prop = searchParams.get('prop')
+  const opTeam = searchParams.get('opponentTeam')
 
   if (!p1Id || !p1Name || !p1Team || !opTeam || !p1Prop) {
     return NextResponse.json(
@@ -40,18 +43,15 @@ export async function POST(request: NextRequest) {
   }
 
   const cacheKey = `player-prop:${p1Id}-${p1Prop}`
-  const cachedData = await redisClient?.get(cacheKey) // Await the promise
+  const cachedData = await redisClient?.get(cacheKey)
   if (cachedData) {
     console.log('cachedData hit')
     const parsedData = JSON.parse(cachedData)
-    console.log('parsedData', parsedData)
-
     return NextResponse.json({
       success: true,
       game: parsedData,
     })
   }
-  console.log('cacheKey', cacheKey)
 
   try {
     // Fetch the data from the Odds API
@@ -72,16 +72,14 @@ export async function POST(request: NextRequest) {
     const propOddsData = await propOdds.json()
     const markets = propOddsData?.bookmakers?.find(
       (book: any) => book.key === 'fanduel'
-    ).markets
+    )?.markets
 
     const playerProp = markets?.[0]?.outcomes.filter(
       (outcome: any) => outcome.description === p1Name
     )
 
-    console.log('playerProp', playerProp)
-
     if (playerProp) {
-      redisClient?.set(cacheKey, JSON.stringify(playerProp), 'EX', 3600) // Cache for 1 hour
+      await redisClient?.set(cacheKey, JSON.stringify(playerProp), 'EX', 3600) // Cache for 1 hour
       return NextResponse.json({
         success: true,
         game: playerProp,
