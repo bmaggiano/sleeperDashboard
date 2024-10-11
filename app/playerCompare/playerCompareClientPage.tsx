@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { Globe } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import AISkeleton from './aiSkeleton'
+import { calculateHeight } from '../utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -86,21 +87,24 @@ function NewsItem({ data }: { data: any }) {
 }
 
 function PlayerProfile({ player }: { player: any }) {
+  const [playerProfileData, setPlayerProfileData] = useState<any>(null)
+  useEffect(() => {
+    const fetchPlayerInfo = async () => {
+      const playerInfo = await fetch(`/api/cache?pid=${player.player_id}`)
+      const playerData = await playerInfo.json()
+      setPlayerProfileData(playerData)
+    }
+    fetchPlayerInfo()
+  }, [])
   return (
-    <Suspense
-      fallback={
-        <div className="w-full flex justify-center items-center">
-          Loading...
-        </div>
-      }
-    >
+    <Suspense fallback={<PlayerProfileSkeleton playerIndex={0} />}>
       <div className="w-full flex items-center space-x-4">
         <div className="flex items-center justify-center text-2xl">
           {player.espn_id ? (
             <Image
               src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-              height={90}
-              width={90}
+              height={110}
+              width={110}
               alt={player.full_name}
             />
           ) : (
@@ -109,6 +113,10 @@ function PlayerProfile({ player }: { player: any }) {
         </div>
         <div>
           <h3 className="text-xl font-semibold">{player.full_name}</h3>
+          <p className="text-gray-500">
+            {calculateHeight(playerProfileData?.height)} -{' '}
+            {playerProfileData?.weight} lbs
+          </p>
           <p className="text-gray-500">
             {player.position} - {player.team}
           </p>

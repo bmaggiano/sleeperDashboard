@@ -63,7 +63,6 @@ export const getPlayerDetails = cache(
     if (idMapping?.espn_id) {
       espnInfo = await getESPNPlayerInfo(idMapping.espn_id)
     }
-
     // Stub out the detailedInfo and playerStats for now
     const detailedInfo = null
     const playerStats: Record<string, any> = {}
@@ -77,7 +76,6 @@ export const getPlayerDetails = cache(
       // detailed_info: detailedInfo,
       player_stats: playerStats,
     }
-
     return result
   }
 )

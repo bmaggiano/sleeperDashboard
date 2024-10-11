@@ -23,7 +23,6 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
   const handlePlayerSelect = async (player: any, playerIndex: number) => {
     const response = await fetch(`/api/cache?pid=${player.player_id}`)
     const data = await response.json()
-
     if (playerIndex === 1) {
       setPlayer1Details(data)
     } else {

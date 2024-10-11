@@ -508,3 +508,12 @@ export const sleeperToESPNMapping = cache(async (playerId: string) => {
     return null
   }
 })
+
+export const calculateHeight = (height: string) => {
+  // Parse the height string to get total inches
+  let heightNum = parseInt(height);
+  
+  // Calculate feet and inches
+  // Format the output without fractions
+  return `${Math.floor(heightNum / 12)}'${heightNum % 12}`;
+}
