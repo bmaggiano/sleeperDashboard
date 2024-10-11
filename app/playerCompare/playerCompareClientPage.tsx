@@ -114,7 +114,7 @@ function PlayerProfile({ player }: { player: any }) {
           </p>
           <Link
             className="flex items-center"
-            href={`/boxScores?p1Id=${player.player_id}`}
+            href={`/boxScores?playerId=${player.player_id}`}
             prefetch={true}
           >
             <FileText className="w-4 h-4 mr-2 text-gray-500 hover:text-gray-700" />
