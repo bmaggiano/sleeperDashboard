@@ -121,6 +121,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
             .sort((a, b) => {
               // Check if search_rank exists and handle undefined values
               if (a.search_rank === null && b.search_rank === null) return 0
+              if (a.search_rank === null) return -1 // b goes after a
               if (b.search_rank === null) return -1 // b goes after a
               if (a.search_rank === undefined) return -1
               if (b.search_rank === undefined) return -1 // a goes after b if a.search_rank is undefined
