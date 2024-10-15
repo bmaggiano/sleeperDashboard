@@ -1,5 +1,6 @@
 'use client'
 import React, { Suspense, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { experimental_useObject as useObject } from 'ai/react'
 import { ffDataSchema } from '../api/db/schema'
 import { IoDiceOutline } from 'react-icons/io5'
@@ -195,70 +196,66 @@ export default function PlayerCompare() {
     api: `/api/db`,
     schema: ffDataSchema,
   })
+  const router = useRouter()
 
   useEffect(() => {
     const handleAutoSubmit = async () => {
       if (!player1Id || !player2Id) return // Prevent execution if IDs are not available
-
       setLoading(true)
 
       // Check if players are already selected
-      if (!selectedPlayer1 && !selectedPlayer2) {
-        setSelectedPlayer1({
-          player_id: player1Id,
-          full_name: player1Name,
-          espn_id: player1EID,
-          position: player1Pos,
-          team: player1Team,
-        })
-        setSelectedPlayer2({
-          player_id: player2Id,
-          full_name: player2Name,
-          espn_id: player2EID,
-          position: player2Pos,
-          team: player2Team,
-        })
+      setSelectedPlayer1({
+        player_id: player1Id,
+        full_name: player1Name,
+        espn_id: player1EID,
+        position: player1Pos,
+        team: player1Team,
+      })
+      setSelectedPlayer2({
+        player_id: player2Id,
+        full_name: player2Name,
+        espn_id: player2EID,
+        position: player2Pos,
+        team: player2Team,
+      })
 
-        try {
-          const [playerStatsRes, playerNewsRes] = await Promise.all([
-            fetch('/api/stats', {
-              method: 'POST',
-              body: JSON.stringify({
-                playerId1: player1Id,
-                playerId2: player2Id,
-              }),
+      try {
+        const [playerStatsRes, playerNewsRes] = await Promise.all([
+          fetch('/api/stats', {
+            method: 'POST',
+            body: JSON.stringify({
+              playerId1: player1Id,
+              playerId2: player2Id,
             }),
-            fetch('/api/news', {
-              method: 'POST',
-              body: JSON.stringify({
-                playerId1: player1Id,
-                playerId2: player2Id,
-              }),
+          }),
+          fetch('/api/news', {
+            method: 'POST',
+            body: JSON.stringify({
+              playerId1: player1Id,
+              playerId2: player2Id,
             }),
-          ])
+          }),
+        ])
 
-          const playerStats = await playerStatsRes.json()
-          const playerNews = await playerNewsRes.json()
+        const playerStats = await playerStatsRes.json()
+        const playerNews = await playerNewsRes.json()
 
-          setPlayerStats([playerStats])
+        setPlayerStats([playerStats])
 
-          const allStories = [
-            ...playerNews.player1Stories,
-            ...playerNews.player2Stories,
-          ]
-          const uniqueStories = Array.from(
-            new Set(allStories.map((story) => story.storyTitle))
-          ).map((title) =>
-            allStories.find((story) => story.storyTitle === title)
-          )
-          setPlayerNews(uniqueStories)
+        const allStories = [
+          ...playerNews.player1Stories,
+          ...playerNews.player2Stories,
+        ]
+        const uniqueStories = Array.from(
+          new Set(allStories.map((story) => story.storyTitle))
+        ).map((title) => allStories.find((story) => story.storyTitle === title))
+        setPlayerNews(uniqueStories)
 
-          await submit({ playerId1: player1Id, playerId2: player2Id })
-        } catch (error) {
-          console.error('An error occurred during submission:', error)
-        } finally {
-          setLoading(false)
-        }
+        await submit({ playerId1: player1Id, playerId2: player2Id })
+      } catch (error) {
+        console.error('An error occurred during submission:', error)
+      } finally {
+        setLoading(false)
       }
     }
 

@@ -84,8 +84,10 @@ export default function PlayerProfile({ player }: PlayerProfileProps) {
       const playerData = await playerInfo.json()
       setPlayerProfileData(playerData)
     }
-    fetchPlayerInfo()
-  }, [player])
+    if (player.player_id) {
+      fetchPlayerInfo()
+    }
+  }, [player?.player_id])
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
