@@ -40,7 +40,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
   }
 
   // Convert the player data object into an array of players
-  const playersArray = Object.values(playerData) as Player[]
+  const playersArray = Object?.values(playerData) as Player[]
 
   const fuse = new Fuse<Player>(playersArray, options)
 
