@@ -70,9 +70,7 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
           <DialogHeader>
             <DialogTitle>Compare Players</DialogTitle>
           </DialogHeader>
-          <DialogDescription>
-            <p>Select two players to compare</p>
-          </DialogDescription>
+          <DialogDescription>Select two players to compare</DialogDescription>
           <form className="flex flex-col gap-2">
             <FuzzySearch
               onPlayerSelect={(player) => handlePlayerSelect(player, 1)}

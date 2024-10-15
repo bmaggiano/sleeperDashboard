@@ -19,6 +19,7 @@ import { Globe } from 'lucide-react'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import AISkeleton from './aiSkeleton'
 import { calculateHeight } from '../utils'
+import PlayerProfile from './playerProfile'
 
 export const dynamic = 'force-dynamic'
 
@@ -86,54 +87,6 @@ function NewsItem({ data }: { data: any }) {
   )
 }
 
-function PlayerProfile({ player }: { player: any }) {
-  const [playerProfileData, setPlayerProfileData] = useState<any>(null)
-  useEffect(() => {
-    const fetchPlayerInfo = async () => {
-      const playerInfo = await fetch(`/api/cache?pid=${player.player_id}`)
-      const playerData = await playerInfo.json()
-      setPlayerProfileData(playerData)
-    }
-    fetchPlayerInfo()
-  }, [])
-  return (
-    <Suspense fallback={<PlayerProfileSkeleton playerIndex={0} />}>
-      <div className="w-full flex items-center space-x-4">
-        <div className="flex items-center justify-center text-2xl">
-          {player.espn_id ? (
-            <Image
-              src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-              height={110}
-              width={110}
-              alt={player.full_name}
-            />
-          ) : (
-            <User size={32} />
-          )}
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold">{player.full_name}</h3>
-          <p className="text-gray-500">
-            {calculateHeight(playerProfileData?.height)} -{' '}
-            {playerProfileData?.weight} lbs
-          </p>
-          <p className="text-gray-500">
-            {player.position} - {player.team}
-          </p>
-          <Link
-            className="flex items-center"
-            href={`/boxScores?playerId=${player.player_id}`}
-            prefetch={true}
-          >
-            <FileText className="w-4 h-4 mr-2 text-gray-500 hover:text-gray-700" />
-            Box Scores
-          </Link>
-        </div>
-      </div>
-    </Suspense>
-  )
-}
-
 function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
   return (
     <div className="w-full flex items-center space-x-4">
@@ -142,7 +95,7 @@ function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
       </div>
       <div>
         <h3 className="text-xl font-semibold">Select Player {playerIndex}</h3>
-        <p className="text-gray-500">Search for a player</p>
+        <span className="text-gray-500">Search for a player</span>
       </div>
     </div>
   )
@@ -172,44 +125,44 @@ function RenderKeyStats({
   ) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 px-2">
-        <p className="inline-flex items-center gap-2">
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Receptions: {recommendedStats?.totalReceptions}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Receiving Yards: {recommendedStats?.totalRecYards}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Rushing Yards: {recommendedStats?.totalRushYards}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Touchdowns: {recommendedStats?.totalTds}
-        </p>
+        </div>
       </div>
     )
   }
   if (data?.playerOnePosition === 'QB' || data?.playerTwoPosition === 'QB') {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-        <p className="inline-flex items-center gap-2">
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Pass Completions: {recommendedStats?.totalPassCompletions}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Pass Yards: {recommendedStats?.totalPassYards}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Pass Touchdowns: {recommendedStats?.totalPassTds}
-        </p>
-        <p className="inline-flex items-center gap-2">
+        </div>
+        <div className="inline-flex items-center gap-2">
           <TrendingUp className="h-4 w-4" />
           Rush Touchdowns: {recommendedStats?.totalTds}
-        </p>
+        </div>
       </div>
     )
   }
@@ -245,8 +198,12 @@ export default function PlayerCompare() {
 
   useEffect(() => {
     const handleAutoSubmit = async () => {
+      if (!player1Id || !player2Id) return // Prevent execution if IDs are not available
+
       setLoading(true)
-      if (player1Id && player2Id) {
+
+      // Check if players are already selected
+      if (!selectedPlayer1 && !selectedPlayer2) {
         setSelectedPlayer1({
           player_id: player1Id,
           full_name: player1Name,
@@ -263,52 +220,50 @@ export default function PlayerCompare() {
         })
 
         try {
-          const playerStatsTest = await fetch('/api/stats', {
-            method: 'POST',
-            body: JSON.stringify({
-              playerId1: player1Id,
-              playerId2: player2Id,
+          const [playerStatsRes, playerNewsRes] = await Promise.all([
+            fetch('/api/stats', {
+              method: 'POST',
+              body: JSON.stringify({
+                playerId1: player1Id,
+                playerId2: player2Id,
+              }),
             }),
-          })
-          const playerStats = await playerStatsTest.json()
+            fetch('/api/news', {
+              method: 'POST',
+              body: JSON.stringify({
+                playerId1: player1Id,
+                playerId2: player2Id,
+              }),
+            }),
+          ])
+
+          const playerStats = await playerStatsRes.json()
+          const playerNews = await playerNewsRes.json()
+
           setPlayerStats([playerStats])
 
-          const playerNewsFetch = await fetch('/api/news', {
-            method: 'POST',
-            body: JSON.stringify({
-              playerId1: player1Id,
-              playerId2: player2Id,
-            }),
-          })
-          const playerNews = await playerNewsFetch.json()
           const allStories = [
             ...playerNews.player1Stories,
             ...playerNews.player2Stories,
           ]
-
-          // Use a Set to remove duplicate articles based on storyTitle
           const uniqueStories = Array.from(
             new Set(allStories.map((story) => story.storyTitle))
           ).map((title) =>
             allStories.find((story) => story.storyTitle === title)
           )
-
-          // Set the unique stories to state
           setPlayerNews(uniqueStories)
 
-          await submit({
-            playerId1: player1Id,
-            playerId2: player2Id,
-          })
-          setLoading(false)
+          await submit({ playerId1: player1Id, playerId2: player2Id })
         } catch (error) {
           console.error('An error occurred during submission:', error)
+        } finally {
+          setLoading(false)
         }
       }
     }
 
     handleAutoSubmit()
-  }, [player1Id, player2Id])
+  }, [player1Id, player2Id]) // Ensure this only runs when IDs change
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -356,7 +311,7 @@ export default function PlayerCompare() {
                                 alt="recommended player"
                                 className="rounded-full"
                               />
-                              <p className="text-lg flex flex-col font-semibold mb-2">
+                              <div className="text-lg flex flex-col font-semibold mb-2">
                                 {data?.recommended_pick}
                                 <span className="font-normal text-gray-500">
                                   {data?.recommended_pick ===
@@ -369,21 +324,21 @@ export default function PlayerCompare() {
                                     ? `${data?.playerOneTeam}`
                                     : `${data?.playerTwoTeam}`}
                                 </span>
-                              </p>
+                              </div>
                             </div>
-                            <p className="sm:block flex flex-col">
+                            <div className="sm:block flex flex-col">
                               <span className="font-semibold text-lg">
                                 {data?.certainty}%
                               </span>{' '}
                               Certainty
-                            </p>
+                            </div>
                           </div>
                           <div>
                             <Progress
                               value={data?.certainty}
                               className="h-4 my-2 sm:block"
                             />
-                            <p>{data?.explanation}</p>
+                            <div>{data?.explanation}</div>
                             <Badge className="mt-4" variant={'outline'}>
                               Key Stats (2024):
                             </Badge>

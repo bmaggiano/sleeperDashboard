@@ -100,27 +100,26 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
 
-  const playerStats = await fetch(
-    `${fetchUrl}/api/stats?playerId1=${playerId1}&playerId2=${playerId2}`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        playerId1: playerId1,
-        playerId2: playerId2,
-      }),
-    }
-  )
-  const playerStatsJson = await playerStats.json()
+  const [playerStatsRes, dailyLimitRes] = await Promise.all([
+    fetch(
+      `${fetchUrl}/api/stats?playerId1=${playerId1}&playerId2=${playerId2}`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ playerId1, playerId2 }),
+      }
+    ),
+    fetch(`${fetchUrl}/api/dailyLimit`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
+      },
+      cache: 'no-store',
+    }),
+  ])
 
-  const dailyLimit = await fetch(`${fetchUrl}/api/dailyLimit`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
-    },
-    cache: 'no-store',
-  })
-  const dailyLimitJson = await dailyLimit.json()
+  const playerStatsJson = await playerStatsRes.json()
+  const dailyLimitJson = await dailyLimitRes.json()
 
   if (!session) {
     return <Unauthenticated />

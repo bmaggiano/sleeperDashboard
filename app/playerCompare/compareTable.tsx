@@ -160,7 +160,7 @@ function StatsCard({
         </CardTitle>
         <CardDescription>2024 Stats</CardDescription>
         <CardDescription className="flex text-base justify-between text-gray-500">
-          <div>{playerOneName}</div>
+          {playerOneName}
           {playerTwoName}
         </CardDescription>
       </CardHeader>
