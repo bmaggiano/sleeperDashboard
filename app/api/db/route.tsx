@@ -8,7 +8,6 @@ import { streamObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { ffDataSchema } from './schema'
 import prisma from '@/lib/db'
-import { getPlayerInjuries } from './injuriesHelper'
 
 interface User {
   dailyLimit: number
@@ -89,16 +88,13 @@ export async function POST(request: NextRequest) {
   // Define combinedStats or use parsedCachedStat if available
   const combinedStats = parsedCachedStat || { player1: {}, player2: {} }
 
-  const player1Injuries = await getPlayerInjuries(player1?.gsis_id ?? '')
-  const player2Injuries = await getPlayerInjuries(player2?.gsis_id ?? '')
-
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
     seed: 100,
     schema: ffDataSchema,
     system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
     prompt: `
-    Compare the following players based on their stats, availability, injuries if they're dealing with any, recent games, and recent news. Emphasize recent performance trends and consider stats from the last three games. Recency bias is encouraged.
+    Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any.
   
     Player 1: (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team})
     
@@ -114,11 +110,9 @@ export async function POST(request: NextRequest) {
     Player 2's team news:
     ${player2NewsStories}
 
-    Player 1's injuries:
-    ${player1Injuries}
+    Player 1 injury status: ${player1?.injury_status} - ${player1?.status}
 
-    Player 2's injuries:
-    ${player2Injuries}
+    Player 2 injury status: ${player2?.injury_status} - ${player2?.status}
     
     Please return the comparison in the following structured format:
     

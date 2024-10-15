@@ -66,7 +66,7 @@ function renderTableHeaders(statline: string) {
 function renderTableData(data: any, statline: string) {
   return (
     <TableBody>
-      {data.map((player: any, index: any) => (
+      {data?.map((player: any, index: any) => (
         <TableRow key={`${player.player_id}-week${player.week}`}>
           <TableCell>{player.week}</TableCell>
           <TableCell>{player.opponent_team}</TableCell>
@@ -131,11 +131,10 @@ export default function GameLogsClient({
   }
 
   const renderPlayerTable = (playerStats: any[]) => {
-    if (playerStats.length === 0) return null
+    if (playerStats?.length === 0) return null
 
-    const playerName = playerStats[0].player_display_name || 'N/A' // Get player name from the first stat
     return (
-      <div key={playerStats[0].player_id} className="mb-8">
+      <div key={playerStats?.[0]?.player_id} className="mb-8">
         <Table>
           {renderTableHeaders(statline)}
           {renderTableData(playerStats, statline)}
@@ -219,12 +218,6 @@ export default function GameLogsClient({
             Passing
           </Badge>
           {renderPlayerTable(data?.playerStats1)}
-
-          {/* Player 2 Stats */}
-          <p className="font-semibold tracking-tight px-4">
-            {data?.playerStats2?.[0]?.player_display_name}
-          </p>
-          {renderPlayerTable(data?.playerStats2)}
         </CardContent>
       </Card>
     </>

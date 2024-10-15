@@ -6,7 +6,7 @@ import {
   ESPNPlayerSchema,
 } from './schemas'
 import { z } from 'zod'
-import playersData from './players.json'
+import playersData from '../../app/playerIds_updated.json'
 import { getPlayerIdMappingsFromRedis } from './cache'
 import { getESPNPlayerInfo } from '@/lib/espn'
 import type { ESPNPlayer } from '@/lib/sleeper/schemas'

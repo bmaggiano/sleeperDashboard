@@ -254,7 +254,14 @@ export default function ParlayHelperClient({
             {addingPlayer && <p>Adding player...</p>}
             {playerName && playerId && playerTeam && (
               <div className="flex justify-end">
-                <Button onClick={() => setStep(2)}>Next</Button>
+                <Button
+                  onClick={() => {
+                    router.refresh()
+                    setStep(2)
+                  }}
+                >
+                  Next
+                </Button>
               </div>
             )}
           </CardContent>

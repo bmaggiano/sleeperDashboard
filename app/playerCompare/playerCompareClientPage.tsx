@@ -364,22 +364,22 @@ export default function PlayerCompare() {
         )}
         <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
           <div className="flex flex-col w-full sm:w-1/2">
-            <div className="ring-1 ring-gray-200 p-4 rounded-md">
-              {selectedPlayer1 ? (
-                <PlayerProfile player={selectedPlayer1} />
-              ) : (
+            {selectedPlayer1 ? (
+              <PlayerProfile player={selectedPlayer1} />
+            ) : (
+              <div className="p-4 ring-1 ring-gray-200 rounded-md">
                 <PlayerProfileSkeleton playerIndex={1} />
-              )}
-            </div>
+              </div>
+            )}
           </div>
           <div className="flex flex-col w-full sm:w-1/2">
-            <div className="ring-1 ring-gray-200 p-4 rounded-md">
-              {selectedPlayer2 ? (
-                <PlayerProfile player={selectedPlayer2} />
-              ) : (
+            {selectedPlayer2 ? (
+              <PlayerProfile player={selectedPlayer2} />
+            ) : (
+              <div className="p-4 ring-1 ring-gray-200 rounded-md">
                 <PlayerProfileSkeleton playerIndex={2} />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
         {playerStats.length > 0 && (

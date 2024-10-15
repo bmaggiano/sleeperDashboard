@@ -11,6 +11,7 @@ const fallbackImage = '/NFL.svg'
 
 type Player = {
   player_id: string
+  search_rank: number
   full_name: string
   team?: string | null
   position?: string
@@ -18,6 +19,7 @@ type Player = {
   espn_id?: string
   gsis_id?: string
   headshot?: string
+  injury_status?: string
 }
 
 interface FuzzySearchProps {
@@ -53,7 +55,11 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
           .map((res) => res.item)
           .filter(
             (player: Player) =>
-              player.status === 'Active' &&
+              (player.status === 'Active' ||
+                player.status === 'Out' ||
+                player.status === 'Questionable' ||
+                player.status === 'Injured Reserve' ||
+                player.status === 'Inactive') &&
               (player.position === 'QB' ||
                 player.position === 'RB' ||
                 player.position === 'TE' ||
@@ -111,36 +117,45 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
       />
       {results.length > 0 && (
         <ul className="search-results bg-white border rounded mt-2 overflow-y-auto">
-          {results.slice(0, 5).map((player, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelect(player)}
-              className={`p-2 hover:bg-gray-100 cursor-pointer ${focusedIndex === index ? 'bg-gray-200' : ''} ${selectedPlayer?.gsis_id === player.gsis_id ? 'bg-green-200' : ''}`}
-              onMouseEnter={() => setFocusedIndex(index)}
-            >
-              <div className="flex items-center">
-                {player.espn_id !== null ? (
-                  <Image
-                    src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-                    alt={player.full_name}
-                    width={50}
-                    height={50}
-                  />
-                ) : (
-                  <Image
-                    src={fallbackImage}
-                    alt="Default player"
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div className="ml-2">
-                  <strong>{player.full_name}</strong> -{' '}
-                  {player.team ?? 'Free Agent'} ({player.position})
+          {results
+            .sort((a, b) => {
+              // Check if search_rank exists and handle undefined values
+              if (a.search_rank === null && b.search_rank === null) return 0
+              if (a.search_rank === null) return 1 // a goes after b
+              if (b.search_rank === null) return -1 // b goes after a
+              return a.search_rank - b.search_rank // Otherwise, sort by search_rank
+            })
+            .slice(0, 5)
+            .map((player, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelect(player)}
+                className={`p-2 hover:bg-gray-100 cursor-pointer ${focusedIndex === index ? 'bg-gray-200' : ''} ${selectedPlayer?.gsis_id === player.gsis_id ? 'bg-green-200' : ''}`}
+                onMouseEnter={() => setFocusedIndex(index)}
+              >
+                <div className="flex items-center">
+                  {player.espn_id !== null ? (
+                    <Image
+                      src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
+                      alt={player.full_name}
+                      width={50}
+                      height={50}
+                    />
+                  ) : (
+                    <Image
+                      src={fallbackImage}
+                      alt="Default player"
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                  <div className="ml-2">
+                    <strong>{player.full_name}</strong> -{' '}
+                    {player.team ?? 'Free Agent'} ({player.position})
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))}
         </ul>
       )}
     </div>

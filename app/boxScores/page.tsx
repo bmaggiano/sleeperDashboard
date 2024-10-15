@@ -11,14 +11,14 @@ export default async function GameLogs({
   searchParams,
   withBack = true,
 }: Props) {
-  const { playerId, p2Id } = searchParams
+  const { playerId } = searchParams
   const fetchUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
 
   const playerStatsFromNew = await fetch(
-    `${fetchUrl}/api/playerStats?playerId=${playerId}&playerId2=${p2Id}`,
+    `${fetchUrl}/api/playerStats?playerId=${playerId}`,
     {
       cache: 'no-store',
     }
