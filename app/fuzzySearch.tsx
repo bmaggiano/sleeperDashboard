@@ -11,15 +11,15 @@ const fallbackImage = '/NFL.svg'
 
 type Player = {
   player_id: string
-  search_rank?: number
-  full_name?: string
+  search_rank?: number | null
+  full_name?: string | null
   team?: string | null
   position?: string
   status?: string
   espn_id?: string
   gsis_id?: string
   headshot?: string
-  injury_status?: string
+  injury_status?: string | null
 }
 
 interface FuzzySearchProps {
