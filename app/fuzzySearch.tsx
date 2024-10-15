@@ -11,7 +11,7 @@ const fallbackImage = '/NFL.svg'
 
 type Player = {
   player_id: string
-  search_rank: number
+  search_rank?: number
   full_name: string
   team?: string | null
   position?: string
@@ -121,8 +121,9 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
             .sort((a, b) => {
               // Check if search_rank exists and handle undefined values
               if (a.search_rank === null && b.search_rank === null) return 0
-              if (a.search_rank === null) return 1 // a goes after b
               if (b.search_rank === null) return -1 // b goes after a
+              if (a.search_rank === undefined) return -1
+              if (b.search_rank === undefined) return -1 // a goes after b if a.search_rank is undefined
               return a.search_rank - b.search_rank // Otherwise, sort by search_rank
             })
             .slice(0, 5)
