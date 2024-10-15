@@ -12,7 +12,7 @@ const fallbackImage = '/NFL.svg'
 type Player = {
   player_id: string
   search_rank?: number
-  full_name: string
+  full_name?: string
   team?: string | null
   position?: string
   status?: string
@@ -74,7 +74,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
   }
 
   const handleSelect = (player: Player) => {
-    setQuery(player.full_name)
+    setQuery(player?.full_name || '')
     setSelectedPlayer(player)
     setResults([])
     setFocusedIndex(null)
@@ -138,7 +138,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                   {player.espn_id !== null ? (
                     <Image
                       src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-                      alt={player.full_name}
+                      alt={player?.full_name || 'player'}
                       width={50}
                       height={50}
                     />
