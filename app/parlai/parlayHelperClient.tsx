@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils'
 import z from 'zod'
 import DailyLimitBanner from '../playerCompare/dailyLimitBanner'
 import GameLogs from '../boxScores/page'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 type AnalysisObject = {
   analysis?: {
@@ -38,6 +39,8 @@ const propMap: Record<string, string> = {
   player_rush_yds: 'Rushing Yards',
   player_reception_yds: 'Receiving Yards',
   player_anytime_td: 'Anytime Touchdown',
+  player_pass_yards: 'Pass Yards',
+  player_pass_td: 'Pass Touchdown',
   // Add other mappings as needed
 }
 
@@ -111,18 +114,6 @@ export default function ParlayHelperClient({
     api: `/api/analyzeParlay`,
     schema: propsResSchema,
   })
-
-  useEffect(() => {
-    console.log('paramsObj', paramsObj)
-    console.log('player', player)
-  }, [player, paramsObj])
-
-  useEffect(() => {
-    console.log('data', data)
-    console.log('data?.game', data?.game)
-    console.log('data length', data?.length)
-    console.log('searchParams', searchParams)
-  }, [data])
 
   useEffect(() => {
     setParamsObj({
@@ -205,17 +196,11 @@ export default function ParlayHelperClient({
 
   const fetchOdds = async () => {
     setLoading(true)
-
-    console.log('here')
-
     // Construct the URL for the API request using the query params
     const oddsUrl = `/api/getOdds?playerId=${playerId}&playerName=${encodeURIComponent(playerName || '')}&playerTeam=${encodeURIComponent(playerTeam || '')}&prop=${betProp || ''}&opponentTeam=${encodeURIComponent(opponentTeam || '')}`
-
-    console.log('here1')
     try {
       const response = await fetch(`${fetchUrl}${oddsUrl}`)
       const data = await response.json()
-      console.log('data', data)
       setOdds(data)
       setData(data) // Store the fetched odds in state
     } catch (error) {
@@ -278,24 +263,27 @@ export default function ParlayHelperClient({
               <span>Step 2: Bet Details</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="">
             <div>
-              <label className="text-sm font-medium mb-1 block">
-                Select the player prop
-              </label>
-              <div className="flex gap-2">
-                {Object.entries(propMap).map(([key, value]) => (
-                  <Button
-                    key={key}
-                    onClick={() => setBetProp(key)}
-                    variant="outline"
-                    className={cn(betProp === key && 'bg-green-50')}
-                  >
-                    {value}
-                  </Button>
-                ))}
+              <div className="py-4">
+                <label className="text-sm font-medium block">
+                  Select the player prop
+                </label>
+                <ScrollArea className="overflow-hidden whitespace-nowrap rounded-md py-4">
+                  {Object.entries(propMap).map(([key, value]) => (
+                    <Button
+                      key={key}
+                      onClick={() => setBetProp(key)}
+                      variant="outline"
+                      className={cn(betProp === key && 'bg-green-50')}
+                    >
+                      {value}
+                    </Button>
+                  ))}
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </div>
-              <div>
+              <div className="pb-4">
                 <label className="text-sm font-medium mb-1 block">
                   Select the opposing team
                 </label>
@@ -401,7 +389,7 @@ export default function ParlayHelperClient({
                 </div>
               </>
             ) : (
-              <p>Please enter player information to generate analysis.</p>
+              <p>Fetching current odds...</p>
             )}
             <div className="flex justify-between mt-4">
               <Button variant={'outline'} onClick={() => setStep(2)}>

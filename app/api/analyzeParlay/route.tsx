@@ -9,6 +9,7 @@ import db from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import teamMap from '../../parlai/teamMap'
+import getOpponentTeamAvg from './opponentTeamAvg'
 
 interface User {
   dailyLimit: number
@@ -44,8 +45,9 @@ export async function POST(request: NextRequest) {
     SELECT * FROM "nflverse_player_stats_2024" WHERE player_display_name = ${playerName}
   `
 
-  console.log('current data', currentData)
-
+  const sortedCurrentData = currentData.sort(
+    (a, b) => Number(b.week) - Number(a.week)
+  )
   const getTeamAbbr = (team: string) => {
     return teamMap[team as keyof typeof teamMap] || team // Cast team to the correct type
   }
@@ -68,9 +70,6 @@ export async function POST(request: NextRequest) {
       message: 'No data found.',
     })
   }
-
-  console.log(results.length)
-
   // Initialize sums and count
   const statsSum = {
     carries: 0,
@@ -127,7 +126,6 @@ export async function POST(request: NextRequest) {
 
   statsAvg.weeks = results.length
 
-  console.log('average stats', statsAvg)
   try {
     const cacheKey1 = `player-news:${playerId}`
 
@@ -174,25 +172,26 @@ export async function POST(request: NextRequest) {
     const cacheKeyProp = `player-prop:${playerId}-${prop}`
     const playerProp = await redisClient?.get(cacheKeyProp)
 
-    console.log(player1Stories)
+    const defTeamAvg = await getOpponentTeamAvg(teamAbbr, 'RB')
 
     if (playerProp && player1Stories) {
       const result = await streamObject({
         model: openai('gpt-4o-mini'),
         seed: 100,
         schema: propsResSchema,
-        system: `You are an expert at finding value within player prop bets.`,
+        system: `You are an expert at sports betting and finding value within player prop bets. Pretend you are down to your last dollar and you NEED to win this bet.`,
         prompt: `
-    Given the current odds for ${playerName} vs ${opponentTeam}, I want you to analyze the prop bets against recent data, historical data, and recent team news to make an informed decision on if it is a good bet. 
+    Given the current odds for ${playerName} vs ${opponentTeam}, I want you to analyze the prop bet given recent data, historical data, and recent team news to make an informed decision on if it is a good bet. 
     
     This is the data to consider:
-    Player 1: ${playerName}
+    Player: ${playerName}
     Team news: ${player1Stories}
     Opposing team: ${opponentTeam}
     Prop: ${prop}
     Current odds from fanduel: ${playerProp}
-    recent data for this year: ${JSON.stringify(currentData)}
+    data for this year for player: ${JSON.stringify(sortedCurrentData)}
     historical data vs this team if available: ${JSON.stringify(statsAvg)}
+    Opposing teams average stats allowed: ${JSON.stringify(defTeamAvg)}
     
     Please return the following:
     
