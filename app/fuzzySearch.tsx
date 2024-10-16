@@ -81,6 +81,37 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
     onPlayerSelect(player)
   }
 
+  function renderHeadshot(player: Player) {
+    if (player.espn_id) {
+      return (
+        <Image
+          src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
+          alt={player?.full_name || 'player'}
+          width={50}
+          height={50}
+        />
+      )
+    } else if (player.headshot) {
+      return (
+        <Image
+          src={player.headshot}
+          alt={player?.full_name || 'player'}
+          width={50}
+          height={50}
+        />
+      )
+    } else {
+      return (
+        <Image
+          src={fallbackImage}
+          alt="Default player"
+          width={50}
+          height={50}
+        />
+      )
+    }
+  }
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -136,21 +167,7 @@ const FuzzySearch: React.FC<FuzzySearchProps> = ({ onPlayerSelect }) => {
                 onMouseEnter={() => setFocusedIndex(index)}
               >
                 <div className="flex items-center">
-                  {player.espn_id !== null ? (
-                    <Image
-                      src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-                      alt={player?.full_name || 'player'}
-                      width={50}
-                      height={50}
-                    />
-                  ) : (
-                    <Image
-                      src={fallbackImage}
-                      alt="Default player"
-                      width={50}
-                      height={50}
-                    />
-                  )}
+                  {renderHeadshot(player)}
                   <div className="ml-2">
                     <strong>{player.full_name}</strong> -{' '}
                     {player.team ?? 'Free Agent'} ({player.position})

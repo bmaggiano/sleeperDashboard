@@ -7,6 +7,7 @@ interface PlayerIdEntry {
   last_name: string
   position: string
   team_abbr: string | null
+  headshot: string | null
   // Add other relevant fields
 }
 
@@ -17,6 +18,7 @@ interface GsisEntry {
   last_name: string
   position: string
   team_abbr: string
+  headshot: string
   // Add other relevant fields
 }
 
@@ -44,6 +46,7 @@ function updateGsisIds() {
 
       if (gsisEntry) {
         player.gsis_id = gsisEntry.gsis_id
+        player.headshot = gsisEntry.headshot
         updatedCount++
       }
     }
