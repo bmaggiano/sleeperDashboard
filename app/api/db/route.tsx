@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     schema: ffDataSchema,
     system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
     prompt: `
-    Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any.
+    Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any. If one player is out, on IR or inactive, and the other is not, you can be 100% sure in your decision.
   
     Player 1: (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team})
     

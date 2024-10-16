@@ -301,16 +301,17 @@ export default function PlayerCompare() {
                         <div>
                           <div className="flex justify-between">
                             <div className="flex items-center gap-2">
-                              <Image
-                                src={`https://a.espncdn.com/i/headshots/nfl/players/full/${data?.recommended_pick_espn_id}.png`}
-                                height={70}
-                                width={70}
-                                alt="recommended player"
-                                className="rounded-full"
-                              />
-                              <div className="text-lg flex flex-col font-semibold mb-2">
+                              <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center text-2xl overflow-hidden">
+                                <Image
+                                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${data?.recommended_pick_espn_id}.png`}
+                                  height={110}
+                                  width={110}
+                                  alt="recommended player"
+                                />
+                              </div>
+                              <div className="text-xl flex flex-col font-semibold mb-2">
                                 {data?.recommended_pick}
-                                <span className="font-normal text-gray-500">
+                                <span className="font-normal text-base text-gray-500">
                                   {data?.recommended_pick ===
                                   data?.playerOneName
                                     ? `${data?.playerOnePosition}`
@@ -324,10 +325,9 @@ export default function PlayerCompare() {
                               </div>
                             </div>
                             <div className="sm:block flex flex-col">
-                              <span className="font-semibold text-lg">
-                                {data?.certainty}%
-                              </span>{' '}
-                              Certainty
+                              <Badge className="font-semibold text-base">
+                                {data?.certainty}% Certainty
+                              </Badge>{' '}
                             </div>
                           </div>
                           <div>
