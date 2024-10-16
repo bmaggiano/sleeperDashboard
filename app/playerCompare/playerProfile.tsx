@@ -43,6 +43,32 @@ const NFL_TEAM_COLORS = {
   WAS: '#773141',
 }
 
+type PlayerStatus =
+  | 'Out'
+  | 'IR'
+  | 'Inactive'
+  | 'Questionable'
+  | 'Injured Reserve'
+  | 'PUP'
+  | 'Active'
+  | undefined
+
+const getStatusColor = (status: PlayerStatus) => {
+  switch (status) {
+    case 'Out':
+    case 'IR':
+    case 'Inactive':
+    case 'Injured Reserve':
+    case 'PUP':
+      return 'bg-red-500'
+    case 'Questionable':
+      return 'bg-yellow-500'
+    case 'Active':
+    default:
+      return 'bg-green-500'
+  }
+}
+
 function renderStatus(status: string) {
   return (
     <Badge className="text-white font-normal" variant="outline">
@@ -52,6 +78,7 @@ function renderStatus(status: string) {
       {status === 'Questionable' && 'Questionable'}
       {status === 'Injured Reserve' && 'Injured Reserve'}
       {status === 'Active' && 'Active'}
+      {status === 'PUP' && 'PUP'}
       {!status && 'Active'}
     </Badge>
   )
@@ -109,12 +136,18 @@ export default function PlayerProfile({ player }: PlayerProfileProps) {
         >
           <div className="w-1/3 flex items-center justify-center bg-white">
             {player.espn_id ? (
-              <Image
-                src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
-                height={110}
-                width={110}
-                alt={player.full_name}
-              />
+              <div className="relative">
+                <Image
+                  src={`https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png`}
+                  height={110}
+                  width={110}
+                  alt={player.full_name}
+                />
+                <span
+                  className={`absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white ${getStatusColor(playerProfileData?.injury_status)}`}
+                  title={playerProfileData?.injury_status || 'Active'}
+                ></span>
+              </div>
             ) : (
               <User size={110} className="text-gray-400" />
             )}
@@ -123,7 +156,7 @@ export default function PlayerProfile({ player }: PlayerProfileProps) {
             <h2 className="text-lg font-bold">{player.full_name}</h2>
             <p className="flex items-center gap-2 text-sm mb-1">
               {`${player.position} - ${player.team}`}{' '}
-              {renderStatus(playerProfileData?.injury_status)}
+              {renderStatus(playerProfileData?.injury_status)}{' '}
             </p>
             {playerProfileData && (
               <p className="text-sm mb-1">
