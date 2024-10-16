@@ -265,10 +265,6 @@ export default function PlayerCompare() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="flex flex-col gap-4 mt-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
-          <PlayerCompareModal />
-        </div>
         {loading && selectedPlayer1 && selectedPlayer2 ? (
           <AISkeleton />
         ) : (
@@ -322,10 +318,15 @@ export default function PlayerCompare() {
                                     ? `${data?.playerOneTeam}`
                                     : `${data?.playerTwoTeam}`}
                                 </span>
+                                <div className="sm:hidden block">
+                                  <Badge className="font-semibold text-xs sm:text-base">
+                                    {data?.certainty}% Certainty
+                                  </Badge>{' '}
+                                </div>
                               </div>
                             </div>
-                            <div className="sm:block flex flex-col">
-                              <Badge className="font-semibold text-base">
+                            <div className="sm:block hidden">
+                              <Badge className="font-semibold text-xs sm:text-base">
                                 {data?.certainty}% Certainty
                               </Badge>{' '}
                             </div>
