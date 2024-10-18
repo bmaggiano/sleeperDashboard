@@ -88,15 +88,17 @@ function NewsItem({ data }: { data: any }) {
   )
 }
 
-function PlayerProfileSkeleton({ playerIndex }: { playerIndex: number }) {
+function PlayerProfileSkeleton() {
   return (
-    <div className="w-full flex items-center space-x-4">
+    <div className="p-8 rounded-md ring-1 ring-gray-200 w-full flex flex-col justify-center items-center">
       <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
         <User size={32} />
       </div>
-      <div>
-        <h3 className="text-xl font-semibold">Select Player {playerIndex}</h3>
-        <span className="text-gray-500">Search for a player</span>
+      <div className="text-center">
+        <h3 className="text-lg font-semibold">No players selected</h3>
+        <span className="text-gray-500">
+          Get started by selecting players to compare
+        </span>
       </div>
     </div>
   )
@@ -362,24 +364,13 @@ export default function PlayerCompare() {
         )}
         <div className="flex flex-col sm:flex-row justify-center items-start flex-row gap-2 sm:space-y-0 space-y-4">
           <div className="flex flex-col w-full sm:w-1/2">
-            {selectedPlayer1 ? (
-              <PlayerProfile player={selectedPlayer1} />
-            ) : (
-              <div className="p-4 ring-1 ring-gray-200 rounded-md">
-                <PlayerProfileSkeleton playerIndex={1} />
-              </div>
-            )}
+            {selectedPlayer1 && <PlayerProfile player={selectedPlayer1} />}
           </div>
           <div className="flex flex-col w-full sm:w-1/2">
-            {selectedPlayer2 ? (
-              <PlayerProfile player={selectedPlayer2} />
-            ) : (
-              <div className="p-4 ring-1 ring-gray-200 rounded-md">
-                <PlayerProfileSkeleton playerIndex={2} />
-              </div>
-            )}
+            {selectedPlayer2 && <PlayerProfile player={selectedPlayer2} />}
           </div>
         </div>
+        {!selectedPlayer1 && !selectedPlayer2 && <PlayerProfileSkeleton />}
         {playerStats.length > 0 && (
           <div className="mb-4">
             <CompareTableVsTeam

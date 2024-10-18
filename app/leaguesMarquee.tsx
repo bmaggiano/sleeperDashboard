@@ -4,19 +4,21 @@ import { cn } from '@/lib/utils'
 import Marquee from '@/components/magicui/marquee'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { getCurrentWeek } from './utils'
 
 const leagues = [
   {
-    name: 'Wet-FF (Year 7)',
+    name: 'Wet-FF (Year 8)',
     description: '12 Team Half PPR',
-    leagueId: '974399495632891904',
-    body: '1 QB, 2 RB, 3 WR, 1 TE, 1 W/R/T, 1 K, 1 DEF',
+    leagueId: '1123290048755032064',
+    body: '1 QB, 2 RB, 2 WR, 1 TE, 1 W/R/T, 1 K, 1 DEF',
     img: 'https://sleepercdn.com/avatars/thumbs/03c86c21e887fadf1b652885694af7cc',
   },
   {
     name: 'League of Legends',
-    description: '8 Team, 3 Man Keeper',
-    leagueId: '992142653368156160',
+    description: '10 Team, 4 Man Keeper',
+    leagueId: '1124814303833124864',
     body: '1 QB, 2 RB, 2 WR, 1 TE, 1 W/R/T, 1 K, 1 DEF',
     img: 'https://sleepercdn.com/images/v2/icons/league/nfl/orange.png',
   },
@@ -35,16 +37,16 @@ const leagues = [
     img: 'https://sleepercdn.com/avatars/thumbs/03c86c21e887fadf1b652885694af7cc',
   },
   {
-    name: "Fantasy Fudus '23",
+    name: "Fantasy Fudus '24",
     description: '12 Team Full PPR',
-    leagueId: '990360731344293888',
+    leagueId: '1123847871855529984',
     body: '1 QB, 2 RB, 2 WR, 1 TE, 1 W/R/T, 1 K, 1 DEF',
     img: 'https://sleepercdn.com/avatars/thumbs/42f817ab2dc95dd29634cd84553902ad',
   },
   {
     name: 'TDP FF',
     description: '12 Team Superflex Half PPR',
-    leagueId: '992179723217981440',
+    leagueId: '1124853725358206976',
     body: '1 QB, 2 RB, 2 WR, 1 TE, 2 W/R/T, 1 K, 1 DEF',
     img: 'https://sleepercdn.com/avatars/thumbs/58f6c24fd240df16ed3d57054285b0ef',
   },
@@ -66,8 +68,22 @@ const ReviewCard = ({
   body: string
   leagueId: string
 }) => {
+  const [currentWeek, setCurrentWeek] = useState<number | null>(null)
+
+  useEffect(() => {
+    async function fetchCurrentWeek() {
+      const week = await getCurrentWeek(leagueId) // Fetch the current week
+      setCurrentWeek(week || 'winners')
+    }
+
+    fetchCurrentWeek()
+  }, [])
   return (
-    <Link href={`/${leagueId}`} prefetch={true} className="block">
+    <Link
+      href={`/${leagueId}/${currentWeek}`}
+      prefetch={true}
+      className="block"
+    >
       <figure
         className={cn(
           'relative w-60 h-32 cursor-pointer overflow-hidden rounded-lg p-4 transition-all duration-300 ease-in-out',
