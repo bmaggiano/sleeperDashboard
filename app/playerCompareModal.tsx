@@ -35,7 +35,7 @@ export default function PlayerCompareModal({ open, setOpen }: any) {
       ? 'https://sleeper-dashboard.vercel.app'
       : 'http://localhost:3000'
 
-  const compareUrl = new URL('/playerCompare', baseUrl)
+  const compareUrl = new URL('/compare', baseUrl)
 
   // Update params based on the new data structure
   const params: { [key: string]: any } = {

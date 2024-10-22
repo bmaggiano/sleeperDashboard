@@ -49,46 +49,11 @@ const navigationItems = [
     title: 'AI Features',
     items: [
       {
-        title: 'AI Assistant',
-        href: '/ai/assistant',
-        children: 'AI-powered assistant for fantasy football insights',
-        icon: <Robot weight="duotone" size={16} />,
-        comingSoon: true,
-      },
-      {
-        title: 'AI Predictions',
-        href: '/ai/predictions',
-        children: 'Machine learning predictions for player performance',
-        icon: <ChartBarHorizontal weight="duotone" size={16} />,
-        comingSoon: true,
-      },
-      {
         title: 'AI Compare Players',
-        href: '/playerCompare',
+        href: '/compare',
         children: 'Compare players across your league',
         icon: <Users weight="duotone" size={16} />,
         comingSoon: false,
-      },
-      {
-        title: 'AI Start/Sit',
-        href: '/ai/start-sit',
-        children: 'Notifications for optimal start and sit decisions',
-        icon: <Bell weight="duotone" size={16} />,
-        comingSoon: true,
-      },
-      {
-        title: 'AI Waiver Claims',
-        href: '/ai/waiver-claims',
-        children: 'Best player recommendations for your team',
-        icon: <Mailbox weight="duotone" size={16} />,
-        comingSoon: true,
-      },
-      {
-        title: 'Historical Stats',
-        href: '/ai/historical-stats',
-        children: 'Compare and analyze historical stats with regressions',
-        icon: <ChartLineUp weight="duotone" size={16} />,
-        comingSoon: true,
       },
       {
         title: 'Parlai',
@@ -102,20 +67,6 @@ const navigationItems = [
   {
     title: 'League Management',
     items: [
-      {
-        title: 'League Buy-ins',
-        href: '/league/buy-ins',
-        children: 'Handle and track league buy-ins and payments',
-        icon: <CurrencyDollar weight="duotone" size={16} />,
-        comingSoon: true,
-      },
-      {
-        title: 'Custom Polls',
-        href: '/league/polls',
-        children: 'Create and manage custom polls for your league',
-        icon: <ChartBar weight="duotone" size={16} />,
-        comingSoon: true,
-      },
       {
         title: 'Claim Your League',
         href: '/league/claim',

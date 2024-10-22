@@ -5,7 +5,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { NextRequest } from 'next/server'
 import redisClient from '@/lib/redis/redisClient'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
-import fetchAndFilterStories from '@/app/playerCompare/recentNews'
+import fetchAndFilterStories from '@/app/compare/recentNews'
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions)

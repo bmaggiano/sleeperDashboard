@@ -22,7 +22,7 @@ import { propsResSchema } from '../api/analyzeParlay/schema'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import z from 'zod'
-import DailyLimitBanner from '../playerCompare/dailyLimitBanner'
+import DailyLimitBanner from '../compare/dailyLimitBanner'
 import GameLogs from '../boxScores/page'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 

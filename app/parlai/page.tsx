@@ -1,6 +1,6 @@
 'use server'
 import FuzzySearch from '../fuzzySearch'
-import DailyLimitBanner from '../playerCompare/dailyLimitBanner'
+import DailyLimitBanner from '../compare/dailyLimitBanner'
 import ParlayHelperClient from './parlayHelperClient'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../api/auth/[...nextauth]/options'

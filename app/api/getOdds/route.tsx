@@ -1,4 +1,4 @@
-import fetchAndFilterStories from '@/app/playerCompare/recentNews'
+import fetchAndFilterStories from '@/app/compare/recentNews'
 import redisClient from '@/lib/redis/redisClient'
 import { getPlayerDetails } from '@/lib/sleeper/helpers'
 import { NextRequest, NextResponse } from 'next/server'

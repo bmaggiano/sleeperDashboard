@@ -1226,13 +1226,13 @@ model nflverse_play_by_play_2023 {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model nflverse_play_by_play_2024 {
-  play_id                              Int?
-  game_id                              String?
+  play_id                              Int
+  game_id                              String
   old_game_id                          Int?
-  home_team                            String?
-  away_team                            String?
-  season_type                          String?
-  week                                 Int?
+  home_team                            String
+  away_team                            String
+  season_type                          String
+  week                                 Int
   posteam                              String?
   posteam_type                         String?
   defteam                              String?
@@ -1597,21 +1597,22 @@ model nflverse_play_by_play_2024 {
   xyac_success                         String?
   xyac_fd                              String?
   xpass                                String?
+  pass_oe                              String?
 
-  @@ignore
+  @@id([play_id, game_id, home_team, away_team, season_type, week], map: "Nflverse_Play_by_Play_2024_pkey")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model nflverse_player_stats_2024 {
-  player_id                   String?
-  player_name                 String?
+  player_id                   String
+  player_name                 String
   player_display_name         String?
-  position                    String?
+  position                    String
   position_group              String?
   headshot_url                String?
   recent_team                 String?
   season                      String?
-  week                        String?
+  week                        String
   season_type                 String?
   opponent_team               String?
   completions                 String?
@@ -1657,7 +1658,7 @@ model nflverse_player_stats_2024 {
   fantasy_points              String?
   fantasy_points_ppr          String?
 
-  @@ignore
+  @@id([player_id, player_name, position, week], map: "nflverse_player_stats_2024_pk")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -1839,7 +1840,6 @@ model nflverse_player_stats_2023 {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model injuries {
-  id                        Int     @id @default(autoincrement())
   season                    Int?
   game_type                 String?
   team                      String?
@@ -1856,4 +1856,5 @@ model injuries {
   practice_secondary_injury String?
   practice_status           String?
   date_modified             String?
+  id                        Int     @id @default(autoincrement())
 }

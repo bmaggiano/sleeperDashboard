@@ -2,7 +2,6 @@
 import RecentSearches from '@/components/ui/recentSearches'
 import LeaguesMarquee from './leaguesMarquee'
 import LeagueSearchForm from './leagueSearchForm'
-import { AssistantModal } from '@/components/ui/assistant-ui/assistant-modal'
 import { Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -42,9 +41,6 @@ export default function Home() {
         </section>
       </main>
       <div className="p-2 sm:p-4 max-w-3xl mx-auto">
-        <div className="absolute z-50">
-          <AssistantModal />
-        </div>
         <RecentSearches />
         <LeaguesMarquee />
       </div>
