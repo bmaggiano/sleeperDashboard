@@ -13,8 +13,8 @@ export default function NoLeaguesFoundEmpty() {
         <h1 className="text-lg font-medium">No leagues found.</h1>
       </CardHeader>
       <CardContent>
-        You haven't linked any leagues to your account yet. Try searching for a
-        league to get started.
+        You haven&apos;t linked any leagues to your account yet. Try searching
+        for a league to get started.
         <LeagueSearchForm />
       </CardContent>
     </Card>
