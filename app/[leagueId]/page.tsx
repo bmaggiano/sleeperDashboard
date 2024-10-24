@@ -47,8 +47,6 @@ export default async function Page({
 
   const mostRecentWeek = await getCurrentWeek(leagueId)
 
-  console.log(mostRecentWeek)
-
   // Check if the most recent week is "Winners Bracket"
   if (mostRecentWeek === 'Winners Bracket') {
     return redirect(`/${leagueId}/winners`)

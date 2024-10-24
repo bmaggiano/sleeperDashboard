@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import db from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]/options'
@@ -50,6 +51,8 @@ export async function POST(req: Request) {
         sleeperUserId: sleeperUserId, // Update the sleeperUserId
       },
     })
+
+    revalidatePath(`/[leagueId]/[week]`)
 
     return NextResponse.json(
       { message: 'League added successfully' },

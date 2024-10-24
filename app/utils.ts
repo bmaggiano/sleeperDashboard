@@ -47,7 +47,14 @@ export async function getPlayerStats(
             totalPassYards: Number(result.total_pass_yards) || 0,
             totalPassTds: Number(result.total_pass_tds) || 0,
             totalInterceptions: Number(result.total_interceptions) || 0,
-            totalYardsPerRec: parseFloat((Number(result.total_rec_yards) / Number(result.total_receptions)).toFixed(2)) || 0,          }
+            totalYardsPerRec:
+              parseFloat(
+                (
+                  Number(result.total_rec_yards) /
+                  Number(result.total_receptions)
+                ).toFixed(2)
+              ) || 0,
+          }
         : {
             longestPlay: 0,
             totalRecYards: 0,
@@ -111,7 +118,7 @@ export const getCurrentWeek = cache(async (leagueId: string) => {
     const leagueData = await response.json()
     const recentWeek = leagueData?.settings?.leg
     if (recentWeek > leagueData?.settings?.playoff_week_start)
-      return "Winners Bracket"
+      return 'Winners Bracket'
     return recentWeek
   } catch (error: any) {
     return { index: 0, week: 'Week 1' }
@@ -267,7 +274,7 @@ const getMatchupInfo = cache(async (leagueId: string, weekIndex: number) => {
   try {
     const response = await fetch(
       `https://api.sleeper.app/v1/league/${leagueId}/matchups/${weekIndex}`,
-      { next: { revalidate: 3600 } } // Cache for 1 hour
+      { cache: 'no-store' } // Cache for 1 hour
     )
     if (!response.ok) throw new Error('Failed to fetch matchup info')
     const matchupInfo = await response.json()
@@ -511,9 +518,9 @@ export const sleeperToESPNMapping = cache(async (playerId: string) => {
 
 export const calculateHeight = (height: string) => {
   // Parse the height string to get total inches
-  let heightNum = parseInt(height);
-  
+  let heightNum = parseInt(height)
+
   // Calculate feet and inches
   // Format the output without fractions
-  return `${Math.floor(heightNum / 12)}'${heightNum % 12}`;
+  return `${Math.floor(heightNum / 12)}'${heightNum % 12}`
 }

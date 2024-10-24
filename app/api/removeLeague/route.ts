@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import db from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]/options'
 
 export async function POST(req: Request) {
   const body = await req.json()
+  const path = req
+
+  console.log('pre path')
+  console.log(path)
+
   const session = await getServerSession(authOptions)
   const { leagueId } = body
 
@@ -48,6 +54,9 @@ export async function POST(req: Request) {
     await db.league.delete({
       where: { id: league.id }, // Use the league ID to delete
     })
+
+    // Revalidate the path for the removed league
+    revalidatePath(`/[leagueId]/[week]`)
 
     return NextResponse.json(
       { message: 'League removed successfully' },

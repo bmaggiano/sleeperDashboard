@@ -23,9 +23,38 @@ export default async function MatchupServer({
     leagueId: leagueId,
     matchupId: matchup,
   })
+  const fetchUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3000'
+      : 'https://sleeper-dashboard.vercel.app'
+
+  const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
+    try {
+      const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
+        method: 'POST',
+        body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        return data
+      } else {
+        return false
+      }
+    } catch (error) {
+      console.error('Error checking league:', error)
+      return false
+    }
+  }
 
   const processedData = await Promise.all(
     data.map(async (team) => {
+      // Perform claimed league check for this specific team
+      const claimed = await checkClaimedLeague(team.league_id, team.owner_id)
+
       const starters = await Promise.all(
         team.starters.map(async (playerId, index) => {
           const info = await cachedSleeperToESPNMapping(playerId)
@@ -33,6 +62,7 @@ export default async function MatchupServer({
             id: playerId,
             points: team.starters_points[index],
             info: info || null, // Handle potential null value
+            claimed, // Pass claimed status to starters
           }
         })
       )
@@ -54,9 +84,12 @@ export default async function MatchupServer({
         ...team,
         starters,
         bench,
+        claimed, // Pass claimed status to the entire team
       }
     })
   )
+
+  const isUnclaimed = processedData.every((matchup: any) => !matchup.claimed)
 
   return (
     <div>
@@ -67,7 +100,12 @@ export default async function MatchupServer({
           </div>
         }
       >
-        <MatchupDetails teamOne={processedData[0]} teamTwo={processedData[1]} />
+        {console.log(processedData)}
+        <MatchupDetails
+          teamOne={processedData[0]}
+          teamTwo={processedData[1]}
+          isUnclaimed={isUnclaimed}
+        />
       </Suspense>
     </div>
   )

@@ -221,13 +221,26 @@ const PlayerMatchupCards = ({ teamOne, teamTwo }: PlayerMatchupCardsProps) => {
   )
 }
 
-const MatchupDetails: React.FC<MatchupDetailProps> = ({ teamOne, teamTwo }) => {
+const MatchupDetails: React.FC<MatchupDetailProps> = ({
+  teamOne,
+  teamTwo,
+  isUnclaimed,
+}) => {
+  useEffect(() => {
+    console.log(teamOne)
+    console.log(isUnclaimed)
+  }, [teamOne])
   if (!teamOne || !teamTwo || !teamOne.starters || !teamTwo.starters)
     return <Skeleton className="w-full h-screen" />
   return (
     <div className="max-h-screen flex flex-col">
       <div className="mx-auto w-full max-w-4xl">
-        <MatchupCard team1={teamOne} team2={teamTwo} withVsLink={false} />
+        <MatchupCard
+          team1={teamOne}
+          team2={teamTwo}
+          withVsLink={false}
+          isUnclaimed={isUnclaimed}
+        />
         <Suspense fallback={<Skeleton className="w-full h-96" />}>
           <PlayerMatchupCards teamOne={teamOne} teamTwo={teamTwo} />
         </Suspense>

@@ -10,9 +10,10 @@ import { weekNumberAtom } from '@/app/atoms/atom'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 // import { Button } from './button'
-import { BookmarkCheck, BookmarkPlus, Hand } from 'lucide-react'
-import { Button } from './testButton'
+import { BookmarkCheck, BookmarkPlus, Hand, Loader2 } from 'lucide-react'
+import { Button } from './tooltip-button'
 import { toast } from './use-toast'
+import { useRouter } from 'next/navigation'
 
 const MatchupCard = ({
   team1,
@@ -30,6 +31,9 @@ const MatchupCard = ({
   const [weekIndex] = useAtom(weekNumberAtom)
 
   if (!team1 || !team2 || !team1.user || !team2.user) {
+    console.log(team1)
+    console.log(team2)
+    console.log('no team found')
     return <MatchupCardSkeleton />
   }
 
@@ -95,6 +99,7 @@ const TeamInfo = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [isLeagueClaimed, setIsLeagueClaimed] = useState<boolean | null>(null)
   const [isTeamClaimed, setIsTeamClaimed] = useState<string | null>(null)
+  const router = useRouter()
 
   const avatarSrc = team.user.avatar
     ? `https://sleepercdn.com/avatars/thumbs/${team.user.avatar}`
@@ -137,6 +142,7 @@ const TeamInfo = ({
       })
       setIsTeamClaimed(team.owner_id)
       setIsLeagueClaimed(true)
+      router.refresh()
     } else {
       toast({
         variant: 'destructive',
@@ -154,8 +160,6 @@ const TeamInfo = ({
     e.preventDefault()
     e.stopPropagation()
     await addLeague(team)
-    console.log('this worked')
-    console.log(team) // You can define this function to handle claiming/removing
   }
 
   const handleRemoveLeague = async (
@@ -165,8 +169,6 @@ const TeamInfo = ({
     e.preventDefault()
     e.stopPropagation()
     await removeLeague(team)
-    console.log('this worked')
-    console.log(team) // You can define this function to handle claiming/removing
   }
 
   const removeLeague = async (leagueId: string) => {
@@ -187,6 +189,7 @@ const TeamInfo = ({
       })
       setIsTeamClaimed(null)
       setIsLeagueClaimed(false)
+      router.refresh()
     } else {
       toast({
         variant: 'destructive',
@@ -223,7 +226,11 @@ const TeamInfo = ({
             )}
             onClick={(e) => handleClaimLeague(e, team)}
           >
-            <BookmarkPlus className="h-4 w-4 text-gray-500" />
+            {loading ? (
+              <Loader2 className="animate-spin h-4 w-4" />
+            ) : (
+              <BookmarkPlus className="h-4 w-4 text-gray-500" />
+            )}
           </Button>
         )}
 
@@ -241,7 +248,11 @@ const TeamInfo = ({
               )}
               onClick={(e) => handleRemoveLeague(e, team)}
             >
-              <BookmarkCheck className="h-4 w-4 text-green-500" />
+              {loading ? (
+                <Loader2 className="animate-spin h-4 w-4" />
+              ) : (
+                <BookmarkCheck className="h-4 w-4 text-green-500" />
+              )}
             </Button>
           )}
 
