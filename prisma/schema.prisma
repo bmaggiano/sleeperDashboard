@@ -81,10 +81,23 @@ model User {
   image         String?
   accountType   String?
   dailyLimit    Int?
+  sleeperUserId String?
   accounts      Account[]
+  leagues       League[]
   sessions      Session[]
 
   @@map("users")
+}
+
+model League {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  leagueId  String   @map("league_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("leagues")
 }
 
 model VerificationToken {

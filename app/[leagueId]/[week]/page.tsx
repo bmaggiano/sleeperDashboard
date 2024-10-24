@@ -1,9 +1,11 @@
 import ScoresComponent from '../scoresServer'
 import { Combobox } from '@/components/ui/combobox'
 import { getLeagueName, getLeagueWeeks } from '../../utils'
+import { Plus } from 'lucide-react'
 
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 type Props = {
   params: { leagueId: string; week: number }
@@ -34,6 +36,7 @@ export async function generateMetadata(
     },
   }
 }
+
 export default async function WeekMatchup({
   params,
 }: {
@@ -41,12 +44,13 @@ export default async function WeekMatchup({
 }) {
   const { week, leagueId } = params
   const weeks = await getLeagueWeeks(leagueId)
+
   return (
     <div>
       <div className="pt-4 pb-2 flex justify-between items-center">
         <h1 className="font-medium my-2">
           <Link href={`/${leagueId}`} className="hover:underline">
-            Matchups - {getLeagueName(leagueId)}
+            Matchups - {await getLeagueName(leagueId)}
           </Link>
         </h1>
         <Combobox leagueId={leagueId} data={weeks} />

@@ -42,4 +42,6 @@ export interface Matchup {
       team_name: string
     }
   }
+  league_id: string
+  owner_id: string
 }

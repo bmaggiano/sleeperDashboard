@@ -10,7 +10,10 @@ const renderSkeletons = () => {
   ))
 }
 
-const renderMatchupCards = (matchups: Matchup[] | null) => {
+const renderMatchupCards = (
+  matchups: Matchup[] | null,
+  isUnclaimed?: boolean
+) => {
   if (!matchups) return <MatchupCardSkeleton />
 
   const cards = []
@@ -21,6 +24,7 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
         team1={matchups[i]}
         team2={matchups[i + 1] || null}
         withVsLink
+        isUnclaimed={isUnclaimed || false}
       />
     )
   }
@@ -29,10 +33,12 @@ const renderMatchupCards = (matchups: Matchup[] | null) => {
 
 export default function Scoreboard({
   scoresData,
+  isUnclaimed,
 }: {
   scoresData: Matchup[] | null
+  isUnclaimed?: boolean
 }) {
   if (!scoresData) return renderSkeletons()
 
-  return <div>{renderMatchupCards(scoresData)}</div>
+  return <div>{renderMatchupCards(scoresData, isUnclaimed)}</div>
 }

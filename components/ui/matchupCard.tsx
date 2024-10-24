@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaTrophy } from 'react-icons/fa6'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import MatchupCardSkeleton from '@/components/ui/matchupCardSkeleton'
@@ -8,19 +8,24 @@ import Link from 'next/link'
 import { useAtom } from 'jotai'
 import { weekNumberAtom } from '@/app/atoms/atom'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { cn } from '@/lib/utils'
+// import { Button } from './button'
+import { BookmarkCheck, BookmarkPlus, Hand } from 'lucide-react'
+import { Button } from './testButton'
+import { toast } from './use-toast'
 
 const MatchupCard = ({
   team1,
   team2,
   withVsLink,
   withWeekRef,
+  isUnclaimed,
 }: {
   team1: any
   team2: any
   withVsLink: boolean
   withWeekRef?: number
+  isUnclaimed?: boolean
 }) => {
   const [weekIndex] = useAtom(weekNumberAtom)
 
@@ -35,11 +40,21 @@ const MatchupCard = ({
 
   const CardContent = () => (
     <div className="flex items-center justify-between">
-      <TeamInfo team={team1} otherTeam={team2} isLeft={true} />
+      <TeamInfo
+        team={team1}
+        otherTeam={team2}
+        isLeft={true}
+        isUnclaimed={isUnclaimed || false}
+      />
       <div className="text-sm sm:text-2xl font-bold text-gray-400 w-[5%]">
         VS
       </div>
-      <TeamInfo team={team2} otherTeam={team1} isLeft={false} />
+      <TeamInfo
+        team={team2}
+        otherTeam={team1}
+        isLeft={false}
+        isUnclaimed={isUnclaimed || false}
+      />
     </div>
   )
 
@@ -68,13 +83,18 @@ const TeamInfo = ({
   team,
   otherTeam,
   isLeft,
+  isUnclaimed,
 }: {
   team: any
   otherTeam: any
   isLeft: boolean
+  isUnclaimed: boolean
 }) => {
   const alignClass = isLeft ? 'text-left' : 'text-right'
   const flexDirection = isLeft ? 'flex-row' : 'flex-row-reverse'
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isLeagueClaimed, setIsLeagueClaimed] = useState<boolean | null>(null)
+  const [isTeamClaimed, setIsTeamClaimed] = useState<string | null>(null)
 
   const avatarSrc = team.user.avatar
     ? `https://sleepercdn.com/avatars/thumbs/${team.user.avatar}`
@@ -93,20 +113,140 @@ const TeamInfo = ({
     team.user.metadata.team_name || team.user.display_name
   )
 
+  useEffect(() => {
+    console.log(team.claimed)
+  }, [])
+  // UseEffect to call the async function
+
+  const addLeague = async (team: any) => {
+    setLoading(true)
+    const res = await fetch('/api/claimLeague', {
+      method: 'POST',
+      body: JSON.stringify({
+        leagueId: team.league_id,
+        sleeperUserId: team.owner_id,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (res.ok) {
+      toast({
+        title: 'League claimed',
+        description: 'Your league has been claimed successfully.',
+      })
+      setIsTeamClaimed(team.owner_id)
+      setIsLeagueClaimed(true)
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Failed to claim league',
+        description: 'Failed to claim your league.',
+      })
+    }
+    setLoading(false)
+  }
+
+  const handleClaimLeague = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    team: any
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+    await addLeague(team)
+    console.log('this worked')
+    console.log(team) // You can define this function to handle claiming/removing
+  }
+
+  const handleRemoveLeague = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    team: any
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+    await removeLeague(team)
+    console.log('this worked')
+    console.log(team) // You can define this function to handle claiming/removing
+  }
+
+  const removeLeague = async (leagueId: string) => {
+    setLoading(true)
+    const res = await fetch('/api/removeLeague', {
+      method: 'POST',
+      body: JSON.stringify({
+        leagueId: team.league_id,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (res.ok) {
+      toast({
+        title: 'League removed',
+        description: 'Your league has been removed successfully.',
+      })
+      setIsTeamClaimed(null)
+      setIsLeagueClaimed(false)
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Failed to remove league',
+        description: 'Failed to remove your league.',
+      })
+    }
+    setLoading(false)
+  }
+
   return (
-    <div
-      className={`flex ${flexDirection} items-center overflow-hidden text-ellipsis w-[45%]`}
-    >
-      <Avatar className={isLeft ? 'mr-4' : 'ml-4'}>
-        {avatarSrc ? (
-          <AvatarImage
-            src={avatarSrc}
-            alt={`${team.user.metadata.team_name} avatar`}
-          />
-        ) : (
-          <AvatarFallback>{teamInitials}</AvatarFallback>
+    <div className={`flex ${flexDirection} items-center text-ellipsis w-[45%]`}>
+      <div className="relative inline-block">
+        {/* Avatar inside a wrapper */}
+        <Avatar className={isLeft ? 'mr-4' : 'ml-4'}>
+          {avatarSrc ? (
+            <AvatarImage
+              src={avatarSrc}
+              alt={`${team.user.metadata.team_name} avatar`}
+            />
+          ) : (
+            <AvatarFallback>{teamInitials}</AvatarFallback>
+          )}
+        </Avatar>
+
+        {isUnclaimed === true && (
+          <Button
+            tooltip={`Claim @${team.user.display_name} as your team`}
+            variant="ghost"
+            size="icon"
+            className={cn(
+              'absolute -top-2 h-6 w-6 rounded-full bg-white shadow',
+              isLeft ? '-left-3' : '-right-3'
+            )}
+            onClick={(e) => handleClaimLeague(e, team)}
+          >
+            <BookmarkPlus className="h-4 w-4 text-gray-500" />
+          </Button>
         )}
-      </Avatar>
+
+        {isTeamClaimed === null && null}
+
+        {isUnclaimed === false &&
+          team.claimed.sleeperUserId === team.owner_id && (
+            <Button
+              tooltip={`Remove @${team.user.display_name} as your team`}
+              variant="ghost"
+              size="icon"
+              className={cn(
+                'absolute -top-2 h-6 w-6 rounded-full bg-white shadow',
+                isLeft ? '-left-3' : '-right-3'
+              )}
+              onClick={(e) => handleRemoveLeague(e, team)}
+            >
+              <BookmarkCheck className="h-4 w-4 text-green-500" />
+            </Button>
+          )}
+
+        {isLeagueClaimed === null && null}
+      </div>
       <div className={`flex flex-col ${alignClass}`}>
         <span className="text-xs text-gray-400 w-[100px] sm:w-full truncate">
           @{team.user.display_name}
@@ -116,7 +256,7 @@ const TeamInfo = ({
         </span>
         <div
           className={cn(
-            'flex text-sm mt-2 items-center',
+            'flex text-sm items-center',
             isLeft ? 'justify-start' : 'justify-end'
           )}
         >
