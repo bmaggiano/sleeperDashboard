@@ -32,12 +32,6 @@ function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
                 <span className="truncate">{leagueDetails.name}</span>{' '}
               </div>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">
-                {leagueDetails.description}
-              </p>
-            </CardContent>
-            {/* Adjust according to your details structure */}
           </Card>
         </Link>
       ) : (
@@ -66,7 +60,6 @@ export default function Home() {
         )
         const fetchedDetails = await Promise.all(detailsPromises)
         setLeagueDetails(fetchedDetails)
-        console.log(fetchedDetails)
       } else {
         setNoLeagues(true)
       }

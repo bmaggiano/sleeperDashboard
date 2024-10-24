@@ -137,8 +137,8 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
             </Button>
           )}
         </div>
-        <UsersPlayers />
         <PlayerCompareClientPage />
+        <UsersPlayers />
       </>
     )
   }
