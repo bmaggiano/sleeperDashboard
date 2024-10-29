@@ -6,17 +6,18 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Image from 'next/image'
 import { X } from 'lucide-react'
-
-// Assume these utility functions are defined elsewhere
-import {
-  combineUserAndRosterInfoCard,
-  getLeagueDetails,
-  sleeperToESPNMapping,
-} from '../utils'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import Link from 'next/link'
 import NoLeaguesFoundEmpty from '../noLeaguesFoundEmpty'
+import FuzzySearch from '../fuzzySearch'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 export default function UsersPlayers() {
   const [loading, setLoading] = useState<boolean>(true)
@@ -31,6 +32,9 @@ export default function UsersPlayers() {
   const [p2Id, setP2Id] = useQueryState('p2Id', parseAsString)
   const [p1EID, setP1EID] = useQueryState('p1EID', parseAsString)
   const [p2EID, setP2EID] = useQueryState('p2EID', parseAsString)
+  const [player1Details, setPlayer1Details] = useState<any>(null)
+  const [player2Details, setPlayer2Details] = useState<any>(null)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const handleAddPlayer = (player: any) => {
     if (p1Id === player.sleeper_id) {
@@ -49,13 +53,13 @@ export default function UsersPlayers() {
       setP1Name(player.full_name)
       setP1Pos(player.position)
       setP1Team(player.team)
-      setP1Id(player.sleeper_id)
+      setP1Id(player.sleeper_id || player.player_id)
       setP1EID(player.espn_id)
     } else if (!p2Id) {
       setP2Name(player.full_name)
       setP2Pos(player.position)
       setP2Team(player.team)
-      setP2Id(player.sleeper_id)
+      setP2Id(player.sleeper_id || player.player_id)
       setP2EID(player.espn_id)
     }
   }
@@ -80,68 +84,26 @@ export default function UsersPlayers() {
       const leaguesData = await response.json()
       setUniquePlayers(leaguesData)
       setLoading(false)
-      console.log(leaguesData)
     }
-    //   const response = await fetch(`/api/user`)
-    //   const userData = await response.json()
-
-    //   if (userData.user?.leagues && userData.user.leagues.length > 0) {
-    //     const leaguePromises = userData.user.leagues.map(
-    //       async (league: any) => {
-    //         const leagueDetails = await getLeagueDetails(league.leagueId)
-    //         const rosterInfo = await combineUserAndRosterInfoCard(
-    //           league.leagueId
-    //         )
-    //         const rosterMatch = rosterInfo.find(
-    //           (roster: any) => roster.owner_id === userData.user.sleeperUserId
-    //         )
-
-    //         let playerDetails: any[] = []
-    //         if (rosterMatch?.players) {
-    //           playerDetails = await Promise.all(
-    //             rosterMatch.players.map(async (player: any) => {
-    //               const info = await sleeperToESPNMapping(player)
-    //               return { player, info }
-    //             })
-    //           )
-    //         }
-
-    //         return {
-    //           leagueDetails,
-    //           players: playerDetails,
-    //         }
-    //       }
-    //     )
-
-    //     const allLeaguesData = await Promise.all(leaguePromises)
-
-    //     const uniquePlayerMap = new Map()
-    //     allLeaguesData.forEach((league) => {
-    //       league.players.forEach((player: any) => {
-    //         if (
-    //           !uniquePlayerMap.has(player.player) &&
-    //           player.info.position !== 'DEF' &&
-    //           player.info.position !== 'K'
-    //         ) {
-    //           uniquePlayerMap.set(player.player, player)
-    //         }
-    //       })
-    //     })
-
-    //     const positionOrder = ['QB', 'WR', 'RB', 'TE']
-    //     const sortedUniquePlayers = Array.from(uniquePlayerMap.values()).sort(
-    //       (a, b) =>
-    //         positionOrder.indexOf(a.info.position) -
-    //         positionOrder.indexOf(b.info.position)
-    //     )
-
-    //     setUniquePlayers(sortedUniquePlayers)
-    //   }
-    //   setLoading(false)
-    // }
-
     fetchUserLeagues()
   }, [])
+
+  const handlePlayerSelect = async (player: any, playerIndex: number) => {
+    const response = await fetch(`/api/cache?pid=${player.player_id}`)
+    const data = await response.json()
+    console.log(data)
+    if (playerIndex === 1) {
+      setPlayer1Details(data)
+    } else {
+      setPlayer2Details(data)
+    }
+    handleAddPlayer(data)
+    setModalOpen(false)
+  }
+
+  const handleClick = () => {
+    setModalOpen(true)
+  }
 
   function PlayerCard({ player }: { player: any }) {
     const imageUrl = player.info?.image_url || '/NFL.svg'
@@ -217,9 +179,15 @@ export default function UsersPlayers() {
             </Card>
           ) : (
             <Card className="w-[18rem]">
-              <CardContent className="p-4 text-center">
-                <p className="font-semibold">Player 1</p>
-                <p className="text-sm text-gray-500">Not Selected</p>
+              <CardContent className="p-6 text-center flex flex-col items-center justify-center">
+                <Button
+                  onClick={handleClick}
+                  variant={'link'}
+                  className="flex flex-col items-center align-center"
+                >
+                  <p className="font-semibold">Player 1</p>
+                  <p className="text-sm text-gray-500">Not Selected</p>
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -249,9 +217,15 @@ export default function UsersPlayers() {
             </Card>
           ) : (
             <Card className="w-[18rem]">
-              <CardContent className="p-4 text-center">
-                <p className="font-semibold">Player 2</p>
-                <p className="text-sm text-gray-500">Not Selected</p>
+              <CardContent className="p-6 text-center flex flex-col items-center justify-center">
+                <Button
+                  onClick={handleClick}
+                  variant={'link'}
+                  className="flex flex-col items-center align-center"
+                >
+                  <p className="font-semibold">Player 2</p>
+                  <p className="text-sm text-gray-500">Not Selected</p>
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -327,6 +301,13 @@ export default function UsersPlayers() {
           )}
         </>
       )}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <FuzzySearch
+            onPlayerSelect={(player) => handlePlayerSelect(player, 1)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
