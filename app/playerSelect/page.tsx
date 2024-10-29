@@ -319,8 +319,8 @@ export default function UsersPlayers() {
           ) : (
             <>
               <div>
-                No players found, your players will show up here once you've
-                added a Sleeper league.
+                No players found, your players will show up here once
+                you&apos;ve added a Sleeper league.
               </div>
               <NoLeaguesFoundEmpty />
             </>
