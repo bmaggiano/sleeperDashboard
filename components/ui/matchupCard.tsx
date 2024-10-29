@@ -135,6 +135,7 @@ const TeamInfo = ({
         'Content-Type': 'application/json',
       },
     })
+    const data = await res.json()
     if (res.ok) {
       toast({
         title: 'League claimed',
@@ -147,7 +148,7 @@ const TeamInfo = ({
       toast({
         variant: 'destructive',
         title: 'Failed to claim league',
-        description: 'Failed to claim your league.',
+        description: data.error,
       })
     }
     setLoading(false)
@@ -182,6 +183,7 @@ const TeamInfo = ({
         'Content-Type': 'application/json',
       },
     })
+    const data = await res.json()
     if (res.ok) {
       toast({
         title: 'League removed',
@@ -194,7 +196,7 @@ const TeamInfo = ({
       toast({
         variant: 'destructive',
         title: 'Failed to remove league',
-        description: 'Failed to remove your league.',
+        description: data.error,
       })
     }
     setLoading(false)

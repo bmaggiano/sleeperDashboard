@@ -15,7 +15,11 @@ export async function POST(req: Request) {
     )
   }
 
-  const user = await db.user.findFirst({
+  if (!session || !session.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const user = await db.user.findUnique({
     where: {
       email: session?.user?.email as string,
       sleeperUserId: sleeperUserId,
@@ -23,7 +27,9 @@ export async function POST(req: Request) {
     select: { id: true, leagues: true, sleeperUserId: true }, // Selecting user ID to associate the league
   })
 
-  if (!user) {
+  console.log(user)
+
+  if (!user || !session) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 

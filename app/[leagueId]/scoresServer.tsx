@@ -1,5 +1,8 @@
+import { getServerSession } from 'next-auth/next'
 import { getMatchups } from '../utils'
 import { ScoreClient } from './scoresClient'
+import { cookies } from 'next/headers'
+import { authOptions } from '../api/auth/[...nextauth]/options'
 
 async function ScoresComponent({
   leagueId,
@@ -13,6 +16,10 @@ async function ScoresComponent({
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
 
+  const session = await getServerSession(authOptions)
+  const cookieStore = cookies()
+  let sessionTokenCookie = cookieStore.get('next-auth.session-token')
+  let sessionToken = sessionTokenCookie?.value
   const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
     try {
       const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
@@ -20,6 +27,7 @@ async function ScoresComponent({
         body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
         headers: {
           'Content-Type': 'application/json',
+          Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
         },
       })
 

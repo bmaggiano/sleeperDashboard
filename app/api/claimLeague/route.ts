@@ -19,7 +19,10 @@ export async function POST(req: Request) {
 
   // Ensure user is authenticated
   if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Unauthorized, you must be signed in' },
+      { status: 401 }
+    )
   }
 
   // Fetch the user based on the session email
