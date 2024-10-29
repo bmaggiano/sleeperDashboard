@@ -19,6 +19,7 @@ async function ScoresComponent({
   const session = await getServerSession(authOptions)
   const cookieStore = cookies()
   let sessionTokenCookie = cookieStore.get('next-auth.session-token')
+  console.log('sessionTokenCookie', sessionTokenCookie)
   let sessionToken = sessionTokenCookie?.value
   const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
     try {
