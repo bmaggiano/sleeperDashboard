@@ -52,7 +52,9 @@ export default function Home() {
     async function fetchUserLeagues() {
       const response = await fetch(`/api/user`)
       const checking = await fetch('/api/checkClaimedLeague')
-      console.log(checking)
+      const checkData = await checking.json()
+      console.log('checkData', checkData)
+      console.log('checks', checking)
       const userData = await response.json() // Parse the response to JSON
       setUser(userData.user)
 
