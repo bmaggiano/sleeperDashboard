@@ -10,7 +10,7 @@ import { cookies } from 'next/headers'
 import CompareTableVsTeam from './playerVsTeam'
 import PlayerCompareModal from '../playerCompareModal'
 import { Button } from '@/components/ui/button'
-import UsersPlayers from './usersPlayers'
+import Link from 'next/link'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -137,8 +137,6 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
             </Button>
           )}
         </div>
-        <PlayerCompareClientPage />
-        <UsersPlayers />
       </>
     )
   }
@@ -148,7 +146,9 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
       <div className="flex items-center justify-between my-4">
         <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
         {session ? (
-          <PlayerCompareModal />
+          <Button variant={'outline'}>
+            <Link href="/playerSelect">Compare Players</Link>
+          </Button>
         ) : (
           <Button disabled variant={'outline'}>
             Compare Players

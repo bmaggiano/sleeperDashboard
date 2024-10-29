@@ -98,8 +98,8 @@ export default function Home() {
           <NoLeaguesFoundEmpty /> // No leagues state
         ) : (
           <>
-            <h2 className="text-xl font-medium">Your leagues</h2>
-            <div className="flex my-4">
+            <h2 className="text-lg font-medium">Your leagues</h2>
+            <div className="flex space-x-2 my-4">
               {leagueDetails.map((details, index) => (
                 <LeagueCard key={index} leagueDetails={details} />
               ))}

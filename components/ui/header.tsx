@@ -50,7 +50,7 @@ const navigationItems = [
     items: [
       {
         title: 'AI Compare Players',
-        href: '/compare',
+        href: '/playerSelect',
         children: 'Compare players across your league',
         icon: <Users weight="duotone" size={16} />,
         comingSoon: false,
