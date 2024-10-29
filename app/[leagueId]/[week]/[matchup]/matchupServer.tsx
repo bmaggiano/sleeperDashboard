@@ -40,8 +40,9 @@ export default async function MatchupServer({
         body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
         headers: {
           'Content-Type': 'application/json',
-          Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
+          Cookie: `next-auth.session-token=${sessionToken}`,
         },
+        credentials: 'include',
       })
 
       if (res.ok) {
