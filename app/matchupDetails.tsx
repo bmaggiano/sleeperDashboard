@@ -104,7 +104,9 @@ const PlayerInfo = ({
           isLeft ? '' : 'items-end'
         }`}
       >
-        <p className="text-sm">{player.full_name || 'Unknown Player'}</p>
+        <p className="text-sm">
+          {player.full_name || `${player.first_name} ${player.last_name}`}
+        </p>
         <p className="text-xs text-gray-500">
           {player.position} - {player.team || 'N/A'}
         </p>
@@ -133,7 +135,7 @@ const PlayerMatchupCard = ({
   return (
     <div
       className={`flex items-center justify-between p-2 sm:p-4 rounded-lg ${
-        isStarter ? 'bg-gray-50' : 'bg-gray-100'
+        isStarter ? 'bg-white' : 'bg-gray-100'
       } mb-4 shadow-sm`}
     >
       <div className="w-5/12">
