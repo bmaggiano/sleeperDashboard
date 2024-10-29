@@ -19,10 +19,15 @@ async function ScoresComponent({
   const session = await getServerSession(authOptions)
   const cookieStore = cookies()
   const sessionTokenCookie =
-    process.env.VERCEL_ENV === 'production'
-      ? cookieStore.get('__Secure-next-auth.session-token')
-      : cookieStore.get('next-auth.session-token')
+    process.env.VERCEL_ENV === 'development'
+      ? cookieStore.get('next-auth.session-token')
+      : cookieStore.get('__Secure-next-auth.session-token')
+  console.log('-----------')
+  console.log('-----------')
   console.log('sessionTokenCookie', sessionTokenCookie)
+  console.log('-----------')
+  console.log('-----------')
+  console.log('-----------')
   let sessionToken = sessionTokenCookie?.value
   const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
     try {
