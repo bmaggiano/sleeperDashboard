@@ -51,6 +51,8 @@ export default function Home() {
   useEffect(() => {
     async function fetchUserLeagues() {
       const response = await fetch(`/api/user`)
+      const checking = await fetch('/api/checkClaimedLeague')
+      console.log(checking)
       const userData = await response.json() // Parse the response to JSON
       setUser(userData.user)
 
