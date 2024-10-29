@@ -1,11 +1,13 @@
-//@ts-nocheck
-// TODO: FIX TYPES
+// @ts-nocheck
 
 'use server'
 
 import { getMatchupsWithMatchupID, sleeperToESPNMapping } from '@/app/utils'
 import MatchupDetails from '@/app/matchupDetails'
 import { cache, Suspense } from 'react'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { cookies } from 'next/headers'
 
 const cachedSleeperToESPNMapping = cache(sleeperToESPNMapping)
 
@@ -27,7 +29,10 @@ export default async function MatchupServer({
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
-
+  const session = await getServerSession(authOptions)
+  const cookieStore = cookies()
+  let sessionTokenCookie = cookieStore.get('next-auth.session-token')
+  let sessionToken = sessionTokenCookie?.value
   const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
     try {
       const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
@@ -35,6 +40,7 @@ export default async function MatchupServer({
         body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
         headers: {
           'Content-Type': 'application/json',
+          Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
         },
       })
 
@@ -51,42 +57,53 @@ export default async function MatchupServer({
   }
 
   const processedData = await Promise.all(
-    data.map(async (team) => {
-      // Perform claimed league check for this specific team
-      const claimed = await checkClaimedLeague(team.league_id, team.owner_id)
+    data.map(
+      async (team: {
+        league_id: string
+        owner_id: any
+        starters: string[]
+        starters_points: { [x: string]: any }
+        players: any[]
+        players_points: { [x: string]: any }
+      }) => {
+        // Perform claimed league check for this specific team
+        const claimed = await checkClaimedLeague(team.league_id, team.owner_id)
 
-      const starters = await Promise.all(
-        team.starters.map(async (playerId, index) => {
-          const info = await cachedSleeperToESPNMapping(playerId)
-          return {
-            id: playerId,
-            points: team.starters_points[index],
-            info: info || null, // Handle potential null value
-            claimed, // Pass claimed status to starters
-          }
-        })
-      )
-
-      const bench = await Promise.all(
-        team.players
-          .filter((playerId) => !team.starters.includes(playerId))
-          .map(async (playerId) => {
-            const info = await cachedSleeperToESPNMapping(playerId)
-            return {
-              id: playerId,
-              points: team.players_points[playerId],
-              info: info || null, // Handle potential null value
+        const starters = await Promise.all(
+          team.starters.map(
+            async (playerId: string, index: string | number) => {
+              const info = await cachedSleeperToESPNMapping(playerId)
+              return {
+                id: playerId,
+                points: team.starters_points[index],
+                info: info || null, // Handle potential null value
+                claimed, // Pass claimed status to starters
+              }
             }
-          })
-      )
+          )
+        )
 
-      return {
-        ...team,
-        starters,
-        bench,
-        claimed, // Pass claimed status to the entire team
+        const bench = await Promise.all(
+          team.players
+            .filter((playerId: any) => !team.starters.includes(playerId))
+            .map(async (playerId: string) => {
+              const info = await cachedSleeperToESPNMapping(playerId)
+              return {
+                id: playerId,
+                points: team.players_points[playerId],
+                info: info || null, // Handle potential null value
+              }
+            })
+        )
+
+        return {
+          ...team,
+          starters,
+          bench,
+          claimed, // Pass claimed status to the entire team
+        }
       }
-    })
+    )
   )
 
   const isUnclaimed = processedData.every((matchup: any) => !matchup.claimed)
@@ -100,7 +117,6 @@ export default async function MatchupServer({
           </div>
         }
       >
-        {console.log(processedData)}
         <MatchupDetails
           teamOne={processedData[0]}
           teamTwo={processedData[1]}

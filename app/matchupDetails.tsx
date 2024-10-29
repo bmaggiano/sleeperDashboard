@@ -226,10 +226,6 @@ const MatchupDetails: React.FC<MatchupDetailProps> = ({
   teamTwo,
   isUnclaimed,
 }) => {
-  useEffect(() => {
-    console.log(teamOne)
-    console.log(isUnclaimed)
-  }, [teamOne])
   if (!teamOne || !teamTwo || !teamOne.starters || !teamTwo.starters)
     return <Skeleton className="w-full h-screen" />
   return (

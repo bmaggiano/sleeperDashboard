@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <>
       <main className="flex-1 my-4">
-        <section className="bg-gradient-to-b from-white to-white pt-8">
+        <section className="pt-8">
           <div className="container mx-auto px-4 text-center">
             <div className="flex sm:flex-row justify-center">
               <h1 className="flex flex-col sm:flex-row items-center text-3xl font-bold mb-4 text-gray-800">

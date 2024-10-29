@@ -110,7 +110,7 @@ export default function LeagueSearchForm() {
         className="w-full"
       />
       {userLeagues.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-4 bg-white rounded-md">
           <h3 className="text-base font-semibold mb-2">Select a league</h3>
           <ul className="space-y-2">
             {userLeagues.map((league) => {

@@ -42,7 +42,7 @@ export default function RootLayout({
           content="https://sleeper-dashboard.vercel.app/api/og?title=Fantasy%20Dashboard"
         /> */}
         </head>
-        <body className={inter.className}>
+        <body className={`${inter.className} min-h-screen bg-gray-50`}>
           <div className="p-2 sm:p-4 max-w-3xl mx-auto">
             <Providers>
               <Header />

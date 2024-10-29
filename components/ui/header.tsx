@@ -183,7 +183,7 @@ const MobileNavigation = () => (
 
 export default function Header() {
   return (
-    <header className="max-w-7xl bg-white dark:bg-gray-900">
+    <header className="max-w-7xl">
       <div className="mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
