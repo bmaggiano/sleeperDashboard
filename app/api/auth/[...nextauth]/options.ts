@@ -12,6 +12,41 @@ export const authOptions: NextAuthOptions = {
       allowDangerousEmailAccountLinking: true,
     }),
   ],
+  // Add these configurations
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: 'database',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  cookies: {
+    sessionToken: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    callbackUrl: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Secure-' : ''}next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    csrfToken: {
+      name: `${process.env.NODE_ENV === 'production' ? '__Host-' : ''}next-auth.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
@@ -56,8 +91,10 @@ export const authOptions: NextAuthOptions = {
       return true
     },
     async session({ session, user }) {
-      console.log(session)
-      console.log(user)
+      // Add debug logging
+      console.log('Session Callback - Session:', session)
+      console.log('Session Callback - User:', user)
+
       return {
         ...session,
         user: {
@@ -69,4 +106,5 @@ export const authOptions: NextAuthOptions = {
       }
     },
   },
+  debug: process.env.NODE_ENV === 'development',
 }

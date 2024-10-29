@@ -27,6 +27,7 @@ async function ScoresComponent({
         body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
         headers: {
           'Content-Type': 'application/json',
+          Cookie: `next-auth.session-token=${sessionToken}`,
         },
         credentials: 'include',
       })
