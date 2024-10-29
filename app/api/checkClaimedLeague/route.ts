@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     }
 
     // If no session, return unauthorized with more detailed error
-    if (!session || !session.user?.email) {
+    if (!session || !session.user) {
       console.log('No session or email found')
       return NextResponse.json(
         {

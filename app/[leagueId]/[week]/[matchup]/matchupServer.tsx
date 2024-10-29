@@ -26,7 +26,7 @@ export default async function MatchupServer({
     matchupId: matchup,
   })
   const fetchUrl =
-    process.env.NODE_ENV === 'development'
+    process.env.VERCEL_ENV === 'development'
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
   const session = await getServerSession(authOptions)

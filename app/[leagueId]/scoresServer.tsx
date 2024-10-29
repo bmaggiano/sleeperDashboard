@@ -12,7 +12,7 @@ async function ScoresComponent({
   week: number
 }) {
   const fetchUrl =
-    process.env.NODE_ENV === 'development'
+    process.env.VERCEL_ENV === 'development'
       ? 'http://localhost:3000'
       : 'https://sleeper-dashboard.vercel.app'
 
