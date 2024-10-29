@@ -15,6 +15,8 @@ export async function POST(req: Request) {
     )
   }
 
+  console.log('from check claim', session)
+
   if (!session || !session.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
