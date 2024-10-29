@@ -3,11 +3,23 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]/options'
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import { Session } from 'next-auth'
+
+interface ExtendedSession extends Session {
+  user: {
+    id: string // Add the id property
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    leagues?: any[]
+    sleeperUserId?: string
+  }
+}
 
 export async function POST(req: Request) {
   try {
     // Get the session with explicit configuration
-    const session = await getServerSession(authOptions)
+    const session = (await getServerSession(authOptions)) as ExtendedSession
     const headersList = headers()
 
     // Debug logging
