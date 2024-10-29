@@ -2,48 +2,105 @@ import db from '@/lib/db'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '../auth/[...nextauth]/options'
 import { NextResponse } from 'next/server'
+import { headers } from 'next/headers'
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  const session = await getServerSession(authOptions)
-  const { leagueId, sleeperUserId } = body
+  try {
+    // Get the session with explicit configuration
+    const session = await getServerSession(authOptions)
+    const headersList = headers()
 
-  if (!leagueId || !sleeperUserId) {
+    // Debug logging
+    console.log('Headers:', Object.fromEntries(headersList.entries()))
+    console.log('Session in API:', session)
+
+    const body = await req.json()
+    const { leagueId, sleeperUserId } = body
+
+    if (!leagueId || !sleeperUserId) {
+      return NextResponse.json(
+        { error: 'League ID and Sleeper user ID is required' },
+        { status: 400 }
+      )
+    }
+
+    // If no session, return unauthorized with more detailed error
+    if (!session || !session.user?.email) {
+      console.log('No session or email found')
+      return NextResponse.json(
+        {
+          error: 'Unauthorized',
+          details: 'No valid session found',
+        },
+        {
+          status: 401,
+        }
+      )
+    }
+
+    // Find user with both email and sleeperUserId
+    const user = await db.user.findFirst({
+      where: {
+        AND: [{ email: session.user.email }, { sleeperUserId: sleeperUserId }],
+      },
+      select: {
+        id: true,
+        leagues: true,
+        sleeperUserId: true,
+      },
+    })
+
+    console.log('Found user:', user)
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          error: 'User not found',
+          details: 'No user found with matching email and sleeper ID',
+        },
+        {
+          status: 404,
+        }
+      )
+    }
+
+    // Find the specific league
+    const league = await db.league.findFirst({
+      where: {
+        userId: user.id,
+        leagueId: leagueId,
+      },
+      select: { id: true },
+    })
+
+    console.log('Found league:', league)
+
+    if (!league) {
+      return NextResponse.json(
+        {
+          error: 'League not found',
+          details: 'No league found for this user',
+        },
+        {
+          status: 404,
+        }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      sleeperUserId: user.sleeperUserId,
+    })
+  } catch (error) {
+    console.error('API Error:', error)
     return NextResponse.json(
-      { error: 'League ID and Sleeper user ID is required' },
-      { status: 400 }
+      {
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      {
+        status: 500,
+      }
     )
   }
-
-  console.log('from check claim', session)
-
-  if (!session || !session.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const user = await db.user.findUnique({
-    where: {
-      email: session?.user?.email as string,
-      sleeperUserId: sleeperUserId,
-    },
-    select: { id: true, leagues: true, sleeperUserId: true }, // Selecting user ID to associate the league
-  })
-
-  console.log(user)
-  console.log(session)
-
-  if (!user || !session) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 })
-  }
-
-  const league = await db.league.findFirst({
-    where: { userId: user.id, leagueId: leagueId }, // Use leagueId instead of id
-    select: { id: true },
-  })
-
-  if (!league) {
-    return NextResponse.json({ error: 'League not found' }, { status: 404 })
-  }
-
-  return NextResponse.json({ sleeperUserId: user.sleeperUserId })
 }
