@@ -30,6 +30,7 @@ async function ScoresComponent({
           Cookie: `next-auth.session-token=${sessionToken}`,
         },
         credentials: 'include',
+        cache: 'no-store',
       })
 
       if (res.ok) {
