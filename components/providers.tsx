@@ -8,7 +8,7 @@ interface props {
 }
 
 const Providers = ({ children }: props) => {
-  return <SessionProvider>{children}</SessionProvider>
+  return <SessionProvider basePath="/api/auth">{children}</SessionProvider>
 }
 
 export default Providers
