@@ -37,18 +37,18 @@ export async function POST(req: Request) {
     }
 
     // If no session, return unauthorized with more detailed error
-    // if (!session || !session.user) {
-    //   console.log('No session or email found')
-    //   return NextResponse.json(
-    //     {
-    //       error: 'Unauthorized',
-    //       details: 'No valid session found',
-    //     },
-    //     {
-    //       status: 401,
-    //     }
-    //   )
-    // }
+    if (!session || !session.user) {
+      console.log('No session or email found')
+      return NextResponse.json(
+        {
+          error: 'Unauthorized',
+          details: 'No valid session found',
+        },
+        {
+          status: 401,
+        }
+      )
+    }
 
     // Find user with both email and sleeperUserId
     const user = await db.user.findFirst({

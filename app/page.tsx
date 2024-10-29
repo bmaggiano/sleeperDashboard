@@ -51,7 +51,13 @@ export default function Home() {
   useEffect(() => {
     async function fetchUserLeagues() {
       const response = await fetch(`/api/user`)
-      const checking = await fetch('/api/checkClaimedLeague')
+      const checking = await fetch('/api/checkClaimedLeague', {
+        method: 'POST',
+        body: JSON.stringify({
+          leagueId: '1123290048755032064',
+          sleeperUserId: '731237855694798848',
+        }),
+      })
       const checkData = await checking.json()
       console.log('checkData', checkData)
       console.log('checks', checking)
