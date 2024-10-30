@@ -11,6 +11,7 @@ import CompareTableVsTeam from './playerVsTeam'
 import PlayerCompareModal from '../playerCompareModal'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { getDailyLimit } from '../utils'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -111,18 +112,11 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
         body: JSON.stringify({ playerId1, playerId2 }),
       }
     ),
-    fetch(`${fetchUrl}/api/dailyLimit`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
-      },
-      cache: 'no-store',
-    }),
+    getDailyLimit(),
   ])
 
   const playerStatsJson = await playerStatsRes.json()
-  const dailyLimitJson = await dailyLimitRes.json()
+  const dailyLimitData = await dailyLimitRes
 
   if (!playerId1 || !playerId2) {
     return (
@@ -162,12 +156,12 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
       <div className="mb-4">
         <YearByYear stats={playerStatsJson} />
       </div>
-      <div className="mb-4">
+      {dailyLimitData && (
         <DailyLimitBanner
-          dailyLimit={dailyLimitJson.dailyLimit}
-          topic="player compare"
+          dailyLimit={dailyLimitData.dailyLimit || 0}
+          topic="parlay check"
         />
-      </div>
+      )}
     </>
   )
 }

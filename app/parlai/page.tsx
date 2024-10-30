@@ -7,6 +7,7 @@ import { authOptions } from '../api/auth/[...nextauth]/options'
 import { cookies } from 'next/headers'
 import Unauthenticated from '../unauthenticated'
 import GameLogs from '../boxScores/page'
+import { getDailyLimit } from '../utils'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -23,23 +24,13 @@ export default async function ParlayHelper({ searchParams }: Props) {
   let sessionTokenCookie = cookieStore.get('next-auth.session-token')
   let sessionToken = sessionTokenCookie?.value
 
-  console.log(searchParams)
-
-  const dailyLimit = await fetch(`${fetchUrl}/api/dailyLimit`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Cookie: `next-auth.session-token=${sessionToken};path=/;expires=Session`,
-    },
-    cache: 'no-store',
-  })
-  const dailyLimitJson = await dailyLimit.json()
+  const dailyLimitData = await getDailyLimit()
 
   if (!session) {
     return <Unauthenticated />
   }
 
-  if (dailyLimitJson.dailyLimit === 0) {
+  if (dailyLimitData && dailyLimitData.dailyLimit === 0) {
     return <DailyLimitBanner dailyLimit={0} topic="parlay check" />
   }
 
@@ -50,10 +41,12 @@ export default async function ParlayHelper({ searchParams }: Props) {
         <GameLogs searchParams={searchParams} withBack={false} />
       )}
       <div className="my-4">
-        <DailyLimitBanner
-          dailyLimit={dailyLimitJson.dailyLimit}
-          topic="parlay check"
-        />
+        {dailyLimitData && (
+          <DailyLimitBanner
+            dailyLimit={dailyLimitData.dailyLimit || 0}
+            topic="parlay check"
+          />
+        )}
       </div>
       <p className="italic text-sm text-gray-500">
         *The information provided on this website is for informational and

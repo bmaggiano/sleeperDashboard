@@ -16,6 +16,24 @@ const years = [
   'nflverse_play_by_play_2021',
 ]
 
+export const getDailyLimit = async () => {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    return false
+  }
+
+  const user = await db.user.findUnique({
+    where: { email: session.user?.email as string },
+    select: { dailyLimit: true },
+  })
+
+  if (!user) {
+    return false
+  }
+  return { dailyLimit: user.dailyLimit }
+}
+
 export const checkClaimedLeague = async (leagueId: any, sleeperUserId: any) => {
   const session = await getServerSession(authOptions)
   try {
