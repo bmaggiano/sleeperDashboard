@@ -492,7 +492,7 @@ export const matchBracketToMatchup = cache(
       })
 
       // Filter for matchups corresponding to the current round
-      winnersBracket.forEach((bracketMatchup: any) => {
+      for (const bracketMatchup of winnersBracket) {
         if (bracketMatchup.r === roundsLength) {
           // Find the corresponding teams
           const matchupTeam1 = matchupDetailsInfo.find(
@@ -501,20 +501,25 @@ export const matchBracketToMatchup = cache(
           const matchupTeam2 = matchupDetailsInfo.find(
             (matchup: any) => matchup.roster_id === bracketMatchup.t2
           )
-
-          // If both teams are found, add to the results array
           if (matchupTeam1 && matchupTeam2) {
+            const claimed1 = await checkClaimedLeague(
+              leagueId,
+              matchupTeam1.owner_id
+            )
+            const claimed2 = await checkClaimedLeague(
+              leagueId,
+              matchupTeam2.owner_id
+            )
             matchupResults.push({
               round: roundsLength,
               week: currentWeek, // Include the current week in the result
               matchupId: bracketMatchup.m,
-              team1: matchupTeam1,
-              team2: matchupTeam2,
+              team1: { ...matchupTeam1, claimed: claimed1 },
+              team2: { ...matchupTeam2, claimed: claimed2 },
             })
           }
         }
-      })
-
+      }
       // Move to the next round and week
       roundsLength--
       currentWeek--

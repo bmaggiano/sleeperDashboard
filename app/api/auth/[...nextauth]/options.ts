@@ -76,7 +76,8 @@ export const authOptions: NextAuthOptions = {
               data: {
                 email: user.email,
                 accountType: 'free',
-                dailyLimit: 10, // Set daily limit for new users only
+                dailyLimit: 10,
+                sleeperUserId: null, // Set daily limit for new users only
               },
             })
           }
@@ -98,6 +99,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           accountType: (user as any).accountType,
           dailyLimit: (user as any).dailyLimit,
+          sleeperUserId: (user as any).sleeperUserId,
         } as any,
       }
     },

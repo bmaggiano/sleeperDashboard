@@ -10,7 +10,7 @@ async function ScoresComponent({
   week: number
 }) {
   const scores = await getMatchups({ weekIndex: week, leagueId })
-  const claimedChecks = scores.map((score: any) =>
+  const claimedChecks = scores?.map((score: any) =>
     checkClaimedLeague(score.league_id, score.owner_id)
   )
 

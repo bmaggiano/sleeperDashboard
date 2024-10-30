@@ -61,10 +61,15 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
       if (!acc[matchup.round]) {
         acc[matchup.round] = []
       }
+      console.log(matchup)
       acc[matchup.round].push(matchup)
       return acc
     },
     {}
+  )
+
+  const isUnclaimed = matchupDetails.every(
+    (matchup: any) => !matchup.team1.claimed && !matchup.team2.claimed
   )
 
   return (
@@ -87,6 +92,7 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
                   team2={matchup.team2}
                   withVsLink
                   withWeekRef={regSeasonWeekNum + parseInt(round)}
+                  isUnclaimed={isUnclaimed}
                 />
               ))}
             </div>

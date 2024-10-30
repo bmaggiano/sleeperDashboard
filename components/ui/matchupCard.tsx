@@ -239,7 +239,7 @@ const TeamInfo = ({
         {isTeamClaimed === null && null}
 
         {isUnclaimed === false &&
-          team.claimed.sleeperUserId === team.owner_id && (
+          team.claimed?.sleeperUserId === team.owner_id && (
             <Button
               tooltip={`Remove @${team.user.display_name} as your team`}
               variant="ghost"
