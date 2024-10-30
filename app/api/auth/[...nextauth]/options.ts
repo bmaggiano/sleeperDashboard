@@ -91,10 +91,6 @@ export const authOptions: NextAuthOptions = {
       return true
     },
     async session({ session, user }) {
-      // Add debug logging
-      console.log('Session Callback - Session:', session)
-      console.log('Session Callback - User:', user)
-
       return {
         ...session,
         user: {
