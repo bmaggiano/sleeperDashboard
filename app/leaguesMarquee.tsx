@@ -32,7 +32,7 @@ const leagues = [
   {
     name: 'Design Twitter Fantasy League',
     description: '10 Team Superflex',
-    leagueId: '934226736143806464',
+    leagueId: '1129274339452514304',
     body: '1 QB, 2 RB, 3 WR, 1 TE, 2 W/R/T, 1 SF',
     img: 'https://sleepercdn.com/avatars/thumbs/5564ab0b8344a1cc95da20ef0e022c24',
   },

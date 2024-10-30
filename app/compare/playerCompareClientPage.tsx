@@ -11,7 +11,6 @@ import { TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Certainty } from './certainty'
 import { useSearchParams } from 'next/navigation'
-import PlayerCompareModal from '../playerCompareModal'
 import { Progress } from '@/components/ui/progress'
 import CompareTableVsTeam from './playerVsTeam'
 import Link from 'next/link'
@@ -327,8 +326,11 @@ export default function PlayerCompare() {
                                 </div>
                               </div>
                             </div>
-                            <div className="sm:block hidden">
-                              <Badge className="font-semibold text-xs sm:text-base">
+                            <div className="sm:flex items-center hidden">
+                              <Badge
+                                variant={'outline'}
+                                className="font-medium text-xs sm:text-sm text-gray-600"
+                              >
                                 {data?.certainty}% Certainty
                               </Badge>{' '}
                             </div>
@@ -336,7 +338,7 @@ export default function PlayerCompare() {
                           <div>
                             <Progress
                               value={data?.certainty}
-                              className="h-4 my-2 sm:block"
+                              className="my-2 sm:block"
                             />
                             <div>{data?.explanation}</div>
                             <Badge className="mt-4" variant={'outline'}>

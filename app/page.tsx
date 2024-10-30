@@ -21,7 +21,7 @@ function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
     fetchUserData()
   }, [])
   return (
-    <div className="w-[15rem]">
+    <div className="sm:w-[14rem]">
       {leagueDetails ? (
         <Link
           href={`/${leagueDetails?.league_id}/${week}`}
@@ -134,7 +134,7 @@ export default function Home() {
         ) : (
           <>
             <h2 className="text-lg font-medium">Your leagues</h2>
-            <div className="flex space-x-2 my-4">
+            <div className="flex sm:flex-wrap flex-col sm:flex-row gap-2 my-4">
               {leagueDetails.map((details, index) => (
                 <LeagueCard key={index} leagueDetails={details} />
               ))}

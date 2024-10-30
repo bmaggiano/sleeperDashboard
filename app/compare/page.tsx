@@ -125,13 +125,7 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
       <>
         <div className="flex items-center justify-between my-4">
           <h1 className="text-lg my-2 font-semibold">Player Compare</h1>
-          {session ? (
-            <PlayerCompareModal />
-          ) : (
-            <Button disabled variant={'outline'}>
-              Compare Players
-            </Button>
-          )}
+          {session ? <PlayerCompareModal /> : null}
         </div>
       </>
     )
@@ -145,11 +139,7 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
           <Button variant={'outline'}>
             <Link href="/playerSelect">Compare Players</Link>
           </Button>
-        ) : (
-          <Button disabled variant={'outline'}>
-            Compare Players
-          </Button>
-        )}
+        ) : null}
       </div>
       {!session && <SignInBanner />}
       <PlayerCompareClientPage />
