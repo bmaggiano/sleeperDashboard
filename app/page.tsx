@@ -18,7 +18,7 @@ function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
       const response = await getCurrentWeek(leagueDetails.league_id)
       setWeek(response)
     }
-    fetchUserData() // Call the async function
+    fetchUserData()
   }, [])
   return (
     <div className="w-[15rem]">

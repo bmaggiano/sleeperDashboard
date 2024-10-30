@@ -12,6 +12,8 @@ import PlayerCompareModal from '../playerCompareModal'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { getDailyLimit } from '../utils'
+import { Alert } from '@/components/ui/alert'
+import SignInBanner from '../signInBanner'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -149,6 +151,7 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
           </Button>
         )}
       </div>
+      {!session && <SignInBanner />}
       <PlayerCompareClientPage />
       <div className="my-4">
         <CompareTable data={playerStatsJson} />
