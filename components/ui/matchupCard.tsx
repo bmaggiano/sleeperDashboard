@@ -31,9 +31,6 @@ const MatchupCard = ({
   const [weekIndex] = useAtom(weekNumberAtom)
 
   if (!team1 || !team2 || !team1.user || !team2.user) {
-    console.log(team1)
-    console.log(team2)
-    console.log('no team found')
     return <MatchupCardSkeleton />
   }
 
@@ -117,11 +114,6 @@ const TeamInfo = ({
   const teamInitials = getInitials(
     team.user.metadata.team_name || team.user.display_name
   )
-
-  useEffect(() => {
-    console.log(team.claimed)
-  }, [])
-  // UseEffect to call the async function
 
   const addLeague = async (team: any) => {
     setLoading(true)
