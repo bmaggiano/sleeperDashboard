@@ -266,7 +266,7 @@ export default function PlayerCompare() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-4 my-4">
         {loading && selectedPlayer1 && selectedPlayer2 ? (
           <AISkeleton />
         ) : (
@@ -372,7 +372,7 @@ export default function PlayerCompare() {
         </div>
         {!selectedPlayer1 && !selectedPlayer2 && <PlayerProfileSkeleton />}
         {playerStats.length > 0 && (
-          <div className="mb-4">
+          <div className="">
             <CompareTableVsTeam
               data={playerStats?.[0] || {}}
               playerOneId={player1Id || ''}

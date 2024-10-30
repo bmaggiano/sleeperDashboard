@@ -150,10 +150,10 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
         )}
       </div>
       <PlayerCompareClientPage />
-      <div className="mb-4">
+      <div className="my-4">
         <CompareTable data={playerStatsJson} />
       </div>
-      <div className="mb-4">
+      <div className="my-4">
         <YearByYear stats={playerStatsJson} />
       </div>
       {dailyLimitData && (

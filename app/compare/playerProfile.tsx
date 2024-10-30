@@ -158,10 +158,12 @@ export default function PlayerProfile({ player }: PlayerProfileProps) {
               {`${player.position} - ${player.team}`}{' '}
               {renderStatus(playerProfileData?.injury_status)}{' '}
             </p>
-            {playerProfileData && (
+            {playerProfileData ? (
               <p className="text-sm mb-1">
                 {`${calculateHeight(playerProfileData.height)} - ${playerProfileData.weight} lbs`}
               </p>
+            ) : (
+              <p className="text-sm mb-1">Height - Weight</p>
             )}
             <Link
               href={`/boxScores?playerId=${player.player_id}`}
