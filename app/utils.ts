@@ -16,6 +16,11 @@ const years = [
   'nflverse_play_by_play_2021',
 ]
 
+export const isLoggedIn = async () => {
+  const session = await getServerSession(authOptions)
+  return !!session
+}
+
 export const getDailyLimit = async () => {
   const session = await getServerSession(authOptions)
 

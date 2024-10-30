@@ -18,6 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { isLoggedIn } from '../utils'
+import Unauthenticated from '../unauthenticated'
 
 export default function UsersPlayers() {
   const [loading, setLoading] = useState<boolean>(true)
@@ -35,6 +37,36 @@ export default function UsersPlayers() {
   const [player1Details, setPlayer1Details] = useState<any>(null)
   const [player2Details, setPlayer2Details] = useState<any>(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const fetchUserLeagues = async () => {
+      setLoading(true)
+      const response = await fetch(`/api/userLeagues`)
+      const leaguesData = await response.json()
+      setUniquePlayers(leaguesData)
+      setLoading(false)
+    }
+    const checkLogin = async () => {
+      const loggedIn = await isLoggedIn()
+      if (loggedIn) {
+        setIsAuthenticated(true)
+        await fetchUserLeagues()
+      }
+      if (!loggedIn) {
+        setIsAuthenticated(false)
+      }
+    }
+    checkLogin()
+  }, [])
+
+  if (isAuthenticated === null) {
+    return <div>Loading...</div>
+  }
+
+  if (!isAuthenticated) {
+    return <Unauthenticated />
+  }
 
   const handleAddPlayer = (player: any) => {
     if (p1Id === player.sleeper_id) {
@@ -76,17 +108,6 @@ export default function UsersPlayers() {
     setP1EID(null)
     setP2EID(null)
   }
-
-  useEffect(() => {
-    setLoading(true)
-    async function fetchUserLeagues() {
-      const response = await fetch(`/api/userLeagues`)
-      const leaguesData = await response.json()
-      setUniquePlayers(leaguesData)
-      setLoading(false)
-    }
-    fetchUserLeagues()
-  }, [])
 
   const handlePlayerSelect = async (player: any, playerIndex: number) => {
     const response = await fetch(`/api/cache?pid=${player.player_id}`)
@@ -148,6 +169,7 @@ export default function UsersPlayers() {
 
   return (
     <div className="py-8">
+      {}
       <Card className="mb-8 p-6 rounded-lg">
         <h2 className="text-lg text-center font-semibold mb-4">
           Selected Players
