@@ -3,6 +3,7 @@ import { getMatchups } from '../utils'
 import { ScoreClient } from './scoresClient'
 import { cookies } from 'next/headers'
 import { authOptions } from '../api/auth/[...nextauth]/options'
+import { headers } from 'next/headers'
 
 async function ScoresComponent({
   leagueId,
@@ -34,10 +35,7 @@ async function ScoresComponent({
       const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
         method: 'POST',
         body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: `next-auth.session-token=${sessionToken}`,
-        },
+        headers: headers(),
         credentials: 'include',
         cache: 'no-store',
       })
