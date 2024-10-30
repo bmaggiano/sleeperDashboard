@@ -51,16 +51,6 @@ export default function Home() {
   useEffect(() => {
     async function fetchUserLeagues() {
       const response = await fetch(`/api/user`)
-      const checking = await fetch('/api/checkClaimedLeague', {
-        method: 'POST',
-        body: JSON.stringify({
-          leagueId: '1123290048755032064',
-          sleeperUserId: '731237855694798848',
-        }),
-      })
-      const checkData = await checking.json()
-      console.log('checkData', checkData)
-      console.log('checks', checking)
       const userData = await response.json() // Parse the response to JSON
       setUser(userData.user)
 
@@ -106,7 +96,7 @@ export default function Home() {
         {loading ? (
           <div>
             <div className="mb-4 text-lg font-medium">Loading leagues...</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-4">
               {Array.from({ length: 3 }, (_, i) => (
                 <div key={i}>
                   <Card>
