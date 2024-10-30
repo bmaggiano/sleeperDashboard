@@ -8,6 +8,7 @@ import { cache, Suspense } from 'react'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { cookies } from 'next/headers'
+import db from '@/lib/db'
 
 const cachedSleeperToESPNMapping = cache(sleeperToESPNMapping)
 
@@ -25,34 +26,57 @@ export default async function MatchupServer({
     leagueId: leagueId,
     matchupId: matchup,
   })
-  const fetchUrl =
-    process.env.VERCEL_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://sleeper-dashboard.vercel.app'
-  const session = await getServerSession(authOptions)
-  const cookieStore = cookies()
-  let sessionTokenCookie = cookieStore.get('next-auth.session-token')
-  let sessionToken = sessionTokenCookie?.value
-  const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
+  const checkClaimedLeague = async (leagueId: any, sleeperUserId: any) => {
+    const session = await getServerSession(authOptions)
     try {
-      const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
-        method: 'POST',
-        body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: `next-auth.session-token=${sessionToken}`,
-        },
-        credentials: 'include',
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        return data
-      } else {
+      if (!leagueId || !sleeperUserId) {
         return false
       }
+
+      // If no session, return unauthorized with more detailed error
+      if (!session || !session.user) {
+        console.log('No session or email found')
+        return false
+      }
+
+      // Find user with both email and sleeperUserId
+      const user = await db.user.findFirst({
+        where: {
+          AND: [
+            { email: session.user.email },
+            { sleeperUserId: sleeperUserId },
+          ],
+        },
+        select: {
+          id: true,
+          leagues: true,
+          sleeperUserId: true,
+        },
+      })
+
+      if (!user) {
+        return false
+      }
+
+      // Find the specific league
+      const league = await db.league.findFirst({
+        where: {
+          userId: user.id,
+          leagueId: leagueId,
+        },
+        select: { id: true },
+      })
+
+      if (!league) {
+        return false
+      }
+
+      return {
+        success: true,
+        sleeperUserId: user.sleeperUserId,
+      }
     } catch (error) {
-      console.error('Error checking league:', error)
+      console.error('API Error:', error)
       return false
     }
   }

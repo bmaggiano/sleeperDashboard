@@ -13,26 +13,7 @@ async function ScoresComponent({
   leagueId: string
   week: number
 }) {
-  const fetchUrl =
-    process.env.VERCEL_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://sleeper-dashboard.vercel.app'
-
-  const session = await getServerSession(authOptions)
-  const cookieStore = cookies()
-  const sessionTokenCookie =
-    process.env.VERCEL_ENV === 'development'
-      ? cookieStore.get('next-auth.session-token')
-      : cookieStore.get('__Secure-next-auth.session-token')
-  console.log('-----------')
-  console.log('-----------')
-  console.log('sessionTokenCookie', sessionTokenCookie)
-  console.log('-----------')
-  console.log('-----------')
-  console.log('-----------')
-  let sessionToken = sessionTokenCookie?.value
-
-  const authCheck = async (leagueId: any, sleeperUserId: any) => {
+  const checkClaimedLeague = async (leagueId: any, sleeperUserId: any) => {
     const session = await getServerSession(authOptions)
     try {
       if (!leagueId || !sleeperUserId) {
@@ -60,8 +41,6 @@ async function ScoresComponent({
         },
       })
 
-      console.log('Found user:', user)
-
       if (!user) {
         return false
       }
@@ -74,8 +53,6 @@ async function ScoresComponent({
         },
         select: { id: true },
       })
-
-      console.log('Found league:', league)
 
       if (!league) {
         return false
@@ -93,7 +70,7 @@ async function ScoresComponent({
 
   const scores = await getMatchups({ weekIndex: week, leagueId })
   const claimedChecks = scores.map((score: any) =>
-    authCheck(score.league_id, score.owner_id)
+    checkClaimedLeague(score.league_id, score.owner_id)
   )
 
   // Wait for all claims to resolve
