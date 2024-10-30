@@ -372,7 +372,7 @@ export default function PlayerCompare() {
         </div>
         {!selectedPlayer1 && !selectedPlayer2 && <PlayerProfileSkeleton />}
         {playerStats.length > 0 && (
-          <div className="">
+          <div>
             <CompareTableVsTeam
               data={playerStats?.[0] || {}}
               playerOneId={player1Id || ''}
