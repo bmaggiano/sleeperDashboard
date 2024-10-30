@@ -194,8 +194,7 @@ export const getCurrentWeek = cache(async (leagueId: string) => {
     if (!response.ok) throw new Error('Failed to fetch league weeks')
     const leagueData = await response.json()
     const recentWeek = leagueData?.settings?.leg
-    if (recentWeek > leagueData?.settings?.playoff_week_start)
-      return 'Winners Bracket'
+    if (recentWeek > leagueData?.settings?.playoff_week_start) return 'winners'
     return recentWeek
   } catch (error: any) {
     return { index: 0, week: 'Week 1' }
@@ -217,7 +216,7 @@ export const getLeagueWeeks = cache(async (leagueId: string) => {
     }))
     leagueWeeksArray.push({
       index: leagueWeekNum + 1,
-      week: 'Winners Bracket',
+      week: 'winners',
     })
     return leagueWeeksArray
   } catch (error: any) {
