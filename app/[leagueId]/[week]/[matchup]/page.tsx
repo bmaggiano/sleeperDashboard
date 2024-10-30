@@ -4,6 +4,8 @@ import { getMatchupsWithMatchupID } from '@/app/utils'
 import MatchupServer from './matchupServer'
 import type { Metadata, ResolvingMetadata } from 'next'
 import PlayerCompareModal from '../../../playerCompareModal'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
 type Props = {
   params: { week: string; leagueId: string; matchup: string }
@@ -81,7 +83,13 @@ export default function MatchupPage({
 
   return (
     <div className="sm:py-6">
-      <PlayerCompareModal />
+      <div className="flex justify-end">
+        <Button variant={'outline'}>
+          <Link prefetch={true} href="/playerSelect">
+            Compare Players
+          </Link>
+        </Button>
+      </div>
       <MatchupServer week={week} leagueId={leagueId} matchup={matchup} />
     </div>
   )

@@ -237,6 +237,7 @@ export default function UsersPlayers() {
             </Button>
             <Button>
               <Link
+                prefetch={true}
                 href={{
                   pathname: '/compare',
                   query: {
