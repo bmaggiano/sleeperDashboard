@@ -159,7 +159,7 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
       {dailyLimitData && (
         <DailyLimitBanner
           dailyLimit={dailyLimitData.dailyLimit || 0}
-          topic="parlay check"
+          topic="player compares"
         />
       )}
     </>
