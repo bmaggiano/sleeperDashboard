@@ -39,6 +39,51 @@ type Matchup = {
 const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
   const weekLength = await getTotalWeeks(leagueId)
   const leaugeDetails = await getLeagueDetails(leagueId)
+  console.log(leaugeDetails.settings.playoff_week_start)
+  console.log(leaugeDetails.settings.leg)
+  if (leaugeDetails.settings.playoff_week_start >= leaugeDetails.settings.leg) {
+    const matchupsByRound: Matchup[] = []
+    return (
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            No Matchups Yet
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center space-y-4">
+          <Trophy className="w-16 h-16 mx-auto text-yellow-400" />
+          <p className="text-muted-foreground">
+            The matchups for this round haven&apos;t been generated yet. Check
+            back soon or explore other sections of the league.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div className="flex flex-col items-center p-4 bg-muted rounded-lg">
+              <Calendar className="w-8 h-8 mb-2 text-primary" />
+              <h3 className="font-semibold">Playoffs</h3>
+              <p className="text-sm text-muted-foreground">
+                Starts in{' '}
+                {leaugeDetails.settings.playoff_week_start -
+                  leaugeDetails.settings.leg}{' '}
+                weeks
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-4 bg-muted rounded-lg">
+              <Users className="w-8 h-8 mb-2 text-primary" />
+              <h3 className="font-semibold">Participants</h3>
+              <p className="text-sm text-muted-foreground">
+                {leaugeDetails.total_rosters} teams remaining
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-4 bg-muted rounded-lg">
+              <Trophy className="w-8 h-8 mb-2 text-primary" />
+              <h3 className="font-semibold">Prize Pool</h3>
+              <p className="text-sm text-muted-foreground">N/A</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
   const matchupDetails = await matchBracketToMatchup({
     week: weekLength,
     leagueId: leagueId,
@@ -61,7 +106,6 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
       if (!acc[matchup.round]) {
         acc[matchup.round] = []
       }
-      console.log(matchup)
       acc[matchup.round].push(matchup)
       return acc
     },
@@ -107,7 +151,7 @@ const WinnersBracket = async ({ leagueId }: { leagueId: string }) => {
           <CardContent className="text-center space-y-4">
             <Trophy className="w-16 h-16 mx-auto text-yellow-400" />
             <p className="text-muted-foreground">
-              The matchups for this round haven&spos;t been generated yet. Check
+              The matchups for this round haven&apos;t been generated yet. Check
               back soon or explore other sections of the league.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">

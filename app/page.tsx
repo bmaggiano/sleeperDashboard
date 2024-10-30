@@ -4,7 +4,7 @@ import LeaguesMarquee from './leaguesMarquee'
 import LeagueSearchForm from './leagueSearchForm'
 import { Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { getLeagueDetails } from './utils'
+import { getCurrentWeek, getLeagueDetails } from './utils'
 import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -12,11 +12,19 @@ import NoLeaguesFoundEmpty from './noLeaguesFoundEmpty'
 import { Skeleton } from '@/components/ui/skeleton'
 
 function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
+  const [week, setWeek] = useState<number | null>(null)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await getCurrentWeek(leagueDetails.league_id)
+      setWeek(response)
+    }
+    fetchUserData() // Call the async function
+  }, [])
   return (
     <div className="w-[15rem]">
       {leagueDetails ? (
         <Link
-          href={`/${leagueDetails?.league_id}/${leagueDetails?.settings?.leg}`}
+          href={`/${leagueDetails?.league_id}/${week}`}
           prefetch={true}
           className="block"
         >
@@ -47,6 +55,16 @@ export default function Home() {
   const [leagueDetails, setLeagueDetails] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [noLeagues, setNoLeagues] = useState<boolean>(false)
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await fetch(`/api/user`)
+      const userData = await response.json()
+      setUser(userData.user)
+    }
+
+    fetchUserData()
+  }, [])
 
   useEffect(() => {
     async function fetchUserLeagues() {
