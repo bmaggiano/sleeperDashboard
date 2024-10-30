@@ -30,11 +30,11 @@ const leagues = [
     img: 'https://sleepercdn.com/avatars/thumbs/bfa3b179c17aa4264282a743e66218bf',
   },
   {
-    name: 'NHAT Dynasty BB',
-    description: '12 Team Best Ball',
+    name: 'Design Twitter Fantasy League',
+    description: '10 Team Superflex',
     leagueId: '934226736143806464',
-    body: '1 QB, 2 RB, 2 WR, 1 TE, 3 W/R/T',
-    img: 'https://sleepercdn.com/avatars/thumbs/03c86c21e887fadf1b652885694af7cc',
+    body: '1 QB, 2 RB, 3 WR, 1 TE, 2 W/R/T, 1 SF',
+    img: 'https://sleepercdn.com/avatars/thumbs/5564ab0b8344a1cc95da20ef0e022c24',
   },
   {
     name: "Fantasy Fudus '24",
