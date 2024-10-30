@@ -4,6 +4,7 @@ import { ScoreClient } from './scoresClient'
 import { cookies } from 'next/headers'
 import { authOptions } from '../api/auth/[...nextauth]/options'
 import { headers } from 'next/headers'
+import db from '@/lib/db'
 
 async function ScoresComponent({
   leagueId,
@@ -30,31 +31,69 @@ async function ScoresComponent({
   console.log('-----------')
   console.log('-----------')
   let sessionToken = sessionTokenCookie?.value
-  const checkClaimedLeague = async (leagueId: string, ownerId: any) => {
-    try {
-      const res = await fetch(`${fetchUrl}/api/checkClaimedLeague`, {
-        method: 'POST',
-        body: JSON.stringify({ leagueId, sleeperUserId: ownerId }),
-        headers: headers(),
-        credentials: 'include',
-        cache: 'no-store',
-      })
 
-      if (res.ok) {
-        const data = await res.json()
-        console.log(data)
-        return data
-      } else {
+  const authCheck = async (leagueId: any, sleeperUserId: any) => {
+    const session = await getServerSession(authOptions)
+    try {
+      if (!leagueId || !sleeperUserId) {
         return false
       }
+
+      // If no session, return unauthorized with more detailed error
+      if (!session || !session.user) {
+        console.log('No session or email found')
+        return false
+      }
+
+      // Find user with both email and sleeperUserId
+      const user = await db.user.findFirst({
+        where: {
+          AND: [
+            { email: session.user.email },
+            { sleeperUserId: sleeperUserId },
+          ],
+        },
+        select: {
+          id: true,
+          leagues: true,
+          sleeperUserId: true,
+        },
+      })
+
+      console.log('Found user:', user)
+
+      if (!user) {
+        return false
+      }
+
+      // Find the specific league
+      const league = await db.league.findFirst({
+        where: {
+          userId: user.id,
+          leagueId: leagueId,
+        },
+        select: { id: true },
+      })
+
+      console.log('Found league:', league)
+
+      if (!league) {
+        return false
+      }
+
+      return {
+        success: true,
+        sleeperUserId: user.sleeperUserId,
+      }
     } catch (error) {
-      console.error('Error checking league:', error)
+      console.error('API Error:', error)
       return false
     }
   }
+
   const scores = await getMatchups({ weekIndex: week, leagueId })
   const claimedChecks = scores.map((score: any) =>
-    checkClaimedLeague(score.league_id, score.owner_id)
+    authCheck(score.league_id, score.owner_id)
   )
 
   // Wait for all claims to resolve
