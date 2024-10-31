@@ -199,7 +199,7 @@ export default function ParlayHelperClient({
     // Construct the URL for the API request using the query params
     const oddsUrl = `/api/getOdds?playerId=${playerId}&playerName=${encodeURIComponent(playerName || '')}&playerTeam=${encodeURIComponent(playerTeam || '')}&prop=${betProp || ''}&opponentTeam=${encodeURIComponent(opponentTeam || '')}`
     try {
-      const response = await fetch(`${fetchUrl}${oddsUrl}`)
+      const response = await fetch(`${oddsUrl}`)
       const data = await response.json()
       setOdds(data)
       setData(data) // Store the fetched odds in state
