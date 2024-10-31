@@ -6,6 +6,7 @@ import { Plus } from 'lucide-react'
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import TryPlayerCompareBanner from '@/app/tryPlayerCompareBanner'
 
 type Props = {
   params: { leagueId: string; week: number }
@@ -55,6 +56,7 @@ export default async function WeekMatchup({
         </h1>
         <Combobox leagueId={leagueId} data={weeks} />
       </div>
+      <TryPlayerCompareBanner />
       <ScoresComponent leagueId={leagueId} week={week} />
     </div>
   )
