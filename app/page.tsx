@@ -99,10 +99,10 @@ export default function Home() {
               <Zap className="mr-1 h-4 w-4" />
               Powered by AI
             </div>
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+            <h1 className="text-center text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
               Fantasy Football Meets AI
             </h1>
-            <p className="max-w-[600px] text-muted-foreground md:text-xl">
+            <p className="text-center text-muted-foreground md:text-xl">
               Dominate your league with cutting-edge AI insights. Get
               personalized player recommendations, player prop analysis, and
               winning strategies.
