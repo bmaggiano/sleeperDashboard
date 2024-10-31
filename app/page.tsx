@@ -3,7 +3,7 @@ import RecentSearches from '@/components/ui/recentSearches'
 import LeaguesMarquee from './leaguesMarquee'
 import LeagueSearchForm from './leagueSearchForm'
 import { ChevronRight, Zap } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { getCurrentWeek, getLeagueDetails } from './utils'
 import Link from 'next/link'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -11,16 +11,23 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import NoLeaguesFoundEmpty from './noLeaguesFoundEmpty'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
+import React from 'react'
 
-function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
-  const [week, setWeek] = useState<number | null>(null)
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const response = await getCurrentWeek(leagueDetails.league_id)
-      setWeek(response)
-    }
-    fetchUserData()
-  }, [])
+// Define a type for league details
+type LeagueDetail = {
+  league_id: string
+  name: string
+  avatar: string
+  week: number // Ensure 'week' is included in the type
+}
+
+const LeagueCard = React.memo(function LeagueCard({
+  leagueDetails,
+  week,
+}: {
+  leagueDetails: any
+  week: number
+}) {
   return (
     <div className="sm:w-[14rem]">
       {leagueDetails ? (
@@ -49,34 +56,28 @@ function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
       )}
     </div>
   )
-}
+})
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null)
-  const [leagueDetails, setLeagueDetails] = useState<any[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [noLeagues, setNoLeagues] = useState<boolean>(false)
+  const [user, setUser] = useState(null)
+  const [leagueDetails, setLeagueDetails] = useState<LeagueDetail[]>([])
+  const [loading, setLoading] = useState(true)
+  const [noLeagues, setNoLeagues] = useState(false)
+  const [weeks, setWeeks] = useState({})
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    async function fetchUserDataAndLeagues() {
       const response = await fetch(`/api/user`)
       const userData = await response.json()
       setUser(userData.user)
-    }
-
-    fetchUserData()
-  }, [])
-
-  useEffect(() => {
-    async function fetchUserLeagues() {
-      const response = await fetch(`/api/user`)
-      const userData = await response.json() // Parse the response to JSON
-      setUser(userData.user)
 
       if (userData.user?.leagues && userData.user.leagues.length > 0) {
-        // Fetch league details for each league
-        const detailsPromises = userData.user.leagues.map((league: any) =>
-          getLeagueDetails(league.leagueId)
+        const detailsPromises = userData.user.leagues.map(
+          async (league: any) => {
+            const leagueData = await getLeagueDetails(league.leagueId)
+            const week = await getCurrentWeek(league.leagueId)
+            return { ...leagueData, week }
+          }
         )
         const fetchedDetails = await Promise.all(detailsPromises)
         setLeagueDetails(fetchedDetails)
@@ -87,7 +88,7 @@ export default function Home() {
       setLoading(false)
     }
 
-    fetchUserLeagues()
+    fetchUserDataAndLeagues()
   }, [])
 
   return (
@@ -112,7 +113,6 @@ export default function Home() {
         {noLeagues ? null : <LeagueSearchForm />}
       </main>
       <div className="max-w-3xl mx-auto">
-        {/* <RecentSearches /> */}
         {loading ? (
           <div>
             <div className="mb-4 text-lg font-medium">Loading leagues...</div>
@@ -132,13 +132,17 @@ export default function Home() {
             </div>
           </div>
         ) : noLeagues ? (
-          <NoLeaguesFoundEmpty /> // No leagues state
+          <NoLeaguesFoundEmpty />
         ) : (
           <>
             <h2 className="text-lg font-medium">Your leagues</h2>
             <div className="flex sm:flex-wrap flex-col sm:flex-row gap-2 my-4">
-              {leagueDetails.map((details, index) => (
-                <LeagueCard key={index} leagueDetails={details} />
+              {leagueDetails.map((details: LeagueDetail, index) => (
+                <LeagueCard
+                  key={index}
+                  leagueDetails={details}
+                  week={details.week}
+                />
               ))}
             </div>
           </>
