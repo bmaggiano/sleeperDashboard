@@ -229,7 +229,9 @@ function StatsCard({
           {/* Player Two */}
           <div>
             <div className="text-right">{playerTwoName}</div>
-            {selectedTeamPlayer2 && <div>vs {selectedTeamPlayer2}</div>}
+            {selectedTeamPlayer2 && (
+              <div className="text-right">vs {selectedTeamPlayer2}</div>
+            )}
             <Input
               showArrowButton={false}
               placeholder="Search for NFL team..."
