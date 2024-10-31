@@ -18,7 +18,10 @@ type LeagueDetail = {
   league_id: string
   name: string
   avatar: string
-  week: number // Ensure 'week' is included in the type
+  settings: {
+    playoff_week_start: number
+    leg: number
+  }
 }
 
 const LeagueCard = React.memo(function LeagueCard({
@@ -75,8 +78,7 @@ export default function Home() {
         const detailsPromises = userData.user.leagues.map(
           async (league: any) => {
             const leagueData = await getLeagueDetails(league.leagueId)
-            const week = await getCurrentWeek(league.leagueId)
-            return { ...leagueData, week }
+            return leagueData
           }
         )
         const fetchedDetails = await Promise.all(detailsPromises)
@@ -141,7 +143,7 @@ export default function Home() {
                 <LeagueCard
                   key={index}
                   leagueDetails={details}
-                  week={details.week}
+                  week={details.settings.leg}
                 />
               ))}
             </div>
