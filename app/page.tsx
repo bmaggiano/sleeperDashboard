@@ -2,7 +2,7 @@
 import RecentSearches from '@/components/ui/recentSearches'
 import LeaguesMarquee from './leaguesMarquee'
 import LeagueSearchForm from './leagueSearchForm'
-import { Zap } from 'lucide-react'
+import { ChevronRight, Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { getCurrentWeek, getLeagueDetails } from './utils'
 import Link from 'next/link'
@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import NoLeaguesFoundEmpty from './noLeaguesFoundEmpty'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/button'
 
 function LeagueCard({ leagueDetails }: { leagueDetails: any }) {
   const [week, setWeek] = useState<number | null>(null)
@@ -92,24 +93,25 @@ export default function Home() {
   return (
     <>
       <main className="flex-1 my-4">
-        <section className="pt-8">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex sm:flex-row justify-center">
-              <h1 className="flex flex-col sm:flex-row items-center text-3xl font-bold mb-4 text-gray-800">
-                <Zap className="hidden sm:block sm:flex-0 h-8 w-8 mr-2 text-gray-600 animate-pulse" />
-                Fantasy Football&nbsp;
-                <span className="text-gray-600">Meets AI</span>
-              </h1>
+        <div className="flex flex-col justify-center p-4 space-y-4">
+          <div className="space-y-2">
+            <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
+              <Zap className="mr-1 h-4 w-4" />
+              Powered by AI
             </div>
-            <p className="text-xl text-gray-600">
-              <span className="text-gray-800 font-semibold">Dominate</span> your
-              league with cutting-edge AI insights
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+              Fantasy Football Meets AI
+            </h1>
+            <p className="max-w-[600px] text-muted-foreground md:text-xl">
+              Dominate your league with cutting-edge AI insights. Get
+              personalized player recommendations, player prop analysis, and
+              winning strategies.
             </p>
-            {noLeagues ? null : <LeagueSearchForm />}
           </div>
-        </section>
+        </div>
+        {noLeagues ? null : <LeagueSearchForm />}
       </main>
-      <div className="p-2 sm:p-4 max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         {/* <RecentSearches /> */}
         {loading ? (
           <div>

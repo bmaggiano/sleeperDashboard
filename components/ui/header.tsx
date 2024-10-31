@@ -38,11 +38,26 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from './sheet'
 import { Textarea } from './textarea'
 import AuthStatus from '../authStatus'
+import { Separator } from './separator'
+import {
+  Badge,
+  BarChart3,
+  ChevronRight,
+  LogOut,
+  Menu,
+  Settings,
+  Shield,
+  Star,
+  Trophy,
+  Users2,
+} from 'lucide-react'
+import { ScrollArea } from './scroll-area'
 
 const navigationItems = [
   {
@@ -136,47 +151,42 @@ const DesktopNavigation = () => (
 const MobileNavigation = () => (
   <Sheet>
     <SheetTrigger asChild>
-      <Button variant="outline" size="icon">
-        <List color="black" size={16} />
-        <span className="sr-only">Toggle menu</span>
+      <Button variant="ghost" size="icon" className="lg:hidden">
+        <Menu className="h-6 w-6" />
+        <span className="sr-only">Toggle navigation menu</span>
       </Button>
     </SheetTrigger>
-    <SheetContent
-      side="right"
-      className="w-[85vw] sm:w-[350px] max-w-[350px] pt-10 overflow-y-auto"
-    >
-      <div className="gap-6">
-        <AuthStatus />
-      </div>
-      <SheetDescription>
-        <VisuallyHidden.Root>
-          A list of Stuart AI features that are currently in development.
-        </VisuallyHidden.Root>
-      </SheetDescription>
-      <SheetTitle>
-        <VisuallyHidden.Root>Menu</VisuallyHidden.Root>
-      </SheetTitle>
-      <nav className="flex flex-col gap-6">
-        {navigationItems.map((item) => (
-          <div key={item.title}>
-            <h2 className="text-lg font-semibold mb-3">{item.title}</h2>
-            <NavigationMenu>
-              <ul className="space-y-2">
-                {item.items.map((component) => (
-                  <ListItem
-                    key={component.title}
-                    {...component}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
-                  />
-                ))}
-              </ul>
-            </NavigationMenu>
-          </div>
-        ))}
-        <div className="mt-6">
+    <SheetContent side="left" className="w-[80%] max-w-[400px] p-0">
+      <SheetHeader className="border-b p-6">
+        <SheetTitle className="text-left text-2xl font-bold">
+          Stuart AI
+        </SheetTitle>
+      </SheetHeader>
+      <ScrollArea className="h-[calc(100vh-8rem)]">
+        <div className="flex flex-col gap-4 p-6">
+          <AuthStatus />
+          <Separator />
+          {navigationItems.map((item) => (
+            <div key={item.title}>
+              <h2 className="text-lg font-semibold mb-3">{item.title}</h2>
+              <NavigationMenu>
+                <ul className="space-y-2">
+                  {item.items.map((component) => (
+                    <ListItem
+                      key={component.title}
+                      {...component}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                    />
+                  ))}
+                </ul>
+              </NavigationMenu>
+            </div>
+          ))}
+
+          <Separator />
           <RequestFeatureDialog />
         </div>
-      </nav>
+      </ScrollArea>
     </SheetContent>
   </Sheet>
 )
