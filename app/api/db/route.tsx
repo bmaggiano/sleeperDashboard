@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
   }
   // Define combinedStats or use parsedCachedStat if available
   const combinedStats = parsedCachedStat || { player1: {}, player2: {} }
+  console.log(JSON.stringify(combinedStats, null, 2))
 
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest) {
     schema: ffDataSchema,
     system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
     prompt: `
-    Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any. If one player is out, on IR or inactive, and the other is not, you can be 100% sure in your decision.
+    Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any. If one player is out, on IR or inactive, and the other is not, you can be 100% sure in your decision. If one player has played well but has been injured and both players are currently healthy, try to use that data in your decision making.
   
     Player 1: (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team})
     
