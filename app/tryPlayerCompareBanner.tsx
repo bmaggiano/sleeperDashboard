@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { track } from '@/vercel/analytics'
+import { track } from '@vercel/analytics'
 
 export default async function TryPlayerCompareBanner() {
   const session = await getServerSession(authOptions)
@@ -32,7 +32,7 @@ export default async function TryPlayerCompareBanner() {
               </div>
             </div>
             <Button
-              onClick={track('Player compare banner')}
+              onClick={() => track('Player compare banner')}
               variant="outline"
               className="flex items-center gap-2"
             >
