@@ -58,6 +58,7 @@ import {
   Users2,
 } from 'lucide-react'
 import { ScrollArea } from './scroll-area'
+import { track } from '@vercel/analytics'
 
 const navigationItems = [
   {
@@ -136,6 +137,7 @@ const DesktopNavigation = () => (
                   href={component.href}
                   icon={component.icon}
                   comingSoon={component.comingSoon}
+                  onClick={() => track(`clicked ${component.title}`)}
                 >
                   {component.children}
                 </ListItem>

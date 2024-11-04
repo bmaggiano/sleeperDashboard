@@ -1,4 +1,3 @@
-'use server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/options'
 import LoginButton from '@/components/login'
@@ -6,11 +5,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { LogIn } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { track } from '@vercel/analytics/server'
 
 export default async function TryPlayerCompareBanner() {
   const session = await getServerSession(authOptions)
-
   if (session) {
     return (
       <Card className="bg-gradient-to-r from-green-50 to-blue-50 shadow-sm border border-gray-100">
@@ -33,13 +30,7 @@ export default async function TryPlayerCompareBanner() {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={async () => {
-                await track('Player compare banner')
-              }}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
+            <Button variant="outline" className="flex items-center gap-2">
               <Link href={'/playerSelect'}>Compare Players</Link>
             </Button>
           </div>
