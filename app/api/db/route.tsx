@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
   }
   // Define combinedStats or use parsedCachedStat if available
   const combinedStats = parsedCachedStat || { player1: {}, player2: {} }
-  console.log(JSON.stringify(combinedStats, null, 2))
 
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
