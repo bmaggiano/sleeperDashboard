@@ -34,6 +34,10 @@ export default function RootLayout({
     <MyRuntimeProvider>
       <html lang="en">
         <head>
+          <meta
+            http-equiv="Content-Security-Policy"
+            content="script-src 'self' https://stuart-ai.com/_vercel/insights/"
+          ></meta>
           {/* 
           Remove hardcoded meta tags if you're using Next.js metadata API
           These will be added dynamically based on the metadata configuration
