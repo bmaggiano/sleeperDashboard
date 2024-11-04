@@ -5,10 +5,13 @@ import prisma from '@/lib/db'
 
 export async function GET() {
   try {
-    console.log('Resetting daily limits 5 mins...')
+    console.log('Resetting daily limits daily')
 
     // Reset daily limits for all users
     await prisma.user.updateMany({
+      where: {
+        accountType: 'free',
+      },
       data: { dailyLimit: 10 } as any,
     })
 

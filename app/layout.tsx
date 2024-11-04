@@ -6,6 +6,7 @@ import Header from '@/components/ui/header'
 import { MyRuntimeProvider } from '@/app/MyRuntimeProvider'
 import { Suspense } from 'react'
 import Providers from '@/components/providers'
+import { Analytics } from '@vercel/analytics/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -46,7 +47,10 @@ export default function RootLayout({
           <div className="p-2 sm:p-4 max-w-3xl mx-auto">
             <Providers>
               <Header />
-              <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+              <Suspense fallback={<div>Loading...</div>}>
+                {children}
+                <Analytics />
+              </Suspense>
               <Toaster />
             </Providers>
           </div>
