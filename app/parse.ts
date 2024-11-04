@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFileSync, unlinkSync } from 'fs'
 
 interface PlayerIdEntry {
   gsis_id: string | null
@@ -22,12 +22,22 @@ interface GsisEntry {
   // Add other relevant fields
 }
 
-function updateGsisIds() {
+async function fetchSleeperData() {
+  const response = await fetch('https://api.sleeper.app/v1/players/nfl')
+  if (!response.ok) {
+    throw new Error(`Error fetching data: ${response.statusText}`)
+  }
+  return await response.json()
+}
+
+// Fetch the latest data from the Sleeper API
+async function updateGsisIds() {
+  const sleeperData = await fetchSleeperData()
   // Read the JSON files
   const playerIdsRaw = readFileSync('./json/playerIds.json', 'utf-8')
   const gsisRaw = readFileSync('./json/gsis.json', 'utf-8')
 
-  const playerIds: Record<string, PlayerIdEntry> = JSON.parse(playerIdsRaw)
+  const playerIds: Record<string, PlayerIdEntry> = sleeperData
   const gsis: GsisEntry[] = JSON.parse(gsisRaw)
   // Create a map of GSIS entries for faster lookup
   const gsisMap = new Map(
@@ -51,8 +61,21 @@ function updateGsisIds() {
       }
     }
   }
+
+  // Remove the previous file if it exists
+  const previousFilePath = './playerIds_updated.json'
+  try {
+    unlinkSync(previousFilePath)
+    console.log(`Removed old file: ${previousFilePath}`)
+  } catch (err: any) {
+    // If the file doesn't exist, we'll ignore the error
+    if (err.code !== 'ENOENT') {
+      console.error(`Error removing file: ${err.message}`)
+    }
+  }
+
   // Write the updated playerIds back to the file
-  writeFileSync('playerIds_updated1.json', JSON.stringify(playerIds, null, 2))
+  writeFileSync(previousFilePath, JSON.stringify(playerIds, null, 2))
 
   console.log(`Updated ${updatedCount} entries with GSIS IDs`)
 }
