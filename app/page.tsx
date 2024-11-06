@@ -7,6 +7,7 @@ import HomeHeroSection from './homeHeroSection'
 import LeaguesMarquee from './leaguesMarquee'
 import Link from 'next/link'
 import { Card, CardHeader } from '@/components/ui/card'
+import NoLeaguesFoundEmpty from './noLeaguesFoundEmpty'
 
 // Define a custom type for the session user
 type SessionUser = {
@@ -116,9 +117,7 @@ export default async function UserLeagues() {
             ))}
           </div>
         </>
-      ) : (
-        <p>No leagues found for this user.</p>
-      )}
+      ) : null}
       <LeaguesMarquee />
     </div>
   )

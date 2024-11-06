@@ -7,6 +7,7 @@ import { MyRuntimeProvider } from '@/app/MyRuntimeProvider'
 import { Suspense } from 'react'
 import Providers from '@/components/providers'
 import { Analytics } from '@vercel/analytics/react'
+import { Loader2 } from 'lucide-react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,6 +26,15 @@ export const metadata: Metadata = {
   },
 }
 
+function LoadingSkeleton() {
+  return (
+    <div className="flex justify-center items-center h-screen w-full bg-gray-50">
+      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <span className="sr-only">Loading</span>
+    </div>
+  )
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,21 +43,12 @@ export default function RootLayout({
   return (
     <MyRuntimeProvider>
       <html lang="en">
-        <head>
-          {/* 
-          Remove hardcoded meta tags if you're using Next.js metadata API
-          These will be added dynamically based on the metadata configuration
-        */}
-          {/* <meta
-          property="og:image"
-          content="https://sleeper-dashboard.vercel.app/api/og?title=Fantasy%20Dashboard"
-        /> */}
-        </head>
+        <head></head>
         <body className={`${inter.className} min-h-screen bg-gray-50`}>
           <div className="p-2 sm:p-4 max-w-3xl mx-auto">
             <Providers>
               <Header />
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingSkeleton />}>
                 {children}
                 <Analytics />
               </Suspense>
