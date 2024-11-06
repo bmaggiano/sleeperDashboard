@@ -98,9 +98,11 @@ const TeamInfo = ({
   const [isTeamClaimed, setIsTeamClaimed] = useState<string | null>(null)
   const router = useRouter()
 
-  const avatarSrc = team.user.avatar
-    ? `https://sleepercdn.com/avatars/thumbs/${team.user.avatar}`
-    : ''
+  const avatarSrc = team.user.metadata.avatar
+    ? team.user.metadata.avatar
+    : team.user.avatar
+      ? `https://sleepercdn.com/avatars/thumbs/${team.user.avatar}`
+      : null
 
   const getInitials = (name: string) => {
     return name
@@ -253,8 +255,9 @@ const TeamInfo = ({
         {isLeagueClaimed === null && null}
       </div>
       <div className={`flex flex-col ${alignClass}`}>
-        <span className="text-xs text-gray-400 w-[100px] sm:w-full truncate">
-          @{team.user.display_name}
+        <span className="flex items-center text-xs text-gray-400 w-[100px] sm:w-full truncate">
+          @{team.user.display_name} · {team.settings.wins} -{' '}
+          {team.settings.losses}
         </span>
         <span className="font-bold text-sm w-[100px] sm:w-full truncate">
           {team.user.metadata.team_name || team.user.display_name}
