@@ -8,7 +8,7 @@ import {
   getLeagueDetails,
   sleeperToESPNMapping,
 } from '../utils'
-import UsersPlayers from './test'
+import UsersPlayers from './playerSelectClient'
 import Unauthenticated from '../unauthenticated'
 import NoLeaguesFoundEmpty from '../noLeaguesFoundEmpty'
 
