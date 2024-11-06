@@ -217,7 +217,7 @@ export const getLeagueWeeks = cache(async (leagueId: string) => {
     }))
     leagueWeeksArray.push({
       index: leagueWeekNum + 1,
-      week: 'winners',
+      week: 'Winners Bracket',
     })
     return leagueWeeksArray
   } catch (error: any) {
