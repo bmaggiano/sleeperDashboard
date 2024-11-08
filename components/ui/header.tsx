@@ -1,6 +1,5 @@
 'use client'
 
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import {
   Dialog,
   DialogClose,
@@ -18,27 +17,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import {
-  Bell,
-  ChartBar,
-  ChartBarHorizontal,
-  ChartLineUp,
-  CurrencyDollar,
-  Flag,
-  List,
-  Mailbox,
-  Robot,
-  Sparkle,
-  Users,
-  Coins,
-  TrendUp,
-} from '@phosphor-icons/react'
+import { Flag, Sparkle, Users, Coins, TrendUp } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { Button } from './button'
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -46,19 +30,7 @@ import {
 import { Textarea } from './textarea'
 import AuthStatus from '../authStatus'
 import { Separator } from './separator'
-import {
-  Badge,
-  BarChart3,
-  ChevronRight,
-  LogOut,
-  Menu,
-  Settings,
-  Shield,
-  Star,
-  Trophy,
-  Users2,
-  TrendingUp,
-} from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { ScrollArea } from './scroll-area'
 import { track } from '@vercel/analytics'
 
