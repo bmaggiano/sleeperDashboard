@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Check, ChevronsUpDown } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -39,16 +38,12 @@ export default function LeagueSelectorClient({
     null
   )
 
-  const router = useRouter()
-
   React.useEffect(() => {
-    console.log('Leagues received:', leagues)
     if (leagues && leagues.length > 0) {
       setSelectedLeague(
         leagues.find((league) => league.id === currentLeauge) || null
       )
     }
-    console.log(selectedLeague)
   }, [leagues, selectedLeague])
 
   return (

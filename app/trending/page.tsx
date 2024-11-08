@@ -13,7 +13,6 @@ export default async function TrendingPlayers({
 }: {
   leagueId: string
 }) {
-  console.log('from no param', leagueId)
   const session = (await getServerSession(authOptions)) as {
     user: { id: string; name?: string; email?: string; image?: string } | null
   }
@@ -34,8 +33,6 @@ export default async function TrendingPlayers({
       }
     })
   )
-
-  console.log(leagueDetails)
 
   const allPlayers = await fetch(
     `https://api.sleeper.app/v1/league/${leagueId}/rosters`
