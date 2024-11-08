@@ -5,13 +5,16 @@ import { authOptions } from '../api/auth/[...nextauth]/options'
 import db from '@/lib/db'
 import { TrendingPlayersClient } from './trendingPlayersClient'
 import LeagueSelectorClient from './leagueSelectorClient'
+import TryPlayerCompareBanner from '../tryPlayerCompareBanner'
 
 const cachedSleeperToESPNMapping = cache(sleeperToESPNMapping)
 
 export default async function TrendingPlayers({
   leagueId,
+  forCompare,
 }: {
-  leagueId: string
+  leagueId?: string
+  forCompare?: boolean
 }) {
   const session = (await getServerSession(authOptions)) as {
     user: { id: string; name?: string; email?: string; image?: string } | null
@@ -127,18 +130,27 @@ export default async function TrendingPlayers({
 
   return (
     <>
-      <div className="flex items-center justify-between pt-4">
-        <span className="font-semibold">
-          {leagueId
-            ? leagueDetails.find((league) => league.leagueId === leagueId)?.name
-            : 'No league selected'}{' '}
-        </span>
-        <LeagueSelectorClient
-          leagues={leagueDetails}
-          currentLeauge={leagueId}
-        />
-      </div>
+      {!forCompare && (
+        <div className="pt-4">
+          <TryPlayerCompareBanner />
+        </div>
+      )}
+      {!forCompare && (
+        <div className="flex items-center justify-between pt-4">
+          <span className="text-lg font-semibold">
+            {leagueId
+              ? leagueDetails.find((league) => league.leagueId === leagueId)
+                  ?.name
+              : 'No league selected'}{' '}
+          </span>
+          <LeagueSelectorClient
+            leagues={leagueDetails}
+            currentLeauge={leagueId || ''}
+          />
+        </div>
+      )}
       <TrendingPlayersClient
+        forCompare={forCompare}
         availablePlayersUp={leagueId ? availablePlayersUpInfo : []}
         availablePlayersDown={leagueId ? availablePlayersDownInfo : []}
         trendingUpPlayers={trendingUpPlayers}

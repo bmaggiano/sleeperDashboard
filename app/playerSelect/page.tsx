@@ -11,6 +11,7 @@ import {
 import UsersPlayers from './playerSelectClient'
 import Unauthenticated from '../unauthenticated'
 import NoLeaguesFoundEmpty from '../noLeaguesFoundEmpty'
+import TrendingPlayers from '../trending/page'
 
 export default async function PlayerSelect() {
   const session = (await getServerSession(authOptions)) as {
@@ -111,5 +112,12 @@ export default async function PlayerSelect() {
     )
   }
 
-  return <div>{<UsersPlayers userPlayers={sortedUniquePlayers} />}</div>
+  // return <div>{<UsersPlayers userPlayers={sortedUniquePlayers} />}</div>
+
+  return (
+    <>
+      <UsersPlayers userPlayers={sortedUniquePlayers} />
+      <TrendingPlayers forCompare={true} />
+    </>
+  )
 }

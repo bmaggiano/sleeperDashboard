@@ -31,6 +31,7 @@ import {
   Sparkle,
   Users,
   Coins,
+  TrendUp,
 } from '@phosphor-icons/react'
 import Link from 'next/link'
 import { Button } from './button'
@@ -56,6 +57,7 @@ import {
   Star,
   Trophy,
   Users2,
+  TrendingUp,
 } from 'lucide-react'
 import { ScrollArea } from './scroll-area'
 import { track } from '@vercel/analytics'
@@ -83,6 +85,13 @@ const navigationItems = [
   {
     title: 'League Management',
     items: [
+      {
+        title: 'Trending Players',
+        href: '/trending',
+        children: 'See trending players across your leagues',
+        icon: <TrendUp weight="duotone" size={16} />,
+        comingSoon: false,
+      },
       {
         title: 'Claim Your League',
         href: '/league/claim',

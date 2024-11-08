@@ -125,7 +125,7 @@ export default function UsersPlayers({ userPlayers }: { userPlayers: any }) {
   }
 
   return (
-    <div className="py-8">
+    <div className="pt-8">
       <Card className="mb-8 p-6 rounded-lg">
         <h2 className="text-lg text-center font-semibold mb-4">
           Selected Players
