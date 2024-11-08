@@ -51,10 +51,6 @@ export default function LeagueSelectorClient({
     console.log(selectedLeague)
   }, [leagues, selectedLeague])
 
-  if (!leagues || leagues.length === 0) {
-    return <div>No leagues found</div>
-  }
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
