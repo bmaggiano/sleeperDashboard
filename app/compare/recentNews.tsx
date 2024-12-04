@@ -57,7 +57,7 @@ export default async function fetchAndFilterStories(
 
     // Map over the filtered articles to return their links property
     const articleLinks = filteredArticles.map(
-      (article: any) => article.links.api.news.href
+      (article: any) => article.links.api.self.href
     )
 
     // Fetch story content for each link
