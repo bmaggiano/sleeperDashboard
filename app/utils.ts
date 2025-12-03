@@ -169,7 +169,7 @@ export async function getPlayerStats(
   return playerStats
 }
 
-const LEAGUE_DEFAULT_YEAR = 2024
+const LEAGUE_DEFAULT_YEAR = 2025
 
 export const getTotalWeeks = cache(async (leagueId: string) => {
   try {

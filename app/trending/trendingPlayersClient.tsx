@@ -163,16 +163,29 @@ export function TrendingPlayersClient({
 
   const filterAndSortPlayers = (players: any[]) => {
     return players
-      .filter((player) =>
-        player.info.full_name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      .filter((player) => {
+        // Safely check if player.info exists and has full_name
+        const fullName =
+          player?.info?.full_name ||
+          `${player?.info?.first_name || ''} ${player?.info?.last_name || ''}`.trim()
+        if (!fullName) return false
+        return fullName.toLowerCase().includes(searchQuery.toLowerCase())
+      })
       .sort((a, b) => {
         if (sortBy === 'count') {
           return b.count - a.count
         } else if (sortBy === 'name') {
-          return a.info.full_name.localeCompare(b.info.full_name)
+          const aName =
+            a?.info?.full_name ||
+            `${a?.info?.first_name || ''} ${a?.info?.last_name || ''}`.trim()
+          const bName =
+            b?.info?.full_name ||
+            `${b?.info?.first_name || ''} ${b?.info?.last_name || ''}`.trim()
+          return aName.localeCompare(bName)
         } else if (sortBy === 'position') {
-          return a.info.position.localeCompare(b.info.position)
+          const aPos = a?.info?.position || ''
+          const bPos = b?.info?.position || ''
+          return aPos.localeCompare(bPos)
         }
         return 0
       })
