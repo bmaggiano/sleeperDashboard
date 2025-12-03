@@ -90,12 +90,13 @@ export async function POST(request: NextRequest) {
   // Define combinedStats or use parsedCachedStat if available
   const combinedStats = parsedCachedStat || { player1: {}, player2: {} }
 
-  const result = await streamObject({
-    model: openai('gpt-4o-mini'),
-    seed: 100,
-    schema: ffDataSchema,
-    system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
-    prompt: `
+  try {
+    const result = await streamObject({
+      model: openai('gpt-4o-mini'),
+      seed: 100,
+      schema: ffDataSchema,
+      system: `You are a fantasy football expert, skilled in analyzing player stats and making decisions based on recent performance and news.`,
+      prompt: `
     Compare the following players based on their stats, availability, injuries if they're dealing with any (if they are Out, IR, or Inactive, take that into consideration and let the user know), recent games, and recent news. Emphasize recent performance trends and present at least one snippet from the news articles if there are any. If one player is out, on IR or inactive, and the other is not, you can be 100% sure in your decision. If one player has played well but has been injured and both players are currently healthy, try to use that data in your decision making.
   
     Player 1: (${player1.full_name}, Position: ${player1.position}, Team: ${player1.team})
@@ -132,13 +133,44 @@ export async function POST(request: NextRequest) {
       "undecided": "Return 'undecided' if no clear recommendation can be made."
     }
     `,
-    onFinish: async ({ object }) => {
-      await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600) // Cache for 1 hour
-      await db.user.update({
-        where: { email: session?.user?.email as string },
-        data: { dailyLimit: { decrement: 1 } } as any,
-      })
-    },
-  })
-  return result.toTextStreamResponse()
+      onFinish: async ({ object }) => {
+        await redisClient?.set(cacheKey, JSON.stringify(object), 'EX', 3600) // Cache for 1 hour
+        await db.user.update({
+          where: { email: session?.user?.email as string },
+          data: { dailyLimit: { decrement: 1 } } as any,
+        })
+      },
+    })
+    return result.toTextStreamResponse()
+  } catch (error: any) {
+    console.error('Error calling OpenAI API:', error)
+
+    // Check if it's a quota error
+    if (
+      error?.statusCode === 429 ||
+      error?.data?.error?.code === 'insufficient_quota'
+    ) {
+      return NextResponse.json(
+        {
+          error: 'AI service temporarily unavailable',
+          message:
+            'OpenAI API quota has been exceeded. Please check your OpenAI account billing and quota limits.',
+          code: 'QUOTA_EXCEEDED',
+        },
+        { status: 503 }
+      )
+    }
+
+    // Return generic error for other cases
+    return NextResponse.json(
+      {
+        error: 'Failed to generate AI analysis',
+        message:
+          error?.message ||
+          'An error occurred while generating the player comparison.',
+        code: 'AI_ERROR',
+      },
+      { status: 500 }
+    )
+  }
 }

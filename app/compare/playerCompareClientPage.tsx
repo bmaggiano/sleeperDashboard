@@ -193,7 +193,11 @@ export default function PlayerCompare() {
   const player2Pos = getCleanedParam('p2Pos')
   const player2Team = getCleanedParam('p2Team')
 
-  const { object, submit } = useObject({
+  const {
+    object,
+    submit,
+    error: apiError,
+  } = useObject({
     api: `/api/db`,
     schema: ffDataSchema,
   })
@@ -268,6 +272,26 @@ export default function PlayerCompare() {
       <div className="flex flex-col gap-4 my-4">
         {loading && selectedPlayer1 && selectedPlayer2 ? (
           <AISkeleton />
+        ) : apiError ? (
+          <Card>
+            <CardHeader className="overflow-hidden rounded-t-md bg-yellow-50">
+              <CardTitle className="flex items-center justify-between text-black text-lg gap-x-2">
+                AI Analysis Unavailable
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <p className="text-gray-600">
+                {String(apiError).includes('quota') ||
+                String(apiError).includes('QUOTA') ||
+                (typeof apiError === 'object' &&
+                  apiError !== null &&
+                  'message' in apiError &&
+                  String((apiError as any).message).includes('quota'))
+                  ? 'OpenAI API quota has been exceeded. Please check your OpenAI account billing and quota limits. The comparison stats below are still available.'
+                  : 'Unable to generate AI analysis at this time. Please try again later. The comparison stats below are still available.'}
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           <>
             {object?.analysis?.map((data, index) => (
