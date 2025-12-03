@@ -11,9 +11,11 @@ import CompareTableVsTeam from './playerVsTeam'
 import PlayerCompareModal from '../playerCompareModal'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { getDailyLimit } from '../utils'
+import { getDailyLimit, getPlayerStats } from '../utils'
 import { Alert } from '@/components/ui/alert'
 import SignInBanner from '../signInBanner'
+import { getPlayerDetails } from '@/lib/sleeper/helpers'
+import redisClient from '@/lib/redis/redisClient'
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined }
@@ -98,27 +100,61 @@ export default async function PlayerCompareServer({ searchParams }: Props) {
     cleanedSearchParams[cleanedKey] = searchParams[key]
   })
 
-  const playerId1 = cleanedSearchParams.p1Id
-  const playerId2 = cleanedSearchParams.p2Id
+  const playerId1 = Array.isArray(cleanedSearchParams.p1Id)
+    ? cleanedSearchParams.p1Id[0]
+    : (cleanedSearchParams.p1Id as string | undefined)
+  const playerId2 = Array.isArray(cleanedSearchParams.p2Id)
+    ? cleanedSearchParams.p2Id[0]
+    : (cleanedSearchParams.p2Id as string | undefined)
 
-  const fetchUrl =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3000'
-      : 'https://sleeper-dashboard.vercel.app'
+  // Get player stats directly instead of making HTTP request
+  let playerStatsJson: any[] = []
+  if (playerId1 && playerId2) {
+    const cacheKey = `player-comparison-stats:${playerId1}:${playerId2}`
+    const cachedResponse = await redisClient?.get(cacheKey)
 
-  const [playerStatsRes, dailyLimitRes] = await Promise.all([
-    fetch(
-      `${fetchUrl}/api/stats?playerId1=${playerId1}&playerId2=${playerId2}`,
-      {
-        method: 'POST',
-        body: JSON.stringify({ playerId1, playerId2 }),
+    if (cachedResponse) {
+      playerStatsJson = JSON.parse(cachedResponse)
+    } else {
+      const [player1, player2] = await Promise.all([
+        getPlayerDetails(playerId1.trim()),
+        getPlayerDetails(playerId2.trim()),
+      ])
+
+      if (player1 && player2) {
+        const player1Gsis = player1.gsis_id?.trim() || ''
+        const player2Gsis = player2.gsis_id?.trim() || ''
+
+        const [player1Stats, player2Stats] = await Promise.all([
+          getPlayerStats(player1Gsis, {
+            full_name: player1.full_name || '',
+            position: player1.position || '',
+            team: player1.team || '',
+          }),
+          getPlayerStats(player2Gsis, {
+            full_name: player2.full_name || '',
+            position: player2.position || '',
+            team: player2.team || '',
+          }),
+        ])
+
+        const combinedStats = {
+          player1: player1Stats,
+          player2: player2Stats,
+        }
+
+        await redisClient?.set(
+          cacheKey,
+          JSON.stringify([combinedStats]),
+          'EX',
+          3600
+        )
+        playerStatsJson = [combinedStats]
       }
-    ),
-    getDailyLimit(),
-  ])
+    }
+  }
 
-  const playerStatsJson = await playerStatsRes.json()
-  const dailyLimitData = await dailyLimitRes
+  const dailyLimitData = await getDailyLimit()
 
   if (!playerId1 || !playerId2) {
     return (
